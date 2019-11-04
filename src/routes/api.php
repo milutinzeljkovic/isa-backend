@@ -26,3 +26,7 @@ Route::group([
     Route::post('me', 'Auth\AuthController@me');
 
 });
+
+Route::get('foo', function () {
+    return 'Hello World';
+});
