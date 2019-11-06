@@ -30,7 +30,7 @@ Route::group([
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('foo', function () {
-        return 'Hello World';
+        return 'Hello World pizda vam materina';
     });
 });
 
