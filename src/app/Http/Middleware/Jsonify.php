@@ -16,7 +16,7 @@ class Jsonify
      */
     public function handle($request, Closure $next)
     {
-        $mikikikiriki = 'miki';
+        $mikikikiriki = 'mikikii';
         $request->headers->set('Accept', 'application/json');
         return $next($request);
     }
