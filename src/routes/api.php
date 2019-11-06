@@ -27,6 +27,10 @@ Route::group([
 
 });
 
-Route::get('foo', function () {
-    return 'Hello World';
+Route::group(['middleware' => ['jwt.verify']], function () {
+    Route::get('foo', function () {
+        return 'Hello World';
+    });
 });
+
+
