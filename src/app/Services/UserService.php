@@ -81,6 +81,12 @@ class UserService
         ]);
     }
 
+    public function refreshToken()
+    {
+        return $this->respondWithToken(auth()->refresh());
+
+    }
+
     /**
      * Get the guard to be used during authentication.
      *

@@ -69,4 +69,15 @@ class AuthController extends Controller
         return $this->userService->logout();
     }
 
+        /**
+     * Log the user out (Invalidate the token)
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->userService->refreshToken();
+    }
+    
+
 }
