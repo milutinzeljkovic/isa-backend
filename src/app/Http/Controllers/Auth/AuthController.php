@@ -28,10 +28,9 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterApiRequest $request)
+    public function register(Request $request)
     {
-        $credentials = $request->only('name', 'email', 'password');
-
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address');
         return $this->userService->register($credentials);
     }
 
