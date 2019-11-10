@@ -15,7 +15,6 @@ class CreateClinicAdminsTable extends Migration
     {
         Schema::create('clinic_admins', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('clinic_id');
             $table->timestamps();
         });
     }
