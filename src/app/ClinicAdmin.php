@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClinicAdmin extends Model
 {
-    public function image()
+    public function user()
     {
         return $this->morphOne('App\User', 'userable');
     }
