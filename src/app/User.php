@@ -10,6 +10,11 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    public function userable()
+    {
+        return $this->morphTo();
+    }
+
     /**
      * The attributes that are mass assignable.
      *
