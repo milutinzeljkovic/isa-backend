@@ -10,4 +10,9 @@ class ClinicalCenterAdmin extends Model
     {
         return $this->morphOne('App\User', 'userable');
     }
+
+    public function clinicalCenter()
+    {
+        return $this->hasOne('App\ClinicalCenter');
+    }
 }

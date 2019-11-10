@@ -10,4 +10,9 @@ class Patient extends Model
     {
         return $this->morphOne('App\User', 'userable');
     }
+
+    public function clinic()
+    {
+        return $this->hasOne('App\Clinic');
+    }
 }
