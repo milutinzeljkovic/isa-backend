@@ -30,5 +30,19 @@ class Clinic extends Model
         return $this->hasMany('App\ClinicAdmin');
     }
 
-    
+    public function operationRooms()
+    {
+        return $this->hasMany('App\OperationsRoom');
+    }
+
+    public function appointmentTypes()
+    {
+        return $this->belongsToMany('App\AppointmentType')
+                ->as('clinics_appointment_types');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany('App/Appointment');
+    }
 }
