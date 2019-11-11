@@ -13,6 +13,6 @@ class ClinicalCenterAdmin extends Model
 
     public function clinicalCenter()
     {
-        return $this->hasOne('App\ClinicalCenter');
+        return $this->belongsTo('App\ClinicalCenter');
     }
 }

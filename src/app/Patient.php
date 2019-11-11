@@ -13,6 +13,6 @@ class Patient extends Model
 
     public function clinic()
     {
-        return $this->hasOne('App\Clinic');
+        return $this->belongsTo('App\Clinic');
     }
 }
