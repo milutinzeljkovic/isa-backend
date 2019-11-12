@@ -15,7 +15,6 @@ class AlterOperationsRoomsTableAddForeignKeys extends Migration
     {
         Schema::table('operations_rooms', function (Blueprint $table) {
             $table->integer('appointment_id')->unsigned()->nullable();
-
             $table->foreign('appointment_id')
                 ->references('id')
                 ->on('appointments')
