@@ -17,4 +17,9 @@ class MedicalRecord extends Model
                 ->as('medical_data_medical_record')
                 ->withPivot('value');
     }
+
+    public function medicalReports()
+    {
+        return $this->hasMany('App\MedicalReport');
+    }
 }
