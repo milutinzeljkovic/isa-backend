@@ -11,9 +11,10 @@ class Patient extends Model
         return $this->morphOne('App\User', 'userable');
     }
 
-    public function clinic()
+    public function clinics()
     {
-        return $this->belongsTo('App\Clinic');
+        return $this->belongsToMany('App\Clinic')
+                ->as('patient_clinic_type');
     }
     
     public function appointments()

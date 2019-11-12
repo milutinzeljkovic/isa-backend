@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClinicsAppointmentTypesTable extends Migration
+class CreateAppointmentTypeClinicTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateClinicsAppointmentTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('clinics_appointment_types', function (Blueprint $table) {
+        Schema::create('appointment_type_clinic', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('appointment_type_id')->unsigned()->nullable();
             $table->foreign('appointment_type_id')
