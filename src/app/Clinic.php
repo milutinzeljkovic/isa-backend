@@ -13,7 +13,7 @@ class Clinic extends Model
     public function patients()
     {
         return $this->belongsToMany('App\Patient')
-                ->as('patient_clinic_type');
+                ->as('clinic_patient');
     }
 
     public function doctors()

@@ -14,11 +14,11 @@ class AlterPatientsTableAddForeignKey extends Migration
     public function up()
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->integer('clinic_id')->unsigned()->nullable();
+            $table->integer('medical_record_id')->unsigned()->nullable();
 
-            $table->foreign('clinic_id')
+            $table->foreign('medical_record_id')
                 ->references('id')
-                ->on('clinics')
+                ->on('medical_records')
                 ->onDelete('set null');
         });
     }
@@ -31,8 +31,8 @@ class AlterPatientsTableAddForeignKey extends Migration
     public function down()
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->dropForeign(['clnic_id']);
-            $table->dropColumn('clinic_id');
+            $table->dropForeign(['medical_record_id']);
+            $table->dropColumn('medical_record_id');
         });
     }
 }

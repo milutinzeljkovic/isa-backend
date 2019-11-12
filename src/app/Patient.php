@@ -14,11 +14,16 @@ class Patient extends Model
     public function clinics()
     {
         return $this->belongsToMany('App\Clinic')
-                ->as('patient_clinic_type');
+                ->as('clinic_patient');
     }
     
     public function appointments()
     {
         return $this->hasMany('App\Appointment');
+    }
+
+    public function medicalRecord()
+    {
+        return $this->hasOne('App\MedicalRecord');
     }
 }
