@@ -10,5 +10,10 @@ class MedicalReport extends Model
     {
         return $this->belongsTo('App\MedicalRecord');
     }
+
+    public function diagnose()
+    {
+        return $this->belongsTo('App\Diagnose');
+    }
     
 }
