@@ -10,4 +10,19 @@ class ClinicalCenter extends Model
     {
         return $this->hasMany('App\ClinicalCenterAdmin');
     }
+
+    public function medicines()
+    {
+        return $this->hasMany('App\Medicine');
+    }
+
+    public function diagnoses()
+    {
+        return $this->hasMany('App\Diagnose');
+    }
+
+    public function clinics()
+    {
+        return $this->hasMany('App\Clinic');
+    }
 }

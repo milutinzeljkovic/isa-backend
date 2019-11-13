@@ -46,4 +46,9 @@ class Clinic extends Model
     {
         return $this->hasMany('App/Appointment');
     }
+
+    public function clinicalCenter()
+    {
+        return $this->belongsTo('App\ClinicalCenter');
+    }
 }

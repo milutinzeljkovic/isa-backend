@@ -16,4 +16,9 @@ class Diagnose extends Model
     {
         return $this->hasMany('App\MedicalReport');
     }
+
+    public function clinicalCenter()
+    {
+        return $this->belongsTo('App\ClinicalCenter');
+    }
 }
