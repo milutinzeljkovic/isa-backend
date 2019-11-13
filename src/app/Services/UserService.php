@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\User;
+use App\Patient;
 
 class UserService
 {
@@ -28,7 +29,10 @@ class UserService
         $user->state = array_get($userData, 'state');
         $user->password = \Hash::make(array_get($userData, 'password'));
 
-        if ($user->save()) {
+        $patient = new Patient();
+        $patient->save();
+
+        if ($patient->user()->save($user)) {
             return $this->login($userData);
         }
 
@@ -44,6 +48,16 @@ class UserService
      */
     public function login(array $userData)
     {
+        $user = User::where('email',array_get($userData, 'email'))->first();
+        if($user->confirmed == 0){
+            return response()->json(['error' => 'email not confirmed'], 401);
+        }
+
+        if($user->activated == 0){
+            return response()->json(['error' => 'account not activated'], 401);
+        }
+        
+
         if ($token = $this->guard()->attempt($userData)) {
             return $this->respondWithToken($token);
         }
