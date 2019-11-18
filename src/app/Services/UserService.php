@@ -40,7 +40,7 @@ class UserService
         return response()->json(['error' => 'Something terrible happened'], 500);
     }
 
-    public function confirm($encryptedId)
+    public function activate($encryptedId)
     {
         $id = Crypt::decryptString($encryptedId);
         $user = User::findOrFail($id);

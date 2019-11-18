@@ -80,9 +80,9 @@ class AuthController extends Controller
     }
 
     //dekriptovanje dela url koji korisnik poseti nakon odobrenja zahteva http://localhost:8000/api/auth/confirm/asufhduih23uio49unao9812390haslnmcxasd
-    public function confirmAccount($encryptedId)
+    public function activate($encryptedId)
     {
-        return $this->userService->confirm($encryptedId);
+        return $this->userService->activate($encryptedId);
     }
     
 

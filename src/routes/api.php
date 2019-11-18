@@ -26,7 +26,7 @@ Route::group([
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
     Route::post('refresh', 'Auth\AuthController@refresh');
-    Route::get('confirm/{enryptedId}', 'Auth\AuthController@confirmAccount');
+    Route::get('activate/{enryptedId}', 'Auth\AuthController@activate');
     
 });
 
@@ -48,5 +48,4 @@ Route::get('decrypt',function(){
     $encrypted = 'eyJpdiI6IkVJZHFGZmdDNUpDazh5Y2thZjBsdnc9PSIsInZhbHVlIjoiWU45VzhYVVo5Smd5K3pESjN4VjA2UT09IiwibWFjIjoiNWM1NTg5YTdjODc4YzkxNjIwOGY4Y2JmMmIyM2UzOGI5NThlYjg1Y2FlNzk1Nzg4ZjBkYjkxNThhNTYzNDI5NiJ9';
     $decrypted = Crypt::decryptString($encrypted);
     return $decrypted;
-
 });
