@@ -62,9 +62,9 @@ class UserService
     public function login(array $userData)
     {
         $user = User::where('email',array_get($userData, 'email'))->first();
-        if($user->confirmed == 0){
+        /**if($user->confirmed == 0){
             return response()->json(['error' => 'email not confirmed'], 401);
-        }
+        }*/
 
         if($user->activated == 0){
             return response()->json(['error' => 'account not activated'], 401);
