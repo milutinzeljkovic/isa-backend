@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::group([
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
     Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::get('confirm/{enryptedId}', 'Auth\AuthController@confirmAccount');
     
 });
 
@@ -35,3 +37,16 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 });
 
 
+Route::get('test',function(){
+    $encrypted = Crypt::encryptString('10');
+    return $encrypted;
+
+});
+
+
+Route::get('decrypt',function(){
+    $encrypted = 'eyJpdiI6IkVJZHFGZmdDNUpDazh5Y2thZjBsdnc9PSIsInZhbHVlIjoiWU45VzhYVVo5Smd5K3pESjN4VjA2UT09IiwibWFjIjoiNWM1NTg5YTdjODc4YzkxNjIwOGY4Y2JmMmIyM2UzOGI5NThlYjg1Y2FlNzk1Nzg4ZjBkYjkxNThhNTYzNDI5NiJ9';
+    $decrypted = Crypt::decryptString($encrypted);
+    return $decrypted;
+
+});

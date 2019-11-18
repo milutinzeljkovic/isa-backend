@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\RegisterApiRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Services\UserService;
@@ -76,6 +77,12 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->userService->refreshToken();
+    }
+
+    //dekriptovanje dela url koji korisnik poseti nakon odobrenja zahteva http://localhost:8000/api/auth/confirm/asufhduih23uio49unao9812390haslnmcxasd
+    public function confirmAccount($encryptedId)
+    {
+        return $this->userService->confirm($encryptedId);
     }
     
 

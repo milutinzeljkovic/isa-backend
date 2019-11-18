@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Facades\Crypt;
 use App\User;
 use App\Patient;
 
@@ -38,6 +39,18 @@ class UserService
 
         return response()->json(['error' => 'Something terrible happened'], 500);
     }
+
+    public function confirm($encryptedId)
+    {
+        $id = Crypt::decryptString($encryptedId);
+        $user = User::findOrFail($id);
+        $user->activated = 1;
+        $user->save();
+        
+        return response()->json(['message' => 'Account successfully activated']);
+    }
+
+    
 
     /**
      * Get a JWT token via given credentials.
@@ -117,4 +130,7 @@ class UserService
     {
         return \Auth::guard();
     }
+
+
+
 }
