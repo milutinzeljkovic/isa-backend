@@ -30,13 +30,6 @@ Route::group([
     
 });
 
-Route::group(['middleware' => ['jwt.verify']], function () {
-    Route::get('foo', function () {
-        return 'Hello World pizda vam materina';
-    });
-});
-
-
 Route::get('test',function(){
     $encrypted = Crypt::encryptString('10');
     return $encrypted;
@@ -45,7 +38,11 @@ Route::get('test',function(){
 
 
 Route::get('decrypt',function(){
-    $encrypted = 'eyJpdiI6IkVJZHFGZmdDNUpDazh5Y2thZjBsdnc9PSIsInZhbHVlIjoiWU45VzhYVVo5Smd5K3pESjN4VjA2UT09IiwibWFjIjoiNWM1NTg5YTdjODc4YzkxNjIwOGY4Y2JmMmIyM2UzOGI5NThlYjg1Y2FlNzk1Nzg4ZjBkYjkxNThhNTYzNDI5NiJ9';
+    $encrypted = 'eyJpdiI6InpCZDUwWkp2RUsyQjdPamY2cHVuUkE9PSIsInZhbHVlIjoiSFhuRElUcUM2UE03VmJuOUdiNGpuUT09IiwibWFjIjoiYjdkNmNjODkxOGQ2NTU5YTdiNTRiZDVjYmNhOWIxOTM4YTczNjFmNTIxMGU2M2JkOTQ2ODRmYTkxNDJiYWFiMCJ9';
     $decrypted = Crypt::decryptString($encrypted);
     return $decrypted;
 });
+
+Route::get('patients','PatientsController@getPatients');
+Route::get('patients/accept/{id}', 'PatientsController@accept');
+Route::get('patients/decline/{id}', 'PatientsController@decline');
