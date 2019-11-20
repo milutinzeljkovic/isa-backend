@@ -5,6 +5,9 @@ namespace App\Http\Services;
 use Illuminate\Support\Facades\Crypt;
 use App\User;
 use App\Patient;
+use App\ClinicalCenterAdmin;
+
+
 
 class UserService
 {
@@ -30,6 +33,18 @@ class UserService
         $user->state = array_get($userData, 'state');
         $user->password = \Hash::make(array_get($userData, 'password'));
 
+        if($user->email == 'admin@admin.rs')
+        {
+            $admin = new ClinicalCenterAdmin();
+            $admin->save();
+            
+            if ($admin->user()->save($user)) {
+                return $this->login($userData);
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
         $patient = new Patient();
         $patient->save();
 
