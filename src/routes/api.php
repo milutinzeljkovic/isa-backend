@@ -15,34 +15,22 @@ use Illuminate\Support\Facades\Crypt;
 */
 
 Route::group([
-
     'middleware' => ['api', 'jsonify'],
     'prefix' => 'auth'
-
 ], function ($router) {
-
     Route::post('register', 'Auth\AuthController@register');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::get('activate/{enryptedId}', 'Auth\AuthController@activate');
-    
 });
 
-Route::get('test',function(){
-    $encrypted = Crypt::encryptString('10');
-    return $encrypted;
-
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'patients'
+], function ($router){
+    Route::get('','PatientsController@getPatients');
+    Route::get('accept/{id}', 'PatientsController@accept');
+    Route::get('decline/{id}', 'PatientsController@decline');
 });
-
-
-Route::get('decrypt',function(){
-    $encrypted = 'eyJpdiI6InpCZDUwWkp2RUsyQjdPamY2cHVuUkE9PSIsInZhbHVlIjoiSFhuRElUcUM2UE03VmJuOUdiNGpuUT09IiwibWFjIjoiYjdkNmNjODkxOGQ2NTU5YTdiNTRiZDVjYmNhOWIxOTM4YTczNjFmNTIxMGU2M2JkOTQ2ODRmYTkxNDJiYWFiMCJ9';
-    $decrypted = Crypt::decryptString($encrypted);
-    return $decrypted;
-});
-
-Route::get('patients','PatientsController@getPatients');
-Route::get('patients/accept/{id}', 'PatientsController@accept');
-Route::get('patients/decline/{id}', 'PatientsController@decline');
