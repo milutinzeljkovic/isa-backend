@@ -23,9 +23,10 @@ class PatientPolicy
      * @param  \App\Patient  $patient
      * @return mixed
      */
-    public function view(User $user, Patient $patient)
+    public function view(User $user, $patient)
     {
-        
+        $ret = $user->userable_type === "App\ClinicalCenterAdmin"  || $user->id === (int)$patient ? true : false;
+        return $ret;
     }
 
     /**
@@ -64,9 +65,10 @@ class PatientPolicy
      * @param  \App\Patient  $patient
      * @return mixed
      */
-    public function update(User $user, Patient $patient)
+    public function update(User $user, $patient)
     {
-        return true;
+        $ret = $user->userable_type === "App\ClinicalCenterAdmin"  || $user->id === (int)$patient ? true : false;
+        return $ret;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserUpdateRequest;
 use App\Mail\ActivateMail;
 use App\Mail\DeclineMail;
 
@@ -14,6 +15,20 @@ use Illuminate\Support\Facades\Crypt;
 class PatientsController extends Controller
 {
     //
+
+    public function view($id)
+    {
+        $user = User::findOrFail($id);
+        return $user;
+    }
+
+    public function update(Request $request,  $id)
+    {
+        $user = User::findOrFail($id);
+        $values = $request->all();
+        $user->update($values);
+        return $user;
+    }
 
 
     public function accept($id)

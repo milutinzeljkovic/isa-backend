@@ -34,5 +34,6 @@ Route::group([
     Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
     Route::get('accept/{id}', 'PatientsController@accept')->middleware('can:accept,App\Patient');
     Route::get('decline/{id}', 'PatientsController@decline')->middleware('can:decline,App\Patient');
-    Route::get('{id}', 'PatientsController@view');
+    Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
+    Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
 });
