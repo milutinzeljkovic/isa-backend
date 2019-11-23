@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -30,7 +31,7 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'patients'
 ], function ($router){
-    Route::get('','PatientsController@getPatients');
+    Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
     Route::get('accept/{id}', 'PatientsController@accept');
     Route::get('decline/{id}', 'PatientsController@decline');
 });
