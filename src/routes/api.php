@@ -32,6 +32,7 @@ Route::group([
     'prefix' => 'patients'
 ], function ($router){
     Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
-    Route::get('accept/{id}', 'PatientsController@accept');
-    Route::get('decline/{id}', 'PatientsController@decline');
+    Route::get('accept/{id}', 'PatientsController@accept')->middleware('can:accept,App\Patient');
+    Route::get('decline/{id}', 'PatientsController@decline')->middleware('can:decline,App\Patient');
+    Route::get('{id}', 'PatientsController@view');
 });

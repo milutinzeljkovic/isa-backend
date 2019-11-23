@@ -45,10 +45,14 @@ class PatientPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function accept(User $user)
+    public function accept()
     {
-       dd($user);
+        return auth()->user()->userable_type === "App\ClinicalCenterAdmin";
+    }
 
+    public function decline()
+    {
+        return auth()->user()->userable_type === "App\ClinicalCenterAdmin";
     }
 
 
