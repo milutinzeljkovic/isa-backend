@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\PatientService;
+
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        
+        $this->app->bind(
+            'App\Services\IPatientService',
+            PatientService::class
+        );
     }
 }
