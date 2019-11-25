@@ -204,6 +204,12 @@ class UserService
 
     public function registerMedicalStaff(array $userData)
     {
+        //clinic_id
+        $currentUser = Auth::user();
+
+        $clinicAdmin = $currentUser->userable()->get()[0];
+
+
         $user = new User;
         $user->email = array_get($userData, 'email');
         $user->name = array_get($userData, 'name');
@@ -223,6 +229,7 @@ class UserService
 
         if($role === 'nurse'){
             $nurse = new Nurse();
+            $nurse->clinic_id = $clinicAdmin->clinic_id;
             $nurse->save();
             $nurse->user()->save($user);
 
@@ -230,8 +237,8 @@ class UserService
         }
 
         if($role === 'doctor'){
-
             $doctor = new Doctor();
+            $doctor->clinic_id = $clinicAdmin->clinic_id;
             $doctor->save();
             $doctor->user()->save($user);
             
