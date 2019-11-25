@@ -35,6 +35,12 @@ class AuthController extends Controller
         return $this->userService->register($credentials);
     }
 
+    public function registerMedicalStaff(Request $request)
+    {
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address', 'role');
+        return $this->userService->registerMedicalStaff($credentials);
+    }
+
     /**
      * Get a JWT token via given credentials.
      *
