@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Crypt;
 use App\User;
 use App\Patient;
 use App\ClinicalCenterAdmin;
+use App\Nurse;
+use App\Doctor;
+use App\ClinicAdmin;
+
 
 
 
@@ -40,6 +44,58 @@ class UserService
             
             if ($admin->user()->save($user)) {
                 return $this->login($userData);
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'nurse@nurse.rs'){
+            $nurse = new Nurse();
+            $nurse->save();
+
+            if($nurse->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'doctor@doctor.rs'){
+            $doctor = new Doctor();
+            $doctor->save();
+
+            if($doctor->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'clinic@clinic.rs'){
+            $ca = new ClinicAdmin();
+            $ca->save();
+
+            if($ca->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'nurse@nurse.rs'){
+            $nurse = new Nurse();
+            $nurse->save();
+
+            if($nurse->user()->save($user)){
+                return $this->login($userData);
+ 
             }
 
             return response()->json(['error' => 'Something terrible happened'], 500);
