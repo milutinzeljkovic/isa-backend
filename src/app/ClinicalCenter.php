@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClinicalCenter extends Model
 {
+    protected $fillable = [
+        'name'
+    ];
+
     public function clinicalCenterAdmins()
     {
         return $this->hasMany('App\ClinicalCenterAdmin');
