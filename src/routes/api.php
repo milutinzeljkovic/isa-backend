@@ -37,3 +37,10 @@ Route::group([
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
 });
+
+Route::group([
+    'middleware' => ['api', 'jsonify'],
+    'prefix' => 'locations'
+],function ($router){
+    Route::get('','LocationController@searchLocation');
+});
