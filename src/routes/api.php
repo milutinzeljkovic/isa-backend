@@ -39,6 +39,15 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'clinics'
+], function ($router){
+    Route::get('','ClinicController@index');
+    Route::post('','ClinicController@store');
+
+});
+
+Route::group([
     'middleware' => ['api', 'jsonify'],
     'prefix' => 'locations'
 ],function ($router){
