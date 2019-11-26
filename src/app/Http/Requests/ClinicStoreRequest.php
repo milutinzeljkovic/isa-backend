@@ -28,7 +28,9 @@ class ClinicStoreRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'required',
-            'address' => 'required'
+            'address' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
         ];
     }
 }
