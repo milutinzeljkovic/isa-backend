@@ -9,6 +9,7 @@ use App\ClinicalCenterAdmin;
 use App\Nurse;
 use App\Doctor;
 use App\ClinicAdmin;
+use Auth;
 
 
 
