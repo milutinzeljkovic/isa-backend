@@ -20,6 +20,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('register', 'Auth\AuthController@register');
+    Route::post('register/staff', 'Auth\AuthController@registerMedicalStaff');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
@@ -31,6 +32,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'patients'
 ], function ($router){
+    
+    Route::get('clinic', 'PatientsController@getClinicsPatients');
     Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
     Route::get('accept/{id}', 'PatientsController@accept')->middleware('can:accept,App\Patient');
     Route::get('decline/{id}', 'PatientsController@decline')->middleware('can:decline,App\Patient');

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserUpdateRequest;
 use App\Mail\ActivateMail;
 use App\Mail\DeclineMail;
+use App\Services\IPatientService;
 
 use Illuminate\Support\Facades\Crypt;
 
@@ -15,6 +16,12 @@ use Illuminate\Support\Facades\Crypt;
 class PatientsController extends Controller
 {
     //
+    private $_patientService;
+
+    public function __construct(IPatientService $patientService)
+    {
+        $this->_patientService = $patientService;
+    }
 
     public function view($id)
     {
@@ -57,6 +64,10 @@ class PatientsController extends Controller
     function getPatients(){
         $patients = User::where('userable_type',"App\Patient")->where('confirmed',0)->get();
         return $patients;
+    }
+
+    function getClinicsPatients(){
+        return $this->_patientService->getPatientsByClinic();
     }
 
 }

@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Crypt;
 use App\User;
 use App\Patient;
 use App\ClinicalCenterAdmin;
+use App\Nurse;
+use App\Doctor;
+use App\ClinicAdmin;
+
 
 
 
@@ -40,6 +44,58 @@ class UserService
             
             if ($admin->user()->save($user)) {
                 return $this->login($userData);
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'nurse@nurse.rs'){
+            $nurse = new Nurse();
+            $nurse->save();
+
+            if($nurse->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'doctor@doctor.rs'){
+            $doctor = new Doctor();
+            $doctor->save();
+
+            if($doctor->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'clinic@clinic.rs'){
+            $ca = new ClinicAdmin();
+            $ca->save();
+
+            if($ca->user()->save($user)){
+                return $this->login($userData);
+ 
+            }
+
+            return response()->json(['error' => 'Something terrible happened'], 500);
+
+        }
+
+        if($user->email == 'nurse@nurse.rs'){
+            $nurse = new Nurse();
+            $nurse->save();
+
+            if($nurse->user()->save($user)){
+                return $this->login($userData);
+ 
             }
 
             return response()->json(['error' => 'Something terrible happened'], 500);
@@ -146,6 +202,50 @@ class UserService
         return \Auth::guard();
     }
 
+    public function registerMedicalStaff(array $userData)
+    {
+        //clinic_id
+        $currentUser = Auth::user();
 
+        $clinicAdmin = $currentUser->userable()->get()[0];
+
+
+        $user = new User;
+        $user->email = array_get($userData, 'email');
+        $user->name = array_get($userData, 'name');
+        $user->last_name = array_get($userData, 'last_name');
+        $user->ensurance_id = array_get($userData, 'ensurance_id');
+        $user->phone_number = array_get($userData, 'phone_number');
+        $user->last_name = array_get($userData, 'last_name');
+        $user->address = array_get($userData, 'address');
+        $user->city = array_get($userData, 'city');
+        $user->state = array_get($userData, 'state');
+        $user->password = \Hash::make(array_get($userData, 'password'));
+        $user->confirmed = 1;
+        $user->activated = 1;
+
+
+        $role = array_get($userData, 'role');
+
+        if($role === 'nurse'){
+            $nurse = new Nurse();
+            $nurse->clinic_id = $clinicAdmin->clinic_id;
+            $nurse->save();
+            $nurse->user()->save($user);
+
+            return response()->json(['created' => 'Nurse has been registered'], 201);
+        }
+
+        if($role === 'doctor'){
+            $doctor = new Doctor();
+            $doctor->clinic_id = $clinicAdmin->clinic_id;
+            $doctor->save();
+            $doctor->user()->save($user);
+            
+            return response()->json(['created' => 'Doctor has been registered'], 201);
+        }
+
+        return response()->json(['error' => 'Something terrible happened'], 500);
+    }
 
 }
