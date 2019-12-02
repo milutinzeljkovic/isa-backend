@@ -6,6 +6,11 @@ use App\Services\PatientService;
 
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\ClinicService;
+use Illuminate\Support\Facades\Log;
+use DB;
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        DB::listen(function ($query) {
+            \Log::info(
+                $query->sql, $query->bindings, $query->time
+            );
+        });
     }
 
     /**
@@ -28,8 +37,14 @@ class AppServiceProvider extends ServiceProvider
     {
         
         $this->app->bind(
+         //   'App\Services\IPatientService',
+          //  PatientService::class,
+            'App\Services\IClinicService',
+            ClinicService::class
+        );
+        $this->app->bind(
             'App\Services\IPatientService',
-            PatientService::class
+            PatientService::class,
         );
     }
 }

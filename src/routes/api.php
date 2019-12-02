@@ -41,3 +41,18 @@ Route::group([
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
 });
 
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'clinics'
+], function ($router){
+    Route::get('','ClinicController@index');
+    Route::post('','ClinicController@store');
+    
+});
+
+Route::group([
+    'middleware' => ['api', 'jsonify'],
+    'prefix' => 'locations'
+],function ($router){
+    Route::get('','LocationController@searchLocation');
+});
