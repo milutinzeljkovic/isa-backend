@@ -217,7 +217,6 @@ class UserService
         $user->last_name = array_get($userData, 'last_name');
         $user->ensurance_id = array_get($userData, 'ensurance_id');
         $user->phone_number = array_get($userData, 'phone_number');
-        $user->last_name = array_get($userData, 'last_name');
         $user->address = array_get($userData, 'address');
         $user->city = array_get($userData, 'city');
         $user->state = array_get($userData, 'state');
@@ -248,5 +247,31 @@ class UserService
 
         return response()->json(['error' => 'Something terrible happened'], 500);
     }
+
+    public function registerClinicAdmin(array $userData, $clinic_id)
+    {
+
+        $user = new User;
+        $user->email = array_get($userData, 'email');
+        $user->name = array_get($userData, 'name');
+        $user->last_name = array_get($userData, 'last_name');
+        $user->ensurance_id = array_get($userData, 'ensurance_id');
+        $user->phone_number = array_get($userData, 'phone_number');
+        $user->address = array_get($userData, 'address');
+        $user->city = array_get($userData, 'city');
+        $user->state = array_get($userData, 'state');
+        $user->password = \Hash::make(array_get($userData, 'password'));
+        $user->confirmed = 1;
+        $user->activated = 1;
+
+        $clinicAdmin = new ClinicAdmin();
+        $clinicAdmin->clinic_id = $clinic_id;
+        $clinicAdmin->save();
+        $clinicAdmin->user()->save($user);
+        
+        return response()->json(['created' => 'Clinic admin has been registered'], 201);
+    }
+
+
 
 }
