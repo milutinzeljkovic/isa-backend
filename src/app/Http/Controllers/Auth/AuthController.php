@@ -51,7 +51,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        \Slack::to('#isa-logs')->send('new login attempt');
+     //   \Slack::to('#isa-logs')->send('new login attempt');
 
         $credentials = $request->only('email', 'password');
 

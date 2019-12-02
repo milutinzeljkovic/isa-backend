@@ -37,10 +37,14 @@ class AppServiceProvider extends ServiceProvider
     {
         
         $this->app->bind(
-            'App\Services\IPatientService',
-            PatientService::class,
+         //   'App\Services\IPatientService',
+          //  PatientService::class,
             'App\Services\IClinicService',
             ClinicService::class
+        );
+        $this->app->bind(
+            'App\Services\IPatientService',
+            PatientService::class,
         );
     }
 }

@@ -14,9 +14,6 @@ services:
         - mysqldata:/var/lib/mysql
     networks:
         - boilerplatenet
-
-
-
   nginx-php:
     build:
         context: .
@@ -31,10 +28,24 @@ services:
         - ./config/default.conf:/opt/docker/etc/nginx/vhost.conf
     networks:
         - boilerplatenet
+
+  redis:
+    image: 'redis:4-alpine'
+    volumes:
+     - redisdata:/data
+    command: redis-server --requirepass root
+    ports:
+      - '6379:6379'
+    environment:
+        REDIS_PASSWORD: root
+    networks:
+     - boilerplatenet
     
 
 volumes:
   mysqldata:
+  redisdata:
+
 
 networks:
   boilerplatenet:
