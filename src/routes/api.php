@@ -44,7 +44,7 @@ Route::group([
 ], function ($router){
     Route::get('','ClinicController@index');
     Route::post('','ClinicController@store');
-
+    
 });
 
 Route::group([

@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\ClinicService;
+use Illuminate\Support\Facades\Log;
+use DB;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +18,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        DB::listen(function ($query) {
+            \Log::info(
+                $query->sql, $query->bindings, $query->time
+            );
+        });
     }
 
     /**

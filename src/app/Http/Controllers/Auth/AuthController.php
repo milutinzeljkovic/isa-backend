@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\RegisterApiRequest;
 use App\Http\Controllers\Controller;
@@ -44,6 +45,8 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        \Slack::to('#isa-logs')->send('new login attempt');
+
         $credentials = $request->only('email', 'password');
 
         return $this->userService->login($credentials);
