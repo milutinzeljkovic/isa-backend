@@ -8,7 +8,8 @@ class Appointment extends Model
 {
     protected $fillable = [
         'date',
-        'price'
+        'price',
+        'done'
     ];
 
     public function appointmentType()

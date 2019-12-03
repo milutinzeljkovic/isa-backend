@@ -9,12 +9,16 @@ use App\Clinic;
 
 class ClinicService implements IClinicService
 {
-    public function searchClinic()
+    public function searchClinic($name)
     {
-        $clinics = Redis::get('clinics');
+        $clinics = null;
+        //Redis::get('clinics');
         if($clinics == null)
         {
-            $clinics = Clinic::all();
+            if($name != null)
+                $clinics = Clinic::where('name', 'like', '%'.$name.'%')->get();
+            else
+                $clinics = Clinic::all();
             Redis::set('clinics', $clinics);
             return $clinics;
         }

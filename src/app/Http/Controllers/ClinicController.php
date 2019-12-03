@@ -8,7 +8,7 @@ use App\Http\Requests\ClinicStoreRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use App\Services\IClinicService;
-
+use Carbon\Carbon;
 
 class ClinicController extends Controller
 {
@@ -20,8 +20,8 @@ class ClinicController extends Controller
     }
 
     public function index(Request $request)
-    {
-        return $this->_clinicService->searchClinic();
+    {   
+        return $this->_clinicService->searchClinic($request->input('name'));
     }
 
     public function store(ClinicStoreRequest $request)
