@@ -31,13 +31,15 @@ class ClinicController extends Controller
     
     public function doctors(Clinic $clinic)
     {
-        $a=array();
+        $doctors = $clinic->doctors()->with(['user', 'appointments'])->get();
+        return $doctors;
+
+       /* $a=array();
         $doctors = $clinic->doctors()->get();
         $collection = collect($doctors);
         foreach ($doctors as $doctor) {
-            array_push($a,$doctor->user()->get()[0]);
-
+            array_push($a,$doctor->with('user')->get()[0]);
         }
-        return $a;
+        return $a;*/
     }
 }
