@@ -66,3 +66,17 @@ Route::group([
 ],function ($router){
     Route::get('{id}','DoctorController@show');
 });
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'medicine'
+],function ($router){
+    Route::post('add','MedicineController@store');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'diagnose'
+],function ($router){
+    Route::post('add','DiagnoseController@store');
+});
