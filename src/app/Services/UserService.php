@@ -37,7 +37,7 @@ class UserService
         $user->city = array_get($userData, 'city');
         $user->state = array_get($userData, 'state');
         $user->password = \Hash::make(array_get($userData, 'password'));
-
+        $user->has_loggedin = 1;
         if($user->email == 'admin@admin.rs')
         {
             $admin = new ClinicalCenterAdmin();
@@ -142,7 +142,6 @@ class UserService
             return response()->json(['error' => 'account not activated'], 401);
         }
         
-
         if ($token = $this->guard()->attempt($userData)) {
             return $this->respondWithToken($token);
         }
@@ -270,6 +269,49 @@ class UserService
         $clinicAdmin->user()->save($user);
         
         return response()->json(['created' => 'Clinic admin has been registered'], 201);
+    }
+
+    public function registerClinicalCenterAdmin(array $userData)
+    {
+        $currentUser = Auth::user();
+
+        $clinicalCenterAdmin = $currentUser->userable()->get()[0];
+
+
+        $user = new User;
+        $user->email = array_get($userData, 'email');
+        $user->name = array_get($userData, 'name');
+        $user->last_name = array_get($userData, 'last_name');
+        $user->ensurance_id = array_get($userData, 'ensurance_id');
+        $user->phone_number = array_get($userData, 'phone_number');
+        $user->address = array_get($userData, 'address');
+        $user->city = array_get($userData, 'city');
+        $user->state = array_get($userData, 'state');
+        $user->password = \Hash::make(array_get($userData, 'password'));
+        $user->confirmed = 1;
+        $user->activated = 1;
+
+        $newClinicalCenterAdmin = new ClinicalCenterAdmin();
+        $newClinicalCenterAdmin->clinical_center_id = $clinicalCenterAdmin->clinical_center_id;
+        $newClinicalCenterAdmin->save();
+        $newClinicalCenterAdmin->user()->save($user);
+        
+        return response()->json(['created' => 'Clinical center admin has been registered'], 201);
+    }
+
+    public function changePassword(array $userData,array $newPassword){
+        $user = User::where('email',array_get($userData, 'email'))->first();
+        $password = array_get($userData, 'password');
+        if (\Hash::check($password, $user->password)) {
+            $user->password = \Hash::make(array_get($newPassword, 'new_password'));
+            $user->has_loggedin = 1;
+            $user->save();
+
+            return response()->json(['changed' => 'Password has been changed'], 201);
+
+        }
+
+        return response()->json(['error' => 'Wrong old password'], 401);
     }
 
 

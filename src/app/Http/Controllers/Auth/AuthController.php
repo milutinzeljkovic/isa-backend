@@ -48,6 +48,12 @@ class AuthController extends Controller
         return $this->userService->registerClinicAdmin($credentials, $clinic_id);
     }
 
+    public function registerClinicalCenterAdmin(RegisterApiRequest $request)
+    {
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address');
+        return $this->userService->registerClinicalCenterAdmin($credentials);
+    }
+
 
 
     /**
@@ -64,6 +70,15 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         return $this->userService->login($credentials);
+    }
+
+    public function changePassword(Request $request){
+
+        $credentials = $request->only('email', 'password');
+        $newPassword = $request->only( 'new_password');
+        return $this->userService->changePassword($credentials, $newPassword);
+
+
     }
 
     /**
