@@ -7,6 +7,7 @@ use App\User;
 use App\Patient;
 use App\ClinicalCenterAdmin;
 use App\Nurse;
+use Auth;
 use App\Doctor;
 use App\ClinicAdmin;
 use Auth;

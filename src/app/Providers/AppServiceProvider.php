@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Services\PatientService;
-
-
 use Illuminate\Support\ServiceProvider;
 use App\Services\ClinicService;
+use App\Services\PatientService;
+use App\Services\DoctorService;
+
 use Illuminate\Support\Facades\Log;
 use DB;
 
@@ -37,14 +37,17 @@ class AppServiceProvider extends ServiceProvider
     {
         
         $this->app->bind(
-         //   'App\Services\IPatientService',
-          //  PatientService::class,
             'App\Services\IClinicService',
             ClinicService::class
         );
         $this->app->bind(
             'App\Services\IPatientService',
             PatientService::class,
+        );
+
+        $this->app->bind(
+            'App\Services\IDoctorService',
+            DoctorService::class
         );
     }
 }

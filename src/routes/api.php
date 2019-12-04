@@ -50,7 +50,7 @@ Route::group([
 ], function ($router){
     Route::get('','ClinicController@index');
     Route::post('','ClinicController@store');
-    
+    Route::get('/doctors/{clinic}','ClinicController@doctors');
 });
 
 Route::group([
@@ -58,4 +58,11 @@ Route::group([
     'prefix' => 'locations'
 ],function ($router){
     Route::get('','LocationController@searchLocation');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'doctors'
+],function ($router){
+    Route::get('{id}','DoctorController@show');
 });
