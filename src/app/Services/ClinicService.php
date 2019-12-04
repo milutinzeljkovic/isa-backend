@@ -16,9 +16,9 @@ class ClinicService implements IClinicService
         if($clinics == null)
         {
             if($name != null)
-                $clinics = Clinic::where('name', 'like', '%'.$name.'%')->get();
+                $clinics = Clinic::where('name', 'like', '%'.$name.'%')->with('appointmentTypes')->get();
             else
-                $clinics = Clinic::all();
+                $clinics = Clinic::with('appointmentTypes')->get();
             Redis::set('clinics', $clinics);
             return $clinics;
         }
