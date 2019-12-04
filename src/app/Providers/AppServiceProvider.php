@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Services\ClinicService;
 use App\Services\PatientService;
 use App\Services\DoctorService;
+use App\Services\MedicineService;
+use App\Services\DiagnoseService;
 
 use Illuminate\Support\Facades\Log;
 use DB;
@@ -48,6 +50,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Services\IDoctorService',
             DoctorService::class
+        );
+
+        $this->app->bind(
+            'App\Services\IMedicineService',
+            MedicineService::class
+        );
+
+        $this->app->bind(
+            'App\Services\IDiagnoseService',
+            DiagnoseService::class
         );
     }
 }
