@@ -10,7 +10,6 @@ use App\Nurse;
 use Auth;
 use App\Doctor;
 use App\ClinicAdmin;
-use Auth;
 
 
 
