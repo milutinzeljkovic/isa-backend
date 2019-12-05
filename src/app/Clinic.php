@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Clinic extends Model
 {
     protected $fillable = [
-        'name', 'address', 'description'
+        'name', 'address', 'description', 'lat', 'lng'
     ];
 
     public function patients()
@@ -44,7 +44,7 @@ class Clinic extends Model
 
     public function appointments()
     {
-        return $this->hasMany('App/Appointment');
+        return $this->hasMany('App\Appointment');
     }
 
     public function clinicalCenter()
