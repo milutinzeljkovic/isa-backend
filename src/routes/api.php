@@ -59,3 +59,13 @@ Route::group([
 ],function ($router){
     Route::get('','LocationController@searchLocation');
 });
+
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'clinicAdmin'
+], function ($router){
+    
+    Route::get('doctors', 'ClinicAdminController@getAllDoctors');
+    Route::get('facilities, ClinicAdminController@getAllFacilities');
+});

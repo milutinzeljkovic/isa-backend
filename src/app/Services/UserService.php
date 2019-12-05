@@ -146,7 +146,7 @@ class UserService
             return $this->respondWithToken($token);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Incorrect credentials'], 401);
     }
 
     /**
