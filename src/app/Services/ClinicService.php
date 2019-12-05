@@ -28,7 +28,13 @@ class ClinicService implements IClinicService
 
     public function addClinic($clinic)
     {
+        $currentUser = Auth::user();
+
+        $clinicalCenterAdmin = $currentUser->userable()->get()[0];
+
         $clinic = Clinic::create($clinic);
+        $clinic->clinical_center_id = $clinicalCenterAdmin->clinical_center_id;
+        $clinic->save();
         $clinics = Clinic::all();
         Redis::set('clinics',$clinics);
 

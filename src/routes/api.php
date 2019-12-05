@@ -19,8 +19,11 @@ Route::group([
     'middleware' => ['api', 'jsonify'],
     'prefix' => 'auth'
 ], function ($router) {
+    Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('register', 'Auth\AuthController@register');
     Route::post('register/staff', 'Auth\AuthController@registerMedicalStaff');
+    Route::post('register/clinic-admin/{clinic_id}', 'Auth\AuthController@registerClinicAdmin');
+    Route::post('register/clinical-center-admin', 'Auth\AuthController@registerClinicalCenterAdmin');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
@@ -62,4 +65,18 @@ Route::group([
     'prefix' => 'doctors'
 ],function ($router){
     Route::get('{id}','DoctorController@show');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'medicine'
+],function ($router){
+    Route::post('add','MedicineController@store');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'diagnose'
+],function ($router){
+    Route::post('add','DiagnoseController@store');
 });
