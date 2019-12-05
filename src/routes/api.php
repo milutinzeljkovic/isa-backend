@@ -80,3 +80,12 @@ Route::group([
 ],function ($router){
     Route::post('add','DiagnoseController@store');
 });
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'clinicAdmin'
+], function ($router){
+    
+    Route::get('doctors', 'ClinicAdminController@getAllDoctors');
+    Route::get('facilities, ClinicAdminController@getAllFacilities');
+});
