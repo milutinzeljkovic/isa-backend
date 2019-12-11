@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Appointment extends Model
 {
+
+    use OptimisticLocking;
+
     protected $fillable = [
         'date',
         'price',
