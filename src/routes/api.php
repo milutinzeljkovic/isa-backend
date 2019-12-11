@@ -94,7 +94,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'prescriptions'
 ], function ($router){
-    
-    Route::put('{id}', 'PrescriptionController@update');
+    Route::get('', 'PrescriptionController@getPrescriptions');
+
+    Route::put('check/{id}', 'PrescriptionController@update');
 });
 
