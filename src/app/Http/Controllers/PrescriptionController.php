@@ -79,6 +79,11 @@ class PrescriptionController extends Controller
         return $prescrption;
     }
 
+    function getPrescriptions(){
+        $prescriptions = Prescription::where('nurse_id',null)->get();
+        return $prescriptions;
+    }
+
     /**
      * Remove the specified resource from storage.
      *
