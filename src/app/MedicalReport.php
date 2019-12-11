@@ -23,5 +23,10 @@ class MedicalReport extends Model
     {
         return $this->hasOne('App\Therapy');
     }
+
+    public function prescriptions()
+    {
+        return $this->hasMany('App\Prescription');
+    }
     
 }
