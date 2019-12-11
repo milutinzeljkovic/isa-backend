@@ -89,3 +89,12 @@ Route::group([
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
     Route::get('facilities, ClinicAdminController@getAllFacilities');
 });
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'prescriptions'
+], function ($router){
+    
+    Route::put('{id}', 'PrescriptionController@update');
+});
+
