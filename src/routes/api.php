@@ -89,3 +89,28 @@ Route::group([
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
     Route::get('facilities, ClinicAdminController@getAllFacilities');
 });
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'operatingRoom'
+], function ($router){
+    
+    Route::post('add', 'OperatingRoomController@store');
+    Route::get('get', 'OperatingRoomController@getOpRooms');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'appointmentType'
+],function ($router){
+    Route::post('add','AppointmentTypeController@store');
+    Route::get('get', 'AppointmentTypeController@getAllAppTypes');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'appointment'
+],function ($router){
+    Route::post('add','AppointmentController@store');
+});
+
