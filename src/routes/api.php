@@ -42,6 +42,7 @@ Route::group([
     Route::get('decline/{id}', 'PatientsController@decline')->middleware('can:decline,App\Patient');
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
+    Route::get('search', 'PatientsController@searchPatients');
 });
 
 Route::group([
@@ -87,7 +88,7 @@ Route::group([
 ], function ($router){
     
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
-    Route::get('facilities, ClinicAdminController@getAllFacilities');
+    Route::get('facilities', 'ClinicAdminController@getAllFacilities');
 });
 
 Route::group([
@@ -97,5 +98,29 @@ Route::group([
     Route::get('', 'PrescriptionController@getPrescriptions');
 
     Route::put('check/{id}', 'PrescriptionController@update');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'operatingRoom'
+], function ($router){
+    
+    Route::post('add', 'OperatingRoomController@store');
+    Route::get('get', 'OperatingRoomController@getOpRooms');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'appointmentType'
+],function ($router){
+    Route::post('add','AppointmentTypeController@store');
+    Route::get('get', 'AppointmentTypeController@getAllAppTypes');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'appointment' 
+],function ($router){
+    Route::post('add','AppointmentController@store');
 });
 

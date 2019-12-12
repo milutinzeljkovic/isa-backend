@@ -5,6 +5,7 @@ use App\User;
 use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\PatientsRequest;
 use App\Mail\ActivateMail;
 use App\Mail\DeclineMail;
 use App\Services\IPatientService;
@@ -68,6 +69,11 @@ class PatientsController extends Controller
 
     function getClinicsPatients(){
         return $this->_patientService->getPatientsByClinic();
+    }
+
+    function searchPatients(PatientsRequest $request){
+        $credentials = $request->only('name', 'last_name', 'ensurance_id');
+        return $this->_patientService->searchPatients($request->validated());
     }
 
 }
