@@ -42,6 +42,7 @@ Route::group([
     Route::get('decline/{id}', 'PatientsController@decline')->middleware('can:decline,App\Patient');
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
+    Route::get('search', 'PatientsController@searchPatients');
 });
 
 Route::group([
@@ -87,7 +88,7 @@ Route::group([
 ], function ($router){
     
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
-    Route::get('facilities, ClinicAdminController@getAllFacilities');
+    Route::get('facilities', 'ClinicAdminController@getAllFacilities');
 });
 
 Route::group([

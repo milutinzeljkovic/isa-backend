@@ -19,8 +19,7 @@ class OperatingRoomService implements IOperatingRoomService
         $opRoom->name = array_get($operatingRoomData, 'name');
         $opRoom->number = array_get($operatingRoomData, 'number');
         $opRoom->clinic_id = $clinicAdmin->clinic_id;
-        $opRoom->reserved = 0; 
-        $opRoom->appointment_id = 0;
+        $opRoom->reserved = 0;
         $opRoom->save();
        
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AppointmentService;
+use App\Services\IAppointmentService;
+use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function __construct(AppointmentService $appointmentService)
+    public function __construct(IAppointmentService $appointmentService)
     {
         $this->_appointmentService = $appointmentService;
     }
