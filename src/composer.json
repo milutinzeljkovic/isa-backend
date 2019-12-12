@@ -13,6 +13,7 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "predis/predis": "^1.1",
+        "reshadman/laravel-optimistic-locking": "^1.1",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
