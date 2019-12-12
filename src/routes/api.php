@@ -110,7 +110,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
-    'prefix' => 'appointment'
+    'prefix' => 'appointment' 
 ],function ($router){
     Route::post('add','AppointmentController@store');
 });
