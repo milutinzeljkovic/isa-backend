@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\DB;
 
 use App\Appointment;
 
@@ -19,36 +20,44 @@ class OptimisticLockingTest extends TestCase
      */
     public function testExample()
     {
-        //prvi zakazuje pregled
-       /* $truth = Appointment::create([
-            'date' => '2020-01-01 11:03:08',
-            'price' => '5000',
-            'clinic_id' => '1',
-            'doctor_id' => '1'
-        ]);*/
-
-        $truth = Appointment::find('7');
-
-        $first = Appointment::find($truth->id);
-        $second = Appointment::find($truth->id);
+        $input = array('id'=> '7');
+        $user1 = '2';
+        $user2 = '5';
         
+        $this->updateAppointment1($input, $user1);
+        $this->updateAppointment2($input, $user2);
 
-        $this->expectException(StaleModelLockingException::class);
+        $appointment = DB::table('appointments')->where('id','7')->first();
+        $this->assertEquals('2', $appointment->patient_id);
 
-        $first->patient_id = '2';
-        $this->assertTrue($first->save());
+    }
 
-        try {
-            $second->patient_id = '5';
-            $second->save();
-        } catch (StaleModelLockingException $e) {
-            $fetchedAfterFirstUpdate = Appointment::find('7');
-            $this->assertEquals($fetchedAfterFirstUpdate->user_id, '2');
-            $this->assertEquals($fetchedAfterFirstUpdate->lock_version, $first->lock_version);
-            $this->assertEquals($fetchedAfterFirstUpdate->lock_version, $truth->lock_version + 1);
-            throw $e;
-        }
+    public function updateAppointment1($input, $id)
+    {
+        DB::transaction(function () {
+            $appointment = DB::table('appointments')->where('id','7')->first();
 
+            DB::table('appointments')
+                ->where('id', '7')
+                ->where('lock_version', $appointment->lock_version)
+                ->update(['patient_id' => '2']);
+            
+            DB::table('appointments')
+                ->where('id', '7')
+                ->update(['lock_version' => $appointment->lock_version +1]);
+            
+        });
+    }
+    public function updateAppointment2($input, $id)
+    {
+        DB::transaction(function () {
+            $appointment = DB::table('appointments')->where('id','7')->first();
 
+            DB::table('appointments')
+                ->where('id', '7')
+                ->where('lock_version', '9')
+                ->update(['patient_id' => '5']);
+
+        });
     }
 }

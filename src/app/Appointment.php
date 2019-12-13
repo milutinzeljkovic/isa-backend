@@ -10,10 +10,13 @@ class Appointment extends Model
 
     use OptimisticLocking;
 
+    
+
     protected $fillable = [
         'date',
         'price',
-        'done'
+        'done',
+        'lock_version'
     ];
 
     public function appointmentType()
