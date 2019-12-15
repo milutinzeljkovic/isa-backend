@@ -19,6 +19,8 @@ Route::group([
     'middleware' => ['api', 'jsonify'],
     'prefix' => 'auth'
 ], function ($router) {
+
+    Route::post('vacation', 'Auth\AuthController@sendRequestForVacation');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('register', 'Auth\AuthController@register');
     Route::post('register/staff', 'Auth\AuthController@registerMedicalStaff');

@@ -15,6 +15,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->morphTo();
     }
 
+    public function vacations()
+    {
+        return $this->hasMany('App\Vacation');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
