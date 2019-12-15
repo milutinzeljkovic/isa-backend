@@ -33,20 +33,17 @@ class PatientService implements IPatientService
 
         $name = array_get($searchParameters, 'name');
         $lastName = array_get($searchParameters, 'last_name');
-        $patientID = array_get($searchParameters, 'patientID');
-
+        $ensurance_id = array_get($searchParameters, 'ensurance_id');
 
         $patients = User::where('userable_type', 'App\Patient' )
-                        ->where(function ($query) use($name, $lastName, $patientID) {
+                        ->where(function ($query) use($name, $lastName, $ensurance_id) {
                             $query->where('name', 'like', '%'.$name.'%')
                                 ->where('last_name', 'like', '%'.$lastName.'%')
-                                ->where('ensurance_id', 'like', '%'.$patientID.'%');
+                                ->where('ensurance_id', 'like', '%'.$ensurance_id.'%');
                         })
                         ->get();
 
         
-
-
         return $patients;
     }
 

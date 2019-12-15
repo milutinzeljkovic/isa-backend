@@ -70,8 +70,9 @@ class PatientsController extends Controller
         return $this->_patientService->getPatientsByClinic();
     }
 
-    function searchPatients(Request $request){
-        $credentials = $request->only('name', 'last_name', 'patientID');
+    function searchPatients(Request $request)
+    {        
+        $credentials = $request->only('name', 'last_name', 'ensurance_id');
         return $this->_patientService->searchPatients($credentials);
     }
 
