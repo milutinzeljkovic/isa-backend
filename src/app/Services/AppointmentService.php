@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Services\IAppointmentService;
 use App\Appointment;
 use App\User;
+use App\Clinic;
 use App\Doctor;
+use Illuminate\Support\Facades\DB;
 use Auth;
 use DateTime;
 
@@ -30,5 +32,44 @@ class AppointmentService implements IAppointmentService
         $app->save();
        
         return response()->json(['created' => 'Appointment has been created'], 201);
+    }
+
+    public function reserve($appointment_id)
+    {
+        $user = Auth::user()->userable()->first();
+        $appointment = Appointment::find($appointment_id);
+        $clinic = Clinic::find($appointment->clinic_id);
+        $userClinics = $user->clinics()->get();
+        if($userClinics->contains('id',$clinic->id))
+        {
+            $user->clinics()->save($clinic);
+        }
+        $id = $user->id;
+
+        DB::transaction(function () use($appointment, $id){
+
+            DB::table('appointments')
+                ->where('id', $appointment->id)
+                ->where('lock_version', $appointment->lock_version)
+                ->update(['patient_id' => $id]);
+                
+            DB::table('appointments')
+                ->where('id', $appointment->id)
+                ->update(['lock_version' => $appointment->lock_version +1]);
+            
+        });
+
+        $updatedAppointment = Appointment::find($appointment_id);
+
+        if($id != $updatedAppointment->patient_id)
+        {
+            //neko je vec rezervisao
+        }
+        else
+        {
+            return $updatedAppointment;
+        }
+
+
     }
 }

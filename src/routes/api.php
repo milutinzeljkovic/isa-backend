@@ -127,5 +127,6 @@ Route::group([
     'prefix' => 'appointment' 
 ],function ($router){
     Route::post('add','AppointmentController@store');
+    Route::post('reserve/{id}', 'AppointmentController@reserve')->middleware('can:reserve,App\Appointment,id');
 });
 

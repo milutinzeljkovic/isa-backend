@@ -43,6 +43,11 @@ class AppointmentController extends Controller
         return $this->_appointmentService->addAppointment($request->validated());
     }
 
+    public function reserve($appointment_id)
+    {
+        return $this->_appointmentService->reserve($appointment_id);
+    }
+
     /**
      * Display the specified resource.
      *
