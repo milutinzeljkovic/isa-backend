@@ -81,6 +81,14 @@ class AuthController extends Controller
 
     }
 
+    public function sendRequestForVacation(Request $request){
+
+        $credentials = $request->only('from', 'to');
+        return $this->userService->sendRequestForVacation($credentials);
+
+
+    }
+
     /**
      * Get the authenticated User
      *

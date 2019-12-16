@@ -8,7 +8,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 class Appointment extends Model
 {
 
-    use OptimisticLocking;
+    //use OptimisticLocking;
 
     
 

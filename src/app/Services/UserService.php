@@ -10,6 +10,7 @@ use App\Nurse;
 use Auth;
 use App\Doctor;
 use App\ClinicAdmin;
+use App\Vacation;
 
 
 
@@ -312,6 +313,19 @@ class UserService
         }
 
         return response()->json(['error' => 'Wrong old password'], 401);
+    }
+
+    public function sendRequestForVacation(array $userData){
+        $currentUser = Auth::user();
+
+        $vacation = new Vacation;
+        $vacation->from = array_get($userData, 'from');
+        $vacation->to = array_get($userData, 'to');
+        $vacation->user_id = $currentUser->id;
+
+        $vacation->save();
+        return response()->json(['created' => 'Request for vacation has been created'], 201);
+
     }
 
 
