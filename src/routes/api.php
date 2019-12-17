@@ -130,3 +130,9 @@ Route::group([
     Route::post('reserve/{id}', 'AppointmentController@reserve')->middleware('can:reserve,App\Appointment,id');
 });
 
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'reactions'
+], function ($router){
+    Route::post('/{id}', 'ReactionController@store');
+});
