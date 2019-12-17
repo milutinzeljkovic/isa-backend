@@ -8,6 +8,8 @@ use App\Http\Requests\ClinicStoreRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use App\Services\IClinicService;
+use Illuminate\Support\Facades\DB;
+
 use Carbon\Carbon;
 
 class ClinicController extends Controller
@@ -31,7 +33,7 @@ class ClinicController extends Controller
     
     public function doctors(Clinic $clinic)
     {
-        $doctors = $clinic->doctors()->with(['user', 'appointments'])->get();
+      /*  $doctors = $clinic->doctors()->with(['user', 'appointments', 'appointments.operationsRoom'])->get();
         return $doctors;
 
        /* $a=array();
@@ -40,6 +42,22 @@ class ClinicController extends Controller
         foreach ($doctors as $doctor) {
             array_push($a,$doctor->with('user')->get()[0]);
         }
-        return $a;*/
+        return $a;
+        */
+        $result = $clinic->doctors()->with('user')->with(['appointments' => function ($q) {
+            $q->where('patient_id','=',null);
+                 
+        }])
+        ->get();
+
+        /*
+        $users = DB::table('doctors')
+                    ->join('users','doctors.id','=','users.userable_id')
+                    ->where('users.userable_type', '=', 'App\Doctor')
+                    ->where('doctors.clinic_id','=',$clinic->id)
+                    ->join('appointments','appointments.doctor_id', '=', 'doctors.id')
+                    ->get();
+        return $users;*/
+        return $result;
     }
 }
