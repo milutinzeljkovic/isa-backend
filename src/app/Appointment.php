@@ -31,7 +31,7 @@ class Appointment extends Model
 
     public function operationsRoom()
     {
-        return $this->hasOne('App\OperationsRoom');
+        return $this->belongsTo('App\OperationsRoom');
     }
 
     public function patient()

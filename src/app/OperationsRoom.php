@@ -14,9 +14,9 @@ class OperationsRoom extends Model
     {
         return $this->belongsTo('App\Clinic');
     }
-    public function appointment()
+    public function appointments()
     {
-        return $this->belongsTo('App\Appointment');
+        return $this->hasMany('App\Appointment');
     }
 
 }
