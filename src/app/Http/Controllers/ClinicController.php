@@ -46,7 +46,9 @@ class ClinicController extends Controller
         */
         $result = $clinic->doctors()->with('user')->with(['appointments' => function ($q) {
             $q->where('patient_id','=',null)
-                ->with('operationsRoom');
+                ->with('operationsRoom')
+                ->with('appointmentType')
+                ->with('doctor.user');
         }])
         ->get();
 
