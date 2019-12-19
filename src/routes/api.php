@@ -128,6 +128,7 @@ Route::group([
 ],function ($router){
     Route::post('add','AppointmentController@store');
     Route::post('reserve/{id}', 'AppointmentController@reserve')->middleware('can:reserve,App\Appointment,id');
+    Route::get('history/{id}','AppointmentController@patientHistory');
 });
 
 Route::group([
@@ -135,4 +136,5 @@ Route::group([
     'prefix' => 'reactions'
 ], function ($router){
     Route::post('/{id}', 'ReactionController@store');
+    Route::post('/doctor/{id}', 'ReactionController@storeDoctorRecension');
 });

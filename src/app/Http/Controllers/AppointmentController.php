@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Appointment;
 use App\Services\IAppointmentService;
 use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
@@ -91,5 +91,10 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function patientHistory($id)
+    {
+        return $this->_appointmentService->showPatientHistory($id);
     }
 }

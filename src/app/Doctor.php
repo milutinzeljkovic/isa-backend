@@ -20,4 +20,9 @@ class Doctor extends Model
     {
         return $this->hasMany('App\Appointment');
     }
+
+    public function recensions()
+    {
+        return $this->hasMany('App\Recension');
+    }
 }
