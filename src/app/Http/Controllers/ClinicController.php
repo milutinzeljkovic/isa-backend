@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Clinic;
 use App\Http\Requests\ClinicStoreRequest;
@@ -21,9 +22,14 @@ class ClinicController extends Controller
         $this->_clinicService = $clinicService;
     }
 
+    public function show($id)
+    {
+        return $this->_clinicService->showClinic($id);
+    }
+
     public function index(Request $request)
     {   
-        return $this->_clinicService->searchClinic($request->input('name'));
+        return $this->_clinicService->searchClinic($request->input('name'),$request->input('date'),$request->input('stars'), $request->input('address'), $request->input('appointment_type'));
     }
 
     public function store(ClinicStoreRequest $request)
@@ -31,35 +37,18 @@ class ClinicController extends Controller
         return $this->_clinicService->addClinic($request->validated());
     }
     
-    public function doctors(Clinic $clinic)
+    public function doctors(Clinic $clinic, Request $request)
     {
-      /*  $doctors = $clinic->doctors()->with(['user', 'appointments', 'appointments.operationsRoom'])->get();
-        return $doctors;
-
-       /* $a=array();
-        $doctors = $clinic->doctors()->get();
-        $collection = collect($doctors);
-        foreach ($doctors as $doctor) {
-            array_push($a,$doctor->with('user')->get()[0]);
-        }
-        return $a;
-        */
+       
         $result = $clinic->doctors()->with('user')->with(['appointments' => function ($q) {
             $q->where('patient_id','=',null)
+              ->where('date', '>', Carbon::createFromTimestamp(Carbon::now()->getTimestamp())->toDateTimeString())
                 ->with('operationsRoom')
                 ->with('appointmentType')
                 ->with('doctor.user');
         }])
         ->get();
 
-        /*
-        $users = DB::table('doctors')
-                    ->join('users','doctors.id','=','users.userable_id')
-                    ->where('users.userable_type', '=', 'App\Doctor')
-                    ->where('doctors.clinic_id','=',$clinic->id)
-                    ->join('appointments','appointments.doctor_id', '=', 'doctors.id')
-                    ->get();
-        return $users;*/
         return $result;
     }
 }

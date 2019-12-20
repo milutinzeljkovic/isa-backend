@@ -53,7 +53,9 @@ Route::group([
     'prefix' => 'clinics'
 ], function ($router){
     Route::get('','ClinicController@index');
+    Route::get('{id}','ClinicController@show');
     Route::post('','ClinicController@store');
+
     Route::get('/doctors/{clinic}','ClinicController@doctors');
 });
 

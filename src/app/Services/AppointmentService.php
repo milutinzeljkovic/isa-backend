@@ -27,7 +27,7 @@ class AppointmentService implements IAppointmentService
         $user = User::where('id',array_get($appointmentData,'doctor'))->get()[0];
         $doctor = $user->userable()->get()[0];
         $app->doctor_id = $doctor->id;
-        $app->operations_rooms_id = array_get($appointmentData, 'operations_rooms_id');
+        $app->operations_room_id = array_get($appointmentData, 'operations_room_id');
 
         $app->save();
        

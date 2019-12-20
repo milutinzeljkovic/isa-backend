@@ -16,7 +16,8 @@ class Appointment extends Model
         'date',
         'price',
         'done',
-        'lock_version'
+        'lock_version',
+        'operations_room_id'
     ];
 
     public function appointmentType()
