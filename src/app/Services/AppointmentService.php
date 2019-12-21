@@ -52,10 +52,12 @@ class AppointmentService implements IAppointmentService
                 ->where('id', $appointment->id)
                 ->where('lock_version', $appointment->lock_version)
                 ->update(['patient_id' => $id]);
-                
             DB::table('appointments')
                 ->where('id', $appointment->id)
                 ->update(['lock_version' => $appointment->lock_version +1]);
+            DB::table('appointments')
+                ->where('id', $appointment->id)
+                ->update(['date' => $appointment->date]);
             
         });
 
