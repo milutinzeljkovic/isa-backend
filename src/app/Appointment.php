@@ -8,12 +8,16 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 class Appointment extends Model
 {
 
-    use OptimisticLocking;
+    //use OptimisticLocking;
+
+    
 
     protected $fillable = [
         'date',
         'price',
-        'done'
+        'done',
+        'lock_version',
+        'operations_room_id'
     ];
 
     public function appointmentType()
@@ -28,7 +32,7 @@ class Appointment extends Model
 
     public function operationsRoom()
     {
-        return $this->hasOne('App\OperationsRoom');
+        return $this->belongsTo('App\OperationsRoom');
     }
 
     public function patient()

@@ -34,7 +34,7 @@ class ClinicAdminService implements IClinicAdminService
     }
 
 
-    function getClinicDetails()
+    function getAdminsClinic()
     {
         $user = Auth::user();
         $clinicAdmin = $user->userable()->get()[0];
@@ -42,6 +42,18 @@ class ClinicAdminService implements IClinicAdminService
         $clinic = Clinic::where('id', $clinicAdmin->clinic_id)->get()[0];
         return $clinic;
     }
-    
-    //function defineAvailableAppointment();
+
+    function updateClinic(array $newClinicData)
+    {
+        $clinic = Clinic::where('id', array_get($newClinicData, 'id'))->get()[0];
+
+        $clinic->name = array_get($newClinicData, 'name');
+        $clinic->description = array_get($newClinicData, 'description');
+        $clinic->clinical_center_id = array_get($newClinicData, 'clinic_center');
+        $clinic->address = array_get($newClinicData, 'address');
+
+        $clinic->save();
+
+        return response()->json(['updated' => 'Clinic has been updated'], 201);
+    }
 }

@@ -4,19 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OperationsRoom extends Model
+class Recension extends Model
 {
     protected $fillable = [
-        'name', 'number'
+        'clinic_id',
+        'patient_id',
+        'stars_count',
+        'doctor_id'
     ];
 
     public function clinic()
     {
         return $this->belongsTo('App\Clinic');
     }
-    public function appointments()
-    {
-        return $this->hasMany('App\Appointment');
-    }
 
+    public function doctor()
+    {
+        return $this->belongsTo('App\Doctor');
+    }
 }
