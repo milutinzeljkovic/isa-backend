@@ -34,7 +34,7 @@ class ClinicService implements IClinicService
                 $query->join('appointment_type_clinic', function ($join) use ($searchByType, $appointmentType){
                     $join->on('clinics.id', '=', 'appointment_type_clinic.clinic_id')
                     ->when($searchByType, function($query) use ($appointmentType){
-                        return $query->where('appointment_type_id', '=', $appointmentType);
+                        return $query->where('appointment_type_clinic.appointment_type_id', '=', $appointmentType);
                     });
                 });
             })
