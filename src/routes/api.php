@@ -71,6 +71,8 @@ Route::group([
     'prefix' => 'doctors'
 ],function ($router){
     Route::get('{id}','DoctorController@show');
+    Route::get('appointments/{id}', 'DoctorController@showDoctorAppointments');
+    Route::get('','DoctorController@index');
 });
 
 Route::group([

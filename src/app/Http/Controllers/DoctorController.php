@@ -21,9 +21,9 @@ class DoctorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(Request $request)
+    {  
+        return $this->_doctorService->searchDoctors($request->input('clinic_id'),$request->input('name'),$request->input('date'), $request->input('stars'), $request->input('appointment_type'));
     }
 
     /**
@@ -56,6 +56,11 @@ class DoctorController extends Controller
     public function show($id)
     {
         return $this->_doctorService->showDoctor($id);
+    }
+
+    public function showDoctorAppointments($id)
+    {
+        return $this->_doctorService->showDoctorsAppointments($id);
     }
 
     /**

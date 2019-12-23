@@ -20,7 +20,6 @@ class ClinicService implements IClinicService
         $searchByStars = ($stars == null ? false : true);
         $searchByAddress = ($address == null ? false : true);
         $searchByType = ($appointmentType == null ? false : true);
-
         $results = DB::table('clinics')
             ->when($searchByDate, function($query) use ($date, $searchByDate){
                 $query->join('appointments', function ($join) use ($searchByDate, $date){

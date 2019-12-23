@@ -51,4 +51,5 @@ class ClinicController extends Controller
 
         return $result;
     }
+
 }

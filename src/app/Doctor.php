@@ -25,4 +25,10 @@ class Doctor extends Model
     {
         return $this->hasMany('App\Recension');
     }
+
+    public function appointmentTypes()
+    {
+        return $this->belongsToMany('App\AppointmentType')
+                ->as('appointment_type_doctor');
+    }
 }
