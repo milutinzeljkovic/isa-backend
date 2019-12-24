@@ -22,6 +22,7 @@ class DoctorService implements IDoctorService
                 ->with('appointmentType')
                 ->with('doctor.user');
         }])
+        ->with('appointmentTypes')
         ->where('id',$id)
         ->first();
 

@@ -6,7 +6,9 @@ use App\Services\IAppointmentService;
 use App\Appointment;
 use App\User;
 use App\Clinic;
+use App\Price;
 use App\Doctor;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use DateTime;
@@ -65,7 +67,7 @@ class AppointmentService implements IAppointmentService
 
         if($id != $updatedAppointment->patient_id)
         {
-            //neko je vec rezervisao
+            return response('Error',400);
         }
         else
         {
@@ -74,6 +76,51 @@ class AppointmentService implements IAppointmentService
 
 
     }
+
+    function requestAppointment($id,$appointment)
+    {
+        $doctor = Doctor::find($id);
+        $user = $doctor->user()->first();
+        $app = $user
+                ->vacations()
+                ->where('from','<',array_get($appointment, 'date'))
+                ->where('to','>',array_get($appointment, 'date'))
+                ->get();
+        if($app->count() != 0)
+        {
+            return response('Could not reserve appointment form a given date', 200);
+        }
+        $doctorAppointments = $doctor
+                                ->appointments()
+                                ->where('date','=',array_get($appointment, 'date'))
+                                ->get();
+        if($doctorAppointments->count() != 0)
+        {
+            return response('Doctor is not free', 200);
+        }
+        
+        $price = Price::where('clinic_id','=',$doctor->clinic_id)
+                        ->where('appointment_type_id','=',array_get($appointment, 'appointment_type'))
+                        ->first();
+
+
+        $app = new Appointment();
+        $app->clinic_id = $doctor->clinic_id;
+        $app->date = array_get($appointment, 'date');
+        $app->price = $price->price;
+        $app->done = 0;
+        $app->appointment_type_id = array_get($appointment, 'appointment_type');
+        $app->doctor_id = $doctor->id;
+        $app->patient_id = Auth::user()->id;
+
+        $app->save();
+
+        return $app;
+    }
+
+
+
+
 
     public function showPatientHistory($id)
     {

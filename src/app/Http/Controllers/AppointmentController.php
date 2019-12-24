@@ -97,4 +97,10 @@ class AppointmentController extends Controller
     {
         return $this->_appointmentService->showPatientHistory($id);
     }
+
+    public function requestAppointment($id, Request $request)
+    {
+        return $this->_appointmentService->requestAppointment($id,$request->all());
+
+    }
 }

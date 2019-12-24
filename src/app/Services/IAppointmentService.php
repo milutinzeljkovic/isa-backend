@@ -8,4 +8,5 @@ interface IAppointmentService
     function addAppointment(array $appointmentData);
     function reserve($appointment_id);
     function showPatientHistory($id);
+    function requestAppointment($id,$appointment);
 }
