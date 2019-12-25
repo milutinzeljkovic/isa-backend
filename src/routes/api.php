@@ -37,7 +37,6 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'patients'
 ], function ($router){
-    
     Route::post('search', 'PatientsController@searchPatients');
     Route::get('clinic', 'PatientsController@getClinicsPatients');
     Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
@@ -46,6 +45,7 @@ Route::group([
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
     Route::get('show/{id}', 'PatientsController@view');
+    Route::get('medical-record/{id}', 'PatientsController@medicalRecord');
 });
 
 Route::group([
@@ -55,7 +55,6 @@ Route::group([
     Route::get('','ClinicController@index');
     Route::get('{id}','ClinicController@show');
     Route::post('','ClinicController@store');
-
     Route::get('/doctors/{clinic}','ClinicController@doctors');
 });
 

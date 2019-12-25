@@ -33,5 +33,9 @@ class MedicalReport extends Model
     {
         return $this->belongsTo('App\Doctor');
     }
+    public function appointment()
+    {
+        return $this->belongsTo('App\Appointment');
+    }
     
 }

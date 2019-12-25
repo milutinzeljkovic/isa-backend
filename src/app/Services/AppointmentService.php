@@ -124,6 +124,12 @@ class AppointmentService implements IAppointmentService
 
     public function showPatientHistory($id)
     {
-        return Appointment::where('patient_id',$id)->where('done',1)->get();
+        return Appointment::with(['doctor' => function($q){
+            $q->with('user');
+        }])
+            ->with(['appointmentType', 'operationsRoom', 'clinic'])
+            ->where('patient_id',$id)->where('done',1)->get();
+
     }
+
 }

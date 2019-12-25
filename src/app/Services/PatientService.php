@@ -7,6 +7,7 @@ use App\Clinic;
 use App\User;
 use Auth;
 use App\ClinicalCenterAdmin;
+use App\MedicalRecord;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -45,6 +46,27 @@ class PatientService implements IPatientService
 
         
         return $patients;
+    }
+
+    function getMedicalRecord($id)
+    {
+        return $medicalRecord = MedicalRecord::with('medicalDatas')
+            ->with(['medicalReports' => function($q) {
+                $q->with('diagnose')
+                  ->with('therapy')
+                  ->with('appointment')
+                  ->with(['doctor' => function($q) {
+                      $q->with('user');
+                  }])
+                  ->with(['prescriptions' => function($q){
+                    $q->with('medicine')
+                      ->with(['nurse' => function($q) {
+                        $q->with('user');
+                      }]);
+                  }]);
+
+        }])
+            ->where('patient_id',$id)->first();
     }
 
 }
