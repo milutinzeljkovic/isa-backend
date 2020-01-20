@@ -50,11 +50,17 @@ class PatientService implements IPatientService
 
     function getMedicalRecord($id)
     {
+        if(Auth::user()->userable_type != "App\Patient")
+        {
+            return [];
+        }
         return $medicalRecord = MedicalRecord::with('medicalDatas')
             ->with(['medicalReports' => function($q) {
                 $q->with('diagnose')
                   ->with('therapy')
-                  ->with('appointment')
+                  ->with(['appointment' => function($q) {
+                    $q->with('clinic');
+                  }])
                   ->with(['doctor' => function($q) {
                       $q->with('user');
                   }])

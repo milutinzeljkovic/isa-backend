@@ -124,6 +124,10 @@ class AppointmentService implements IAppointmentService
 
     public function showPatientHistory($id)
     {
+        if(Auth::user()->userable_type != "App\Patient")
+        {
+            return [];
+        }
         return Appointment::with(['doctor' => function($q){
             $q->with('user');
         }])
