@@ -15,6 +15,7 @@ class AlterAppointmentsTableAddDurationColumn extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             $table->string('duration')->nullable();
+            $table->boolean('approved')->default(-1);
         });
     }
 
@@ -27,7 +28,7 @@ class AlterAppointmentsTableAddDurationColumn extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             $table->dropColumn('duration')->nullable();
-            
+            $table->dropColumn('approved');
         });
     }
 }

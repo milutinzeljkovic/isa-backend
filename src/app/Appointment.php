@@ -17,7 +17,12 @@ class Appointment extends Model
         'price',
         'done',
         'lock_version',
-        'operations_room_id'
+        'operations_room_id',
+        'duration',
+    ];
+
+    protected $guarded = [
+        'approved'
     ];
 
     public function appointmentType()
