@@ -100,8 +100,8 @@ class AppointmentService implements IAppointmentService
         {
             return response('Doctor is not free', 200);
         }
-
-        $doctorAppointments = $doctor->appointments()->get();
+        
+        $doctorAppointments = $doctor->appointments()->where('date','>',Carbon::now())->get();
 
         $overlap = false;
         $appointmentDate = Carbon::parse(array_get($appointment, 'date'));
