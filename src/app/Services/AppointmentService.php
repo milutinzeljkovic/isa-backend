@@ -100,11 +100,30 @@ class AppointmentService implements IAppointmentService
         {
             return response('Doctor is not free', 200);
         }
+
+        $doctorAppointments = $doctor->appointments()->get();
+
+        $overlap = false;
+        $appointmentDate = Carbon::parse(array_get($appointment, 'date'));
+        foreach ($doctorAppointments as $a) {
+            $start = Carbon::parse($a->date);
+            $duration = $a->duration;
+            $end = Carbon::parse($start);
+            $end->addSeconds($duration*3600);
+            if($appointmentDate->greaterThanOrEqualTo($start) && $appointmentDate->lessThanOrEqualTo($end))
+            {
+                $overlap = true;
+            }
+        }
+
+        if($overlap)
+        {
+            return response('Appointment overlapping', 200);
+        }
         
         $price = Price::where('clinic_id','=',$doctor->clinic_id)
                         ->where('appointment_type_id','=',array_get($appointment, 'appointment_type'))
                         ->first();
-
 
         $app = new Appointment();
         $app->clinic_id = $doctor->clinic_id;
