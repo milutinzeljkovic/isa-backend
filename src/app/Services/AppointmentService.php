@@ -76,7 +76,6 @@ class AppointmentService implements IAppointmentService
             return $updatedAppointment;
         }
 
-
     }
 
     function requestAppointment($id,$appointment)
