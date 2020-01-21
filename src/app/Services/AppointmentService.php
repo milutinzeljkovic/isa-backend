@@ -81,11 +81,17 @@ class AppointmentService implements IAppointmentService
     //id doktora i pregled koji pacijent oce da rezervise
     function requestAppointment($id,$appointment)
     {
+        if(Carbon::parse(array_get($appointment, 'date')) < Carbon::now() || array_get($appointment,'appointment_type') == null)
+        {
+            return response('Bad request', 400);
+        }
+
         $doctor = Doctor::find($id);
         $user = $doctor->user()->first();
         //poklapanje sa godisnjnim odmorom
         $app = $user
                 ->vacations()
+                ->where('approved','=','1')
                 ->where('from','<',array_get($appointment, 'date'))
                 ->where('to','>',array_get($appointment, 'date'))
                 ->get();
@@ -96,16 +102,22 @@ class AppointmentService implements IAppointmentService
 
         //ako postoji pregled koji doktor treba da izvrsi a pocinje isto kad i zahtevani pregled
         $doctorAppointments = $doctor
-                                ->appointments()
-                                ->where('date','=',array_get($appointment, 'date'))
-                                ->get();
+            ->appointments()
+            ->where('date','=',array_get($appointment, 'date'))
+            ->get();
         if($doctorAppointments->count() != 0)
         {
             return response('Doctor is not free', 200);
         }
         
-        $doctorAppointments = $doctor->appointments()->where('date','>',Carbon::now())->get();
 
+        $doctorAppointments = $doctor
+            ->appointments()
+            ->where('date','>',Carbon::now())
+            ->where('approved','=','1')
+            ->get();
+
+        //provera preklapanja pocetka zahtevanog pregelda sa pregledom koji doktor treba da odrzi
         $overlap = false;
         $appointmentDate = Carbon::parse(array_get($appointment, 'date'));
         foreach ($doctorAppointments as $a) {
@@ -124,19 +136,21 @@ class AppointmentService implements IAppointmentService
             return response('Appointment overlapping', 200);
         }
         
+        //default cena za taj pregled
         $price = Price::where('clinic_id','=',$doctor->clinic_id)
-                        ->where('appointment_type_id','=',array_get($appointment, 'appointment_type'))
-                        ->first();
+            ->where('appointment_type_id','=',array_get($appointment, 'appointment_type'))
+            ->first();
 
         $app = new Appointment();
         $app->clinic_id = $doctor->clinic_id;
         $app->date = array_get($appointment, 'date');
         $app->price = $price->price;
+        //pending approval
+        $app->approved = 0;
         $app->done = 0;
         $app->appointment_type_id = array_get($appointment, 'appointment_type');
         $app->doctor_id = $doctor->id;
         $app->patient_id = Auth::user()->id;
-
         $app->save();
 
         return $app;
