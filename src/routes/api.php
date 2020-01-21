@@ -69,6 +69,8 @@ Route::group([
     'prefix' => 'doctors'
 ],function ($router){
     Route::get('{id}','DoctorController@show');
+    Route::delete('delete/{id}', 'DoctorController@destroy');
+    Route::put('update/{id}', 'DoctorController@update');
 });
 
 Route::group([
@@ -112,6 +114,8 @@ Route::group([
     
     Route::post('add', 'OperatingRoomController@store');
     Route::get('get', 'OperatingRoomController@getOpRooms');
+    Route::put('update/{id}', 'OperatingRoomController@update');
+    Route::delete('delete/{id}', 'OperatingRoomController@destroy');
 });
 
 Route::group([
@@ -120,6 +124,8 @@ Route::group([
 ],function ($router){
     Route::post('add','AppointmentTypeController@store');
     Route::get('get', 'AppointmentTypeController@getAllAppTypes');
+    Route::delete('delete/{id}', 'AppointmentTypeController@destroy');
+    Route::put('update/{id}', 'AppointmentTypeController@update');
 });
 
 Route::group([

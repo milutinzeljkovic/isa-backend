@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\IDoctorService;
+use App\Appointment;
+use App\Doctor;
+use App\User;
 
 
 class DoctorController extends Controller
@@ -78,7 +81,12 @@ class DoctorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $values = $request->all();
+        $user = User::find($id);
+        $doctor = Doctor::where('id', $user->userable_id)->get()[0];
+
+        $doctor->update($values);
+        return response()->json(['message' => 'Doctor successfully updated'], 200);
     }
 
     /**
@@ -89,6 +97,18 @@ class DoctorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $doctor = Doctor::where('id', $user->userable_id)->get()[0];
+
+        $allApps = Appointment::all();
+
+        foreach($allApps as $appointment){
+            if($appointment->doctor_id == $doctor->id){    //za sad ne proverava da li je termin zakazan
+                return response()->json(['message' => "The doctor you are trying to delete has an appointment booked"], 400);
+            }
+        }
+
+        $doctor->delete();
+        return response()->json(['message' => 'Doctor successfully deleted'], 200);
     }
 }
