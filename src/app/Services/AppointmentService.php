@@ -78,10 +78,12 @@ class AppointmentService implements IAppointmentService
 
     }
 
+    //id doktora i pregled koji pacijent oce da rezervise
     function requestAppointment($id,$appointment)
     {
         $doctor = Doctor::find($id);
         $user = $doctor->user()->first();
+        //poklapanje sa godisnjnim odmorom
         $app = $user
                 ->vacations()
                 ->where('from','<',array_get($appointment, 'date'))
@@ -91,6 +93,8 @@ class AppointmentService implements IAppointmentService
         {
             return response('Could not reserve appointment form a given date', 200);
         }
+
+        //ako postoji pregled koji doktor treba da izvrsi a pocinje isto kad i zahtevani pregled
         $doctorAppointments = $doctor
                                 ->appointments()
                                 ->where('date','=',array_get($appointment, 'date'))
