@@ -23,7 +23,7 @@ class DiagnoseController extends Controller
      */
     public function index()
     {
-        //
+        return $this->_diagnoseService->getDiagnoses();
     }
 
     /**

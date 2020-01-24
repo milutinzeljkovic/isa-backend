@@ -28,5 +28,14 @@ class MedicalReport extends Model
     {
         return $this->hasMany('App\Prescription');
     }
+
+    public function doctor()
+    {
+        return $this->belongsTo('App\Doctor');
+    }
+    public function appointment()
+    {
+        return $this->belongsTo('App\Appointment');
+    }
     
 }

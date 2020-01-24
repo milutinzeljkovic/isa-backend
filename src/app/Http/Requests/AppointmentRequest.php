@@ -28,7 +28,8 @@ class AppointmentRequest extends FormRequest
             'doctor' => 'required',
             'date' => 'required',
             'app_type' => 'required',
-            'operations_rooms_id' => 'required'
+            'duration' => 'required',
+            'operations_room_id' => 'required'
         ];
     }
 }

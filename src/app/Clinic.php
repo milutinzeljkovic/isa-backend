@@ -10,6 +10,10 @@ class Clinic extends Model
         'name', 'address', 'description', 'lat', 'lng'
     ];
 
+    protected $guarded = [
+        'stars_count'
+    ];
+
     public function patients()
     {
         return $this->belongsToMany('App\Patient')
@@ -50,5 +54,10 @@ class Clinic extends Model
     public function clinicalCenter()
     {
         return $this->belongsTo('App\ClinicalCenter');
+    }
+
+    public function recensions()
+    {
+        return $this->hasMany('App\Recension');
     }
 }

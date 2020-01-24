@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Services\IDiagnoseService;
 use App\Diagnose;
 use Auth;
+use DB;
 
 class DiagnoseService implements IDiagnoseService
 {
@@ -23,6 +24,13 @@ class DiagnoseService implements IDiagnoseService
        
 
         return response()->json(['created' => 'Diagnose has been created'], 201);
+    }
+
+    public function getDiagnoses()
+    {
+        $diagnoses = DB::table('diagnoses')->get();
+
+        return $diagnoses;
     }
 
 }

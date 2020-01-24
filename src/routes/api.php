@@ -37,7 +37,6 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'patients'
 ], function ($router){
-    
     Route::post('search', 'PatientsController@searchPatients');
     Route::get('clinic', 'PatientsController@getClinicsPatients');
     Route::get('','PatientsController@getPatients')->middleware('can:fetch,App\Patient');
@@ -46,6 +45,7 @@ Route::group([
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
     Route::get('show/{id}', 'PatientsController@view');
+    Route::get('medical-record/{id}', 'PatientsController@medicalRecord');
 });
 
 Route::group([
@@ -53,6 +53,7 @@ Route::group([
     'prefix' => 'clinics'
 ], function ($router){
     Route::get('','ClinicController@index');
+    Route::get('{id}','ClinicController@show');
     Route::post('','ClinicController@store');
     Route::get('/doctors/{clinic}','ClinicController@doctors');
 });
@@ -68,13 +69,21 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'doctors'
 ],function ($router){
+    Route::post('finish-report','DoctorController@medicalReportForAppointment');
+    Route::get('get-data/{id}','DoctorController@getDataForDoctor');
+
+    Route::get('calendar','DoctorController@getApointments');
     Route::get('{id}','DoctorController@show');
+    Route::get('appointments/{id}', 'DoctorController@showDoctorAppointments');
+    Route::get('','DoctorController@index');
 });
 
 Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'medicine'
 ],function ($router){
+    Route::get('','MedicineController@index');
+
     Route::post('add','MedicineController@store');
 });
 
@@ -82,6 +91,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'diagnose'
 ],function ($router){
+    Route::get('','DiagnoseController@index');
+
     Route::post('add','DiagnoseController@store');
 });
 
@@ -127,5 +138,15 @@ Route::group([
     'prefix' => 'appointment' 
 ],function ($router){
     Route::post('add','AppointmentController@store');
+    Route::post('reserve/{id}', 'AppointmentController@reserve')->middleware('can:reserve,App\Appointment,id');
+    Route::get('history/{id}','AppointmentController@patientHistory');
+    Route::post('request/{id}','AppointmentController@requestAppointment');
 });
 
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'reactions'
+], function ($router){
+    Route::post('/{id}', 'ReactionController@store');
+    Route::post('/doctor/{id}', 'ReactionController@storeDoctorRecension');
+});

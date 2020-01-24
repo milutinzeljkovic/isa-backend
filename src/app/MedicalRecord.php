@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class MedicalRecord extends Model
 {
+    protected $fillable = [
+        'height',
+        'weight',
+        'allergy',
+        'diopter',
+        'blood_type'
+
+    ];
     public function patient()
     {
         return $this->belongsTo('App\Patient');
@@ -22,4 +30,5 @@ class MedicalRecord extends Model
     {
         return $this->hasMany('App\MedicalReport');
     }
+
 }

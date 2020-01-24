@@ -10,10 +10,19 @@ class Appointment extends Model
 
     //use OptimisticLocking;
 
+    
+
     protected $fillable = [
         'date',
         'price',
-        'done'
+        'done',
+        'lock_version',
+        'operations_room_id',
+        'duration',
+    ];
+
+    protected $guarded = [
+        'approved'
     ];
 
     public function appointmentType()
@@ -28,7 +37,7 @@ class Appointment extends Model
 
     public function operationsRoom()
     {
-        return $this->hasOne('App\OperationsRoom');
+        return $this->belongsTo('App\OperationsRoom');
     }
 
     public function patient()
@@ -39,5 +48,11 @@ class Appointment extends Model
     public function doctor()
     {
         return $this->belongsTo('App\Doctor');
+    }
+
+    public function medicalReport()
+    {
+        return $this->hasOne('App\MedicalReport');
+
     }
 }

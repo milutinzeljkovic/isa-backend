@@ -76,4 +76,8 @@ class PatientsController extends Controller
         return $this->_patientService->searchPatients($credentials);
     }
 
+    function medicalRecord($id)
+    {
+        return $this->_patientService->getMedicalRecord($id);
+    }
 }

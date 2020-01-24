@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Appointment;
 use App\Services\IAppointmentService;
 use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
@@ -41,6 +41,11 @@ class AppointmentController extends Controller
     public function store(AppointmentRequest $request)
     {
         return $this->_appointmentService->addAppointment($request->validated());
+    }
+
+    public function reserve($appointment_id)
+    {
+        return $this->_appointmentService->reserve($appointment_id);
     }
 
     /**
@@ -86,5 +91,16 @@ class AppointmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function patientHistory($id)
+    {
+        return $this->_appointmentService->showPatientHistory($id);
+    }
+
+    public function requestAppointment($id, Request $request)
+    {
+        return $this->_appointmentService->requestAppointment($id,$request->all());
+
     }
 }
