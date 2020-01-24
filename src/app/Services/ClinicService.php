@@ -25,7 +25,9 @@ class ClinicService implements IClinicService
                 $query->join('appointments', function ($join) use ($searchByDate, $date){
                     $join->on('clinics.id', '=', 'appointments.clinic_id')
                     ->when($searchByDate, function($query) use ($date){
-                        return $query->whereDate('date', '=', $date);
+                        return $query
+                            ->whereDate('date', '=', $date)
+                            ->where('patient_id',null);
                     });
                 });
             })

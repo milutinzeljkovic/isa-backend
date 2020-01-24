@@ -43,6 +43,7 @@ class DoctorService implements IDoctorService
                     ->when($searchByDate, function($query) use ($date, $searchByType, $appointmentType){
                         $query
                             ->whereDate('appointments.date', '=', $date)
+                            ->where('appointments.patient_id',null)
                             ->when($searchByType, function($query) use ($appointmentType){
                                 $query->where('appointments.appointment_type_id', '=', $appointmentType);
                             });
