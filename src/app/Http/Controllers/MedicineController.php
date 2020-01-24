@@ -23,7 +23,8 @@ class MedicineController extends Controller
      */
     public function index()
     {
-        //
+        return $this->_medicineService->getMedicines();
+
     }
 
     /**
@@ -55,7 +56,7 @@ class MedicineController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**

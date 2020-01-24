@@ -63,6 +63,24 @@ class DoctorController extends Controller
         return $this->_doctorService->showDoctorsAppointments($id);
     }
 
+    public function getApointments()
+    {
+        return $this->_doctorService->getApointments();
+    }
+
+    public function getDataForDoctor($appointment_id)
+    {
+        return $this->_doctorService->getDataForDoctor($appointment_id);
+    }
+
+    public function medicalReportForAppointment(Request $request)
+    {
+
+        $credentials = $request->only('height', 'weight', 'allergy', 'diopter', 'blood_type', 'therapy', 'diagnose', 'medicines', 'appointment_id');
+
+        return $this->_doctorService->medicalReportForAppointment($credentials);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

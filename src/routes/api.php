@@ -69,6 +69,10 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'doctors'
 ],function ($router){
+    Route::post('finish-report','DoctorController@medicalReportForAppointment');
+    Route::get('get-data/{id}','DoctorController@getDataForDoctor');
+
+    Route::get('calendar','DoctorController@getApointments');
     Route::get('{id}','DoctorController@show');
     Route::get('appointments/{id}', 'DoctorController@showDoctorAppointments');
     Route::get('','DoctorController@index');
@@ -78,6 +82,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'medicine'
 ],function ($router){
+    Route::get('','MedicineController@index');
+
     Route::post('add','MedicineController@store');
 });
 
@@ -85,6 +91,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'diagnose'
 ],function ($router){
+    Route::get('','DiagnoseController@index');
+
     Route::post('add','DiagnoseController@store');
 });
 
