@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\IMedicineService;
 use App\Medicine;
+use DB;
 
 class MedicineService implements IMedicineService
 {
@@ -17,5 +18,14 @@ class MedicineService implements IMedicineService
 
         return response()->json(['created' => 'Medicine has been created'], 201);
     }
+
+    public function getMedicines()
+    {
+        $medicines = DB::table('medicines')->get();
+
+        return $medicines;
+    }
+
+
 
 }
