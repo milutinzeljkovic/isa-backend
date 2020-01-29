@@ -103,4 +103,9 @@ class AppointmentController extends Controller
         return $this->_appointmentService->requestAppointment($id,$request->all());
 
     }
+
+    public function searchAppointment(Request $request)
+    {
+        return $this->_appointmentService->searchAppointment($request->input('date'),$request->input('type'));
+    }
 }

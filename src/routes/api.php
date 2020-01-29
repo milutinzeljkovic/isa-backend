@@ -133,6 +133,7 @@ Route::group([
     Route::post('reserve/{id}', 'AppointmentController@reserve')->middleware('can:reserve,App\Appointment,id');
     Route::get('history/{id}','AppointmentController@patientHistory');
     Route::post('request/{id}','AppointmentController@requestAppointment');
+    Route::get('','AppointmentController@searchAppointment');
 });
 
 Route::group([

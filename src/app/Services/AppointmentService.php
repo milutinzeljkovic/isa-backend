@@ -174,4 +174,38 @@ class AppointmentService implements IAppointmentService
 
     }
 
+    function searchAppointment($date, $type)
+    {
+        $searchByTyoe = ($type == null ? false : true);
+        $searchByDate = ($date == null ? false : true);
+
+        $query = Appointment::query();
+        if($type != null)
+        {
+            $query->where('appointment_type_id',$type);
+        }
+        if($date != null)
+        {
+            $query->whereDate('date', $date);
+
+        }
+        else
+        {
+            $query->where('date','>',Carbon::now());
+        }
+        $query->where('patient_id', null);
+
+        $query->with(['doctor' => function ($q) {
+            $q->with('user');
+        }]);
+
+        $query->with('operationsRoom');
+        $query->with('appointmentType');
+        $query->with('clinic');
+
+        return $query->get();
+
+    }
+
+
 }
