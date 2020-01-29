@@ -11,6 +11,7 @@ use Auth;
 use App\Doctor;
 use App\ClinicAdmin;
 use App\Vacation;
+use App\MedicalRecord;
 
 
 
@@ -117,10 +118,20 @@ class UserService
     {
         $id = Crypt::decryptString($encryptedId);
         $user = User::findOrFail($id);
-        $user->activated = 1;
-        $user->save();
+        if($user->activated == 0){
+            $patient = $user->userable()->get()[0];
+            $medicalRecord = new MedicalRecord();
+            $medicalRecord->patient_id=$patient->id;
+            $medicalRecord->save();
+            $user->activated = 1;
+            $user->save();
+            
+            return response()->json(['message' => 'Account successfully activated']);
+        }
+
+        return response()->json(['message' => 'Account was already activated']);
+
         
-        return response()->json(['message' => 'Account successfully activated']);
     }
 
     

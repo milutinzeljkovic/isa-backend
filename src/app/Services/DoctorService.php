@@ -6,6 +6,16 @@ use Illuminate\Support\Facades\DB;
 use App\Services\IDoctorService;
 use App\Doctor;
 
+use Auth;
+use Log;
+
+use App\Appointment;
+use App\MedicalReport;
+use App\MedicalRecord;
+use App\Medicine;
+use App\Prescription;
+use App\Diagnose;
+
 class DoctorService implements IDoctorService
 {
     function showDoctor($id)
@@ -77,5 +87,93 @@ class DoctorService implements IDoctorService
 
             return $results;
     }
+
+    function getApointments()
+    {
+        $user = Auth::user();
+        $doctor = $user->userable()->get()[0];
+
+        $appointments = Appointment::where('doctor_id', $doctor->id)
+                                    ->where('patient_id','!=',null)
+                                    ->where('approved','==',1)
+                                    ->with('appointmentType')
+                                    ->with(['patient' => function($q) {
+                                        $q->with('user');
+                                    }])
+                                    ->get();
+
+        
+
+        return $appointments;
+    }
+
+    function medicalReportForAppointment(array $userData)
+    {
+        
+        $height = array_get($userData, 'height');
+        $weight = array_get($userData, 'weight');
+        $allergy = array_get($userData, 'allergy');
+        $diopter = array_get($userData, 'diopter');
+        $bloodType = array_get($userData, 'blood_type');
+        $therapy = array_get($userData, 'therapy');
+        $diagnose = array_get($userData, 'diagnose');
+        $medicines = array_get($userData, 'medicines');
+        $appointment_id = array_get($userData, 'appointment_id');
+
+        
+
+
+        $appointment =  Appointment::where('id',$appointment_id )->first();
+        $medicalRecord =  MedicalRecord::where('patient_id', $appointment->patient_id)->first();
+
+        if( $appointment->done == 1){
+            print_r($height);
+
+            $medicalRecord->height=$height;
+            $medicalRecord->weight=$weight;
+            $medicalRecord->allergy=$allergy;
+            $medicalRecord->diopter=$diopter;
+            $medicalRecord->blood_type=$bloodType;
+            $medicalRecord->save();
+            return response()->json(['created' => 'Medical record has been changed'], 201);
+        }
+
+        $medicalRecord->height=$height;
+        $medicalRecord->weight=$weight;
+        $medicalRecord->allergy=$allergy;
+        $medicalRecord->diopter=$diopter;
+        $medicalRecord->blood_type=$bloodType;
+        $medicalRecord->save();
+
+        $d = Diagnose::where('label',$diagnose['label'])->first();
+        $medicalReport= new MedicalReport();
+        $medicalReport->medical_record_id=$medicalRecord->id;
+        $medicalReport->diagnose_id=$d->id;
+        $medicalReport->information=$therapy;
+        $medicalReport->doctor_id=$appointment->doctor_id;
+        $medicalReport->appointment_id=$appointment->id;
+        $medicalReport->save();
+
+        foreach($medicines as $med){
+        
+                $medicine = Medicine::where('label',$med['label'])->first();
+                $prescription = new Prescription();
+                $prescription->medical_report_id=$medicalReport->id;
+                $prescription->medicine_id=$medicine->id;
+                $prescription->info=$med['info'];
+                $prescription->save();
+            
+        }
+
+        $appointment->done=1;
+        $appointment->save();
+
+        return response()->json(['created' => 'Medical report has been created'], 201);
+
+
+
+    }
+
+
 
 }
