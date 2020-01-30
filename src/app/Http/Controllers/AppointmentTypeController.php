@@ -89,6 +89,11 @@ class AppointmentTypeController extends Controller
         //
     }
 
+    public function clinicAppointmentTypes()
+    {
+        return $this->_appointmentTypeService->appointmentTypesClinic();
+    }
+
     public function getAllAppTypes()
     {
         return $this->_appointmentTypeService->getAppointmentTypes();

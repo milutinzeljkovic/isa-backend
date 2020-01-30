@@ -12,7 +12,7 @@ class OperatingRoomService implements IOperatingRoomService
     public function addOperatingRoom(array $operatingRoomData)
     {
         $user = Auth::user();
-        $clinicAdmin = $user->userable()->get()[0];
+        $clinicAdmin = $user->userable()->first();
 
         $opRoom = new OperationsRoom();
 
@@ -28,9 +28,9 @@ class OperatingRoomService implements IOperatingRoomService
 
     public function getOperatingRooms(){
         $user = Auth::user();
-        $clinicAdmin = $user->userable()->get()[0];
+        $clinicAdmin = $user->userable()->first();
 
-        $clinic = Clinic::where('id', $clinicAdmin->clinic_id)->get()[0];
+        $clinic = Clinic::where('id', $clinicAdmin->clinic_id)->first();
         $facilities = $clinic->operationRooms;
 
         return $facilities;

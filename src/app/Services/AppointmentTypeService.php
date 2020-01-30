@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\IAppointmentTypeService;
 use App\AppointmentType;
+use Auth;
 
 class AppointmentTypeService implements IAppointmentTypeService
 {
@@ -22,6 +23,14 @@ class AppointmentTypeService implements IAppointmentTypeService
     {
         $appointments = AppointmentType::all();
         return $appointments;
+    }
+
+    public function appointmentTypesClinic()
+    {
+        $user = Auth::user();
+        $admin = $user->userable()->first();
+        $clinic = $admin->clinic()->first();
+        return $clinic->appointmentTypes()->get();
     }
 
 }

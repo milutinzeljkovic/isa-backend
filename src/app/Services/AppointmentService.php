@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\IAppointmentService;
 use App\Appointment;
+use App\OperationsRoom;
 use App\User;
 use App\Clinic;
 use App\Price;
@@ -78,6 +79,7 @@ class AppointmentService implements IAppointmentService
         $appointmentDate = Carbon::parse(array_get($appointmentData, 'date'));
         $appointmentDateEnd = Carbon::parse(array_get($appointmentData, 'date'));
         $appointmentDateEnd->addSeconds(array_get($appointmentData, 'duration') * 3600);
+
         foreach ($doctorAppointments as $a) {
             $start = Carbon::parse($a->date);
             $duration = $a->duration;
@@ -91,12 +93,40 @@ class AppointmentService implements IAppointmentService
             {
                 $overlap = true;
             }
+
+            
         }
+
 
         if($overlap)
         {
             return response('Appointment overlapping', 400);
         }
+
+
+        $operationRoom = OperationsRoom::find($app->operations_room_id);
+        $operationRoomOverlap = false;
+        $operationRoomAppointments = $operationRoom->appointments()->get();
+        foreach ($operationRoomAppointments as $a) {
+            $start = Carbon::parse($a->date);
+            $duration = $a->duration;
+            $end = Carbon::parse($start);
+            $end->addSeconds($duration*3600);
+            if($appointmentDate->greaterThanOrEqualTo($start) && $appointmentDate->lessThanOrEqualTo($end))
+            {
+                $operationRoomOverlap = true;
+            }
+            if($appointmentDateEnd->greaterThanOrEqualTo($start) && $appointmentDateEnd->lessThanOrEqualTo($end))
+            {
+                $operationRoomOverlap = true;
+            }
+        }
+
+        if($operationRoomOverlap)
+        {
+            return response('Operation room overlapping', 400);
+        }
+
         $app->save();
         return response()->json(['created' => 'Appointment has been created'], 201);
     }

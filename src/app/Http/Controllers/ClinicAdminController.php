@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ClinicAdmin;
 use Illuminate\Http\Request;
+use Auth;
 use App\Services\ClinicAdminService;
 
 class ClinicAdminController extends Controller
@@ -100,5 +101,13 @@ class ClinicAdminController extends Controller
     {
         $credentials = $request->only('name', 'description', 'id', 'clinic_center', 'address');
         return $this->_clinicAdminService->updateClinic($credentials);
+    }
+
+    public function clinicDoctors()
+    {
+        $user = Auth::user();
+        $admin = $user->userable()->first();
+        $clinic = $admin->clinic()->first();
+        return $clinic->doctors()->with('user')->get();
     }
 }
