@@ -19,6 +19,10 @@ class Appointment extends Model
         'lock_version',
         'operations_room_id',
         'duration',
+        'discount',
+        'appointment_type_id',
+        'doctor_id',
+        'clinic_id'
     ];
 
     protected $guarded = [

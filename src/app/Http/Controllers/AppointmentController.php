@@ -38,9 +38,9 @@ class AppointmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AppointmentRequest $request)
+    public function store(Request $request)
     {
-        return $this->_appointmentService->addAppointment($request->validated());
+        return $this->_appointmentService->addAppointment($request->all());
     }
 
     public function reserve($appointment_id)

@@ -24,17 +24,80 @@ class AppointmentService implements IAppointmentService
         $app->clinic_id = $clinicAdmin->clinic_id;
         $app->date = array_get($appointmentData, 'date');
         $app->price = array_get($appointmentData, 'price');
+        if(array_get($appointmentData, 'discount'))
+        {
+            $app->discount = array_get($appointmentData, 'discount');
+        }
+        if(array_get($appointmentData, 'duration'))
+        {
+            $app->duration = array_get($appointmentData, 'duration');
+        }
+        else
+        {
+            $app->duration = 1;
+        }
         $app->done = 0;
-
         $app->approved = 1;
         $app->appointment_type_id = array_get($appointmentData, 'app_type');
         $app->doctor_id = array_get($appointmentData, 'doctor');
         $app->operations_room_id = array_get($appointmentData, 'operations_room_id');
-        $app->duration = array_get($appointmentData, 'duration');
         $clinic = $clinicAdmin->clinic()->first();
         $app->clinic()->associate($clinic);
-        $app->save();
 
+
+        $doctor = Doctor::find($app->doctor_id);
+        $user = $doctor->user()->first();
+        $apps = $user
+                ->vacations()
+                ->where('approved','=','1')
+                ->where('from','<',array_get($appointmentData, 'date'))
+                ->where('to','>',array_get($appointmentData, 'date'))
+                ->get();
+        if($apps->count() != 0)
+        {
+            return response('Could not create appointment form a given date', 400);
+        }
+
+
+        $doctorAppointments = $doctor
+            ->appointments()
+            ->where('date','=',array_get($appointmentData, 'date'))
+            ->get();
+        if($doctorAppointments->count() != 0)
+        {
+            return response('Doctor is not free', 400);
+        }
+
+        $doctorAppointments = $doctor
+        ->appointments()
+        ->where('date','>',Carbon::now())
+        ->where('approved','=','1')
+        ->get();
+
+        $overlap = false;
+        $appointmentDate = Carbon::parse(array_get($appointmentData, 'date'));
+        $appointmentDateEnd = Carbon::parse(array_get($appointmentData, 'date'));
+        $appointmentDateEnd->addSeconds(array_get($appointmentData, 'duration') * 3600);
+        foreach ($doctorAppointments as $a) {
+            $start = Carbon::parse($a->date);
+            $duration = $a->duration;
+            $end = Carbon::parse($start);
+            $end->addSeconds($duration*3600);
+            if($appointmentDate->greaterThanOrEqualTo($start) && $appointmentDate->lessThanOrEqualTo($end))
+            {
+                $overlap = true;
+            }
+            if($appointmentDateEnd->greaterThanOrEqualTo($start) && $appointmentDateEnd->lessThanOrEqualTo($end))
+            {
+                $overlap = true;
+            }
+        }
+
+        if($overlap)
+        {
+            return response('Appointment overlapping', 400);
+        }
+        $app->save();
         return response()->json(['created' => 'Appointment has been created'], 201);
     }
 
