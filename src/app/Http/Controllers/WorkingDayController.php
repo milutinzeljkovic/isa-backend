@@ -1,25 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Services\OperatingRoomService;
-use App\Http\Requests\OperationRoomRequest;
-use App\Appointment;
-use App\OperationsRoom;
+use App\Services\IWorkingDayService;
 
 use Illuminate\Http\Request;
 
-class OperatingRoomController extends Controller
+class WorkingDayController extends Controller
 {
+
+    private $_workingDayService;
+
+    public function __construct(IWorkingDayService $workingDayService)
+    {
+        $this->_workingDayService= $workingDayService;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(OperatingRoomService $operatingRoomService)
-    {
-        $this->_operatingRoomService = $operatingRoomService;
-    }
-
     public function index()
     {
         //
@@ -41,9 +42,9 @@ class OperatingRoomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OperationRoomRequest $request)
+    public function store(Request $request)
     {
-        return $this->_operatingRoomService->addOperatingRoom($request->validated());
+        //
     }
 
     /**
@@ -77,11 +78,7 @@ class OperatingRoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $values = $request->all();
-
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->update($values);
-        return response()->json(['message' => "Operating room successfully updated"], 200);
+        //
     }
 
     /**
@@ -92,17 +89,15 @@ class OperatingRoomController extends Controller
      */
     public function destroy($id)
     {
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->delete();
-        return $opRoom->id;
+        //
     }
 
-    public function getOpRooms(){
-        return $this->_operatingRoomService->getOperatingRooms();
+    public function getDoctorsWorkingHours($id){
+        return $this->_workingDayService->getDoctorsWorkingHours($id);
     }
 
-    public function seeIfOpRoomBooked($id)
-    {
-        return $this->_operatingRoomService->seeIfOpRoomBooked($id);
+    public function updateDoctorsWorkingHours(Request $request, $id){
+        $data = $request->all();
+        return $this->_workingDayService->updateDoctorsWorkingHours($id, $data);
     }
 }

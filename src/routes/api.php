@@ -71,6 +71,9 @@ Route::group([
     Route::get('{id}','DoctorController@show');
     Route::delete('delete/{id}', 'DoctorController@destroy');
     Route::put('update/{id}', 'DoctorController@update');
+    Route::get('booked/{id}', 'DoctorController@seeIfDoctorUsed');
+    Route::delete('delete/{id}', 'DoctorController@destroy');
+    Route::get('working-days/{id}', 'DoctorController@getWorkingHours');
 });
 
 Route::group([
@@ -116,6 +119,7 @@ Route::group([
     Route::get('get', 'OperatingRoomController@getOpRooms');
     Route::put('update/{id}', 'OperatingRoomController@update');
     Route::delete('delete/{id}', 'OperatingRoomController@destroy');
+    Route::get('used/{id}', 'OperatingRoomController@seeIfOpRoomBooked');
 });
 
 Route::group([
@@ -126,6 +130,7 @@ Route::group([
     Route::get('get', 'AppointmentTypeController@getAllAppTypes');
     Route::delete('delete/{id}', 'AppointmentTypeController@destroy');
     Route::put('update/{id}', 'AppointmentTypeController@update');
+    Route::get('used/{id}', 'AppointmentTypeController@seeIfAppTypeUsed');
 });
 
 Route::group([
@@ -133,5 +138,13 @@ Route::group([
     'prefix' => 'appointment' 
 ],function ($router){
     Route::post('add','AppointmentController@store');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'working-hours' 
+], function ($router){
+    Route::get('doctors/{id}', 'WorkingDayController@getDoctorsWorkingHours');
+    Route::put('update-doctors/{id}', 'WorkingDayController@updateDoctorsWorkingHours');
 });
 

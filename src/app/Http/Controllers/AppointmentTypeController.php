@@ -78,16 +78,10 @@ class AppointmentTypeController extends Controller
     public function update(Request $request, $id)
     {
         $values = $request->all();
-        $allApps = Appointment::all();
-
-        foreach($allApps as $appointment){
-            if($appointment->appointment_type_id == $id){    //za sad ne proverava da li je termin zakazan
-                return response()->json(['message' => "That appointment type is being used in a appointment"], 400);
-            }
-        }
 
         $appType = AppointmentType::find($id);
         $appType->update($values);
+        
         return response()->json(['message' => "Appointment type successfully updated"], 200);
     }
 
@@ -99,22 +93,19 @@ class AppointmentTypeController extends Controller
      */
     public function destroy($id)
     {
-        $allApps = Appointment::all();
-
-        foreach($allApps as $appointment){
-            if($appointment->appointment_type_id == $id){    //za sad ne proverava da li je termin zakazan
-                return response()->json(['message' => "That appointment type is being used in a appointment"], 400);
-            }
-        }
-        
         $appType = AppointmentType::find($id);
         $appType->delete();
 
-        return response()->json(['message' => "Appointment type successfully deleted"], 200);
+        return $appType->id;
     }
 
     public function getAllAppTypes()
     {
         return $this->_appointmentTypeService->getAppointmentTypes();
+    }
+
+    public function seeIfAppTypeUsed($id)
+    {   
+        return $this->_appointmentTypeService->seeIfAppTypeUsed($id);
     }
 }
