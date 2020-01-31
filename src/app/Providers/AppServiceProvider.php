@@ -9,7 +9,8 @@ use App\Services\DoctorService;
 use App\Services\MedicineService;
 use App\Services\DiagnoseService;
 use App\Services\AppointmentService;
-
+use App\Utils\AddPredefinedAppointment;
+use App\Utils\IAddAppointmentStrategy;
 use Illuminate\Support\Facades\Log;
 use DB;
 
@@ -47,7 +48,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\IPatientService',
             PatientService::class,
         );
-
+        $this->app->bind(
+            'App\Utils\IAddAppointmentStrategy',
+            AddPredefinedAppointment::class,
+        );
         $this->app->bind(
             'App\Services\IDoctorService',
             DoctorService::class
