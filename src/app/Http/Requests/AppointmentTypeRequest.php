@@ -24,7 +24,8 @@ class AppointmentTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'name' => 'required',
+            'price' => 'required'
         ];
     }
 }

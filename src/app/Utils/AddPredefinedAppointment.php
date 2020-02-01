@@ -2,9 +2,11 @@
 
 namespace App\Utils;
 use App\Appointment;
+use App\AppointmentType;
 use App\Doctor;
 use Carbon\Carbon;
 use App\OperationsRoom;
+use Illuminate\Support\Facades\DB;
 use App\Utils\IAddAppointmentStrategy;
 
 class AddPredefinedAppointment implements IAddAppointmentStrategy
@@ -15,6 +17,16 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
 
         $doctor = Doctor::find($app->doctor_id);
         $user = $doctor->user()->first();
+        $result = DB::table('appointment_type_doctor')
+            ->where('doctor_id',$app->doctor_id)
+            ->where('appointment_type_id', $app->appointment_type_id)
+            ->get();
+        
+        if(count($result) == 0)
+        {
+            $doctor->appointmentTypes()->save($app->appointmentType()->first());
+        }
+
         $apps = $user
             ->vacations()
             ->where('approved','=','1')

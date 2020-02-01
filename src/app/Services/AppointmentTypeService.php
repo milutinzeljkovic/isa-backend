@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\IAppointmentTypeService;
 use App\AppointmentType;
+use App\Clinic;
 use Auth;
 
 class AppointmentTypeService implements IAppointmentTypeService
@@ -13,6 +14,11 @@ class AppointmentTypeService implements IAppointmentTypeService
         $appType = new AppointmentType();
 
         $appType->name = array_get($appTypeData, 'name');
+        $user = Auth::user()->userable()->first();
+
+        $clinic = Clinic::find($user->clinic_id);
+        $clinic->appointmentTypes()->save($appType, ['price' => array_get($appTypeData, 'price') ]);
+
         $appType->save();
        
 

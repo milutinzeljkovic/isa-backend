@@ -52,8 +52,17 @@ class AppointmentService implements IAppointmentService
         $appointmentAdding = new AppointmentAdding();
         $message = $appointmentAdding->addAppointment(new AddPredefinedAppointment(), $app);
 
+
         if($message['error'] == false)
-        {            
+        {
+            if($app->price == null)
+            {
+                $price = DB::table('appointment_type_clinic')
+                    ->where('clinic_id',$app->clinic_id)
+                    ->where('appointment_type_id',$app->appointment_type_id)
+                    ->first();
+                $app->price = $price->price;
+            }            
             $app->save();
             return response()->json(['created' => 'Appointment has been created'], 201);
         }
