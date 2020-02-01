@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\RegisterApiRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Services\UserService;
@@ -34,6 +36,26 @@ class AuthController extends Controller
         return $this->userService->register($credentials);
     }
 
+    public function registerMedicalStaff(Request $request)
+    {
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address', 'role');
+        return $this->userService->registerMedicalStaff($credentials);
+    }
+
+    public function registerClinicAdmin(RegisterApiRequest $request, $clinic_id)
+    {
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address');
+        return $this->userService->registerClinicAdmin($credentials, $clinic_id);
+    }
+
+    public function registerClinicalCenterAdmin(RegisterApiRequest $request)
+    {
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address');
+        return $this->userService->registerClinicalCenterAdmin($credentials);
+    }
+
+
+
     /**
      * Get a JWT token via given credentials.
      *
@@ -43,9 +65,28 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+     //   \Slack::to('#isa-logs')->send('new login attempt');
+
         $credentials = $request->only('email', 'password');
 
         return $this->userService->login($credentials);
+    }
+
+    public function changePassword(Request $request){
+
+        $credentials = $request->only('email', 'password');
+        $newPassword = $request->only( 'new_password');
+        return $this->userService->changePassword($credentials, $newPassword);
+
+
+    }
+
+    public function sendRequestForVacation(Request $request){
+
+        $credentials = $request->only('from', 'to');
+        return $this->userService->sendRequestForVacation($credentials);
+
+
     }
 
     /**
@@ -76,6 +117,12 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->userService->refreshToken();
+    }
+
+    //dekriptovanje dela url koji korisnik poseti nakon odobrenja zahteva http://localhost:8000/api/auth/confirm/asufhduih23uio49unao9812390haslnmcxasd
+    public function activate($encryptedId)
+    {
+        return $this->userService->activate($encryptedId);
     }
     
 

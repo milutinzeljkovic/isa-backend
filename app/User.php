@@ -10,6 +10,16 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    public function userable()
+    {
+        return $this->morphTo();
+    }
+
+    public function vacations()
+    {
+        return $this->hasMany('App\Vacation');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +35,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'role', 'confirmed'
+        'password', 'remember_token', 'role', 'confirmed', 'activated'
     ];
 
     protected $guarded = [

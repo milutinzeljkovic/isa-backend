@@ -21,7 +21,9 @@ class AlterUsersTable extends Migration
             $table->string('city');
             $table->string('state');
             $table->boolean('confirmed')->default(0);
-            $table->enum('role', ['doctor', 'nurse', 'patient'])->nullable(); 
+            $table->integer('userable_id');
+            $table->string('userable_type');
+
         });
     }
 
@@ -40,7 +42,8 @@ class AlterUsersTable extends Migration
             $table->dropColumn('city');
             $table->dropColumn('state');
             $table->dropColumn('confirmed');
-            $table->dropColumn('role');
+            $table->dropColumn('userable_id');
+            $table->dropColumn('userable_type');
         });
     }
 }
