@@ -5,16 +5,19 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\IDoctorService;
 use App\Doctor;
-
-use Auth;
-use Log;
-
 use App\Appointment;
+use App\User;
+use App\WorkingDay;
 use App\MedicalReport;
 use App\MedicalRecord;
 use App\Medicine;
 use App\Prescription;
 use App\Diagnose;
+
+use Auth;
+use Log;
+
+
 
 class DoctorService implements IDoctorService
 {
@@ -188,4 +191,26 @@ class DoctorService implements IDoctorService
 
 
 
+    function seeIfDoctorUsed($id)
+    {
+        $user = User::find($id);
+        $doctor = Doctor::where('id', $user->userable_id)->get()[0];
+
+        $allApps = Appointment::all();
+
+        foreach($allApps as $appointment){
+            if($appointment->doctor_id == $doctor->id){    //za sad ne proverava da li je termin zakazan
+                return response()->json(["true"], 200);
+            }
+        }
+
+        return response()->json(["false"], 200);
+    }
+
+    function getWorkingHours($id){
+        $user = User::find($id);
+
+        $workingHours = WorkingDay::where('doctor_id', $user->userable_id)->get();
+        
+    }
 }

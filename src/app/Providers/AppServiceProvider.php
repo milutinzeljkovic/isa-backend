@@ -11,6 +11,8 @@ use App\Services\DiagnoseService;
 use App\Services\AppointmentService;
 use App\Utils\AddPredefinedAppointment;
 use App\Utils\IAddAppointmentStrategy;
+use App\Services\WorkingDayService;
+
 use Illuminate\Support\Facades\Log;
 use DB;
 
@@ -70,6 +72,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Services\IAppointmentService',
             AppointmentService::class
+        );
+
+        $this->app->bind(
+            'App\Services\IWorkingDayService',
+            WorkingDayService::class
         );
     }
 }

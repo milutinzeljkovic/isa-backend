@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Services\IOperatingRoomService;
 use App\OperationsRoom;
 use App\Clinic;
+use App\Appointment;
 use Auth;
 
 class OperatingRoomService implements IOperatingRoomService
@@ -36,4 +37,17 @@ class OperatingRoomService implements IOperatingRoomService
         return $facilities;
     }
 
+    public function seeIfOpRoomBooked($id){
+        $allApps = Appointment::all();
+
+        foreach($allApps as $appointment){
+            if($appointment->operations_room_id != null){
+                if($appointment->operations_room_id == $id){    //za sad ne proverava da li je termin zakazan
+                    return response()->json(["true"], 200);
+                }
+            }
+        }
+
+        return response()->json(["false"], 200);
+    }
 }

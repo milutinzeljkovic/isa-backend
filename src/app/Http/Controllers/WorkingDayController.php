@@ -1,19 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Services\AppointmentTypeService;
-use App\Http\Requests\AppointmentTypeRequest;
-use Illuminate\Http\Request;
-use App\AppointmentType;
-use App\Appointment;
+use App\Services\IWorkingDayService;
 
-class AppointmentTypeController extends Controller
+use Illuminate\Http\Request;
+
+class WorkingDayController extends Controller
 {
 
-    public function __construct(AppointmentTypeService $appointmentTypeService)
+    private $_workingDayService;
+
+    public function __construct(IWorkingDayService $workingDayService)
     {
-        $this->_appointmentTypeService = $appointmentTypeService;
+        $this->_workingDayService= $workingDayService;
     }
+
 
     /**
      * Display a listing of the resource.
@@ -41,9 +42,9 @@ class AppointmentTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AppointmentTypeRequest $request)
+    public function store(Request $request)
     {
-        return $this->_appointmentTypeService->addAppointmentType($request->validated());
+        //
     }
 
     /**
@@ -77,12 +78,7 @@ class AppointmentTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $values = $request->all();
-
-        $appType = AppointmentType::find($id);
-        $appType->update($values);
-        
-        return response()->json(['message' => "Appointment type successfully updated"], 200);
+        //
     }
 
     /**
@@ -93,24 +89,15 @@ class AppointmentTypeController extends Controller
      */
     public function destroy($id)
     {
-        $appType = AppointmentType::find($id);
-        $appType->delete();
-
-        return $appType->id;
+        //
     }
 
-    public function clinicAppointmentTypes()
-    {
-        return $this->_appointmentTypeService->appointmentTypesClinic();
+    public function getDoctorsWorkingHours($id){
+        return $this->_workingDayService->getDoctorsWorkingHours($id);
     }
 
-    public function getAllAppTypes()
-    {
-        return $this->_appointmentTypeService->getAppointmentTypes();
-    }
-
-    public function seeIfAppTypeUsed($id)
-    {   
-        return $this->_appointmentTypeService->seeIfAppTypeUsed($id);
+    public function updateDoctorsWorkingHours(Request $request, $id){
+        $data = $request->all();
+        return $this->_workingDayService->updateDoctorsWorkingHours($id, $data);
     }
 }
