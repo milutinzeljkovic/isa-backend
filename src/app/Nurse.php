@@ -15,9 +15,4 @@ class Nurse extends Model
     {
         return $this->belongsTo('App\Clinic');
     }
-
-    public function businessHours()
-    {
-        return $this->hasMany('App\BusinessHours');
-    }
 }

@@ -13,7 +13,6 @@ use App\ClinicAdmin;
 use App\Vacation;
 use App\MedicalRecord;
 
-use App\WorkingDay;
 
 
 
@@ -245,55 +244,6 @@ class UserService
             $nurse->save();
             $nurse->user()->save($user);
 
-            $monday = new WorkingDay();
-            $monday->from = array_get($userData, 'mondayFrom');
-            $monday->to = array_get($userData, 'mondayTo');
-            $monday->nurse_id = $nurse->id;
-            $monday->day = 1;
-            $monday->save();
-
-            $tuesday = new WorkingDay();
-            $tuesday->from = array_get($userData, 'tuesdayFrom');
-            $tuesday->to = array_get($userData, 'tuesdayTo');
-            $tuesday->nurse_id = $nurse->id;
-            $tuesday->day = 2;
-            $tuesday->save();
-
-            $wednesday = new WorkingDay();
-            $wednesday->from = array_get($userData, 'wednesdayFrom');
-            $wednesday->to = array_get($userData, 'wednesdayTo');
-            $wednesday->nurse_id = $nurse->id;
-            $wednesday->day = 3;
-            $wednesday->save();
-
-            $thursday = new WorkingDay();
-            $thursday->from = array_get($userData, 'thursdayFrom');
-            $thursday->to = array_get($userData, 'thursdayTo');
-            $thursday->nurse_id = $nurse->id;
-            $thursday->day = 4;
-            $thursday->save();
-
-            $friday = new WorkingDay();
-            $friday->from = array_get($userData, 'fridayFrom');
-            $friday->to = array_get($userData, 'fridayTo');
-            $friday->nurse_id = $nurse->id;
-            $friday->day = 5;
-            $friday->save();
-
-            $saturday = new WorkingDay();
-            $saturday->from = array_get($userData, 'saturdayFrom');
-            $saturday->to = array_get($userData, 'saturdayTo');
-            $saturday->nurse_id = $nurse->id;
-            $saturday->day = 6;
-            $saturday->save();
-
-            $sunday = new WorkingDay();
-            $sunday->from = array_get($userData, 'sundayFrom');
-            $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->nurse_id = $nurse->id;
-            $sunday->day = 0;
-            $sunday->save();
-
             return response()->json(['created' => 'Nurse has been registered'], 201);
         }
 
@@ -302,163 +252,11 @@ class UserService
             $doctor->clinic_id = $clinicAdmin->clinic_id;
             $doctor->save();
             $doctor->user()->save($user);
-
-            $monday = new WorkingDay();
-            $monday->from = array_get($userData, 'mondayFrom');
-            $monday->to = array_get($userData, 'mondayTo');
-            $monday->$doctor->id = $doctor->id;
-            $monday->day = 1;
-            $monday->save();
-
-            $tuesday = new WorkingDay();
-            $tuesday->from = array_get($userData, 'tuesdayFrom');
-            $tuesday->to = array_get($userData, 'tuesdayTo');
-            $tuesday->$doctor->id = $doctor->id;
-            $tuesday->day = 2;
-            $tuesday->save();
-
-            $wednesday = new WorkingDay();
-            $wednesday->from = array_get($userData, 'wednesdayFrom');
-            $wednesday->to = array_get($userData, 'wednesdayTo');
-            $wednesday->$doctor->id = $doctor->id;
-            $wednesday->day = 3;
-            $wednesday->save();
-
-            $thursday = new WorkingDay();
-            $thursday->from = array_get($userData, 'thursdayFrom');
-            $thursday->to = array_get($userData, 'thursdayTo');
-            $thursday->$doctor->id = $doctor->id;
-            $thursday->day = 4;
-            $thursday->save();
-
-            $friday = new WorkingDay();
-            $friday->from = array_get($userData, 'fridayFrom');
-            $friday->to = array_get($userData, 'fridayTo');
-            $friday->$doctor->id = $doctor->id;
-            $friday->day = 5;
-            $friday->save();
-
-            $saturday = new WorkingDay();
-            $saturday->from = array_get($userData, 'saturdayFrom');
-            $saturday->to = array_get($userData, 'saturdayTo');
-            $saturday->$doctor->id = $doctor->id;
-            $saturday->day = 6;
-            $saturday->save();
-
-            $sunday = new WorkingDay();
-            $sunday->from = array_get($userData, 'sundayFrom');
-            $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->$doctor->id = $doctor->id;
-            $sunday->day = 0;
-            $sunday->save();
-
+            
             return response()->json(['created' => 'Doctor has been registered'], 201);
         }
 
         return response()->json(['error' => 'Something terrible happened'], 500);
-    }
-
-    public function addWorkingDays($id, $koJe, array $userData){
-
-        if($koJe == 0){
-            $monday = new WorkingDay();
-            $monday->from = array_get($userData, 'mondayFrom');
-            $monday->to = array_get($userData, 'mondayTo');
-            $monday->nurse_id = $id;
-            $monday->day = 1;
-            $monday->save();
-
-            $tuesday = new WorkingDay();
-            $tuesday->from = array_get($userData, 'tuesdayFrom');
-            $tuesday->to = array_get($userData, 'tuesdayTo');
-            $tuesday->nurse_id = $id;
-            $tuesday->day = 2;
-            $tuesday->save();
-
-            $wednesday = new WorkingDay();
-            $wednesday->from = array_get($userData, 'wednesdayFrom');
-            $wednesday->to = array_get($userData, 'wednesdayTo');
-            $wednesday->nurse_id = $id;
-            $wednesday->day = 3;
-            $wednesday->save();
-
-            $thursday = new WorkingDay();
-            $thursday->from = array_get($userData, 'thursdayFrom');
-            $thursday->to = array_get($userData, 'thursdayTo');
-            $thursday->nurse_id = $id;
-            $thursday->day = 4;
-            $thursday->save();
-
-            $friday = new WorkingDay();
-            $friday->from = array_get($userData, 'fridayFrom');
-            $friday->to = array_get($userData, 'fridayTo');
-            $friday->nurse_id = $id;
-            $friday->day = 5;
-            $friday->save();
-
-            $saturday = new WorkingDay();
-            $saturday->from = array_get($userData, 'saturdayFrom');
-            $saturday->to = array_get($userData, 'saturdayTo');
-            $saturday->nurse_id = $id;
-            $saturday->day = 6;
-            $saturday->save();
-
-            $sunday = new WorkingDay();
-            $sunday->from = array_get($userData, 'sundayFrom');
-            $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->nurse_id = $id;
-            $sunday->day = 0;
-            $sunday->save();
-        }else {
-            $monday = new WorkingDay();
-            $monday->from = array_get($userData, 'mondayFrom');
-            $monday->to = array_get($userData, 'mondayTo');
-            $monday->doctor_id = $id;
-            $monday->day = 1;
-            $monday->save();
-
-            $tuesday = new WorkingDay();
-            $tuesday->from = array_get($userData, 'tuesdayFrom');
-            $tuesday->to = array_get($userData, 'tuesdayTo');
-            $tuesday->doctor_id = $id;
-            $tuesday->day = 2;
-            $tuesday->save();
-
-            $wednesday = new WorkingDay();
-            $wednesday->from = array_get($userData, 'wednesdayFrom');
-            $wednesday->to = array_get($userData, 'wednesdayTo');
-            $wednesday->doctor_id = $id;
-            $wednesday->day = 3;
-            $wednesday->save();
-
-            $thursday = new WorkingDay();
-            $thursday->from = array_get($userData, 'thursdayFrom');
-            $thursday->to = array_get($userData, 'thursdayTo');
-            $thursday->doctor_id = $id;
-            $thursday->day = 4;
-            $thursday->save();
-
-            $friday = new WorkingDay();
-            $friday->from = array_get($userData, 'fridayFrom');
-            $friday->to = array_get($userData, 'fridayTo');
-            $friday->doctor_id = $id;
-            $friday->day = 5;
-            $friday->save();
-
-            $saturday = new WorkingDay();
-            $saturday->from = array_get($userData, 'saturdayFrom');
-            $saturday->to = array_get($userData, 'saturdayTo');
-            $saturday->doctor_id = $id;
-            $saturday->day = 6;
-            $saturday->save();
-
-            $sunday = new WorkingDay();
-            $sunday->from = array_get($userData, 'sundayFrom');
-            $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->doctor_id = $id;
-            $sunday->day = 0;
-            $sunday->save();
-        }
     }
 
     public function registerClinicAdmin(array $userData, $clinic_id)
@@ -540,6 +338,7 @@ class UserService
         return response()->json(['created' => 'Request for vacation has been created'], 201);
 
     }
+
 
 
 }

@@ -38,8 +38,7 @@ class AuthController extends Controller
 
     public function registerMedicalStaff(Request $request)
     {
-        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address', 'role', 'mondayFrom', 'mondayTo', 'tuesdayFrom', 'tuesdayTo', 'wednesdayFrom', 'wednesdayTo', 'thursdayFrom', 'thursdayTo', 'fridayFrom', 'fridayTo', 'saturdayFrom', 'saturdayTo', 'sundayFrom', 'sundayTo');
-        
+        $credentials = $request->only('name', 'last_name', 'email', 'password', 'ensurance_id', 'city', 'state', 'phone_number', 'address', 'role');
         return $this->userService->registerMedicalStaff($credentials);
     }
 

@@ -4,7 +4,6 @@ namespace App\Utils;
 use App\Appointment;
 use App\Doctor;
 use Carbon\Carbon;
-use App\WorkingDay;
 use App\OperationsRoom;
 use App\Utils\IAddAppointmentStrategy;
 
@@ -15,6 +14,7 @@ class AddCustomAppointment implements IAddAppointmentStrategy
         $message = array('error' => false, 'message' => '');
         
         $doctor = $app->doctor;
+
         $user = $doctor->user()->first();
         //poklapanje sa godisnjnim odmorom
         $apps = $user
@@ -82,7 +82,6 @@ class AddCustomAppointment implements IAddAppointmentStrategy
             $message['message'] = 'Work hours for given day: '.$res->from.' to '.$res->to;
         }
 
-        
 
         return $message;
 

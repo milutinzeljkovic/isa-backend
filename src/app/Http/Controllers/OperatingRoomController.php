@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 use App\Services\OperatingRoomService;
 use App\Http\Requests\OperationRoomRequest;
-use App\Appointment;
-use App\OperationsRoom;
 
 use Illuminate\Http\Request;
 
@@ -77,11 +75,7 @@ class OperatingRoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $values = $request->all();
-
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->update($values);
-        return response()->json(['message' => "Operating room successfully updated"], 200);
+        //
     }
 
     /**
@@ -92,17 +86,10 @@ class OperatingRoomController extends Controller
      */
     public function destroy($id)
     {
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->delete();
-        return $opRoom->id;
+        //
     }
 
     public function getOpRooms(){
         return $this->_operatingRoomService->getOperatingRooms();
-    }
-
-    public function seeIfOpRoomBooked($id)
-    {
-        return $this->_operatingRoomService->seeIfOpRoomBooked($id);
     }
 }

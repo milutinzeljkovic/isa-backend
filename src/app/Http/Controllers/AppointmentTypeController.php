@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 use App\Services\AppointmentTypeService;
 use App\Http\Requests\AppointmentTypeRequest;
 use Illuminate\Http\Request;
-use App\AppointmentType;
-use App\Appointment;
 
 class AppointmentTypeController extends Controller
 {
@@ -77,12 +75,7 @@ class AppointmentTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $values = $request->all();
-
-        $appType = AppointmentType::find($id);
-        $appType->update($values);
-        
-        return response()->json(['message' => "Appointment type successfully updated"], 200);
+        //
     }
 
     /**
@@ -93,10 +86,7 @@ class AppointmentTypeController extends Controller
      */
     public function destroy($id)
     {
-        $appType = AppointmentType::find($id);
-        $appType->delete();
-
-        return $appType->id;
+        //
     }
 
     public function clinicAppointmentTypes()
@@ -107,10 +97,5 @@ class AppointmentTypeController extends Controller
     public function getAllAppTypes()
     {
         return $this->_appointmentTypeService->getAppointmentTypes();
-    }
-
-    public function seeIfAppTypeUsed($id)
-    {   
-        return $this->_appointmentTypeService->seeIfAppTypeUsed($id);
     }
 }

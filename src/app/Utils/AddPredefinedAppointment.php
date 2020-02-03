@@ -7,7 +7,6 @@ use App\Doctor;
 use Carbon\Carbon;
 use App\OperationsRoom;
 use Illuminate\Support\Facades\DB;
-use App\WorkingDay;
 use App\Utils\IAddAppointmentStrategy;
 
 class AddPredefinedAppointment implements IAddAppointmentStrategy
@@ -121,8 +120,6 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
             $message['error'] = true;
             $message['message'] = 'Work hours for given day: '.$res->from.' to '.$res->to;
         }
-
-
 
         return $message;
 

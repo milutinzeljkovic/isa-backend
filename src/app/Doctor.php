@@ -31,9 +31,4 @@ class Doctor extends Model
         return $this->belongsToMany('App\AppointmentType')
                 ->as('appointment_type_doctor');
     }
-    
-    public function workingDays()
-    {
-        return $this->hasMany('App\WorkingDay');
-    }
 }
