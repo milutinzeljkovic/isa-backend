@@ -24,8 +24,8 @@ class DiagnoseStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'label' => 'required|string',
             'name' => 'required|string',
-            'description' => 'required|string'
         ];
     }
 }
