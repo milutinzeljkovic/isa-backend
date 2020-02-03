@@ -13,6 +13,8 @@ class MedicineService implements IMedicineService
         $medicine = new Medicine();
 
         $medicine->name = array_get($medicineData, 'name');
+        $medicine->label = array_get($medicineData, 'label');
+
         $medicine->save();
        
 

@@ -11,15 +11,12 @@ class DiagnoseService implements IDiagnoseService
 {
     public function addDiagnose(array $diagnoseData)
     {
-        $currentUser = Auth::user();
-
-        $clinicalCenterAdmin = $currentUser->userable()->get()[0];
+       
 
         $diagnose = new Diagnose();
 
         $diagnose->name = array_get($diagnoseData, 'name');
-        $diagnose->description = array_get($diagnoseData, 'description');
-        $diagnose->clinical_center_id = $clinicalCenterAdmin->clinical_center_id;
+        $diagnose->label = array_get($diagnoseData, 'label');
         $diagnose->save();
        
 
