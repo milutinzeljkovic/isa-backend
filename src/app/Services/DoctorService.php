@@ -92,10 +92,9 @@ class DoctorService implements IDoctorService
     {
         $user = Auth::user();
         $doctor = $user->userable()->get()[0];
-
         $appointments = Appointment::where('doctor_id', $doctor->id)
                                     ->where('patient_id','!=',null)
-                                    ->where('approved','==',1)
+                                    ->where('approved',1)
                                     ->with('appointmentType')
                                     ->with(['patient' => function($q) {
                                         $q->with('user');
@@ -127,7 +126,6 @@ class DoctorService implements IDoctorService
         $medicalRecord =  MedicalRecord::where('patient_id', $appointment->patient_id)->first();
 
         if( $appointment->done == 1){
-            print_r($height);
 
             $medicalRecord->height=$height;
             $medicalRecord->weight=$weight;
@@ -174,6 +172,27 @@ class DoctorService implements IDoctorService
 
     }
 
+    function getDataForDoctor($appointment_id)
+    {
+        $appointment =  Appointment::where('id',$appointment_id )->first();
 
+        if($appointment->done == 0){
+            $medicalRecord =  MedicalRecord::where('patient_id', $appointment->patient_id)->first();
+            return $medicalRecord;
+        }
+
+        $medicalReport= MedicalReport::where('appointment_id',$appointment_id)
+                        ->with('diagnose')
+                        ->with('medicalRecord')
+                        ->with('appointment')
+                        ->with(['prescriptions' => function($q) {
+                            $q->with('medicine');
+                        }])               
+                         ->first();
+
+        return $medicalReport;
+                    
+                        
+    }
 
 }
