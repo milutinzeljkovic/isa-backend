@@ -48,11 +48,11 @@ class AppServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             'App\Services\IPatientService',
-            PatientService::class,
+            PatientService::class
         );
         $this->app->bind(
             'App\Utils\IAddAppointmentStrategy',
-            AddPredefinedAppointment::class,
+            AddPredefinedAppointment::class
         );
         $this->app->bind(
             'App\Services\IDoctorService',

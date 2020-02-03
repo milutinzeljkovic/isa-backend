@@ -4,6 +4,7 @@ namespace App\Utils;
 use App\Appointment;
 use App\Doctor;
 use Carbon\Carbon;
+use App\WorkingDay;
 use App\OperationsRoom;
 use App\Utils\IAddAppointmentStrategy;
 
@@ -14,7 +15,6 @@ class AddCustomAppointment implements IAddAppointmentStrategy
         $message = array('error' => false, 'message' => '');
         
         $doctor = $app->doctor;
-
         $user = $doctor->user()->first();
         //poklapanje sa godisnjnim odmorom
         $apps = $user
@@ -61,6 +61,28 @@ class AddCustomAppointment implements IAddAppointmentStrategy
                 $message['error'] = true;
             }
         }
+
+        $c = new Carbon($app->date);
+        $appointmentDayOfWeek = $c->dayOfWeek;
+        $c = new Carbon($app->date);
+        $pieces = explode(" ", $app->date);
+        $appointmentHourOfDay = $pieces[1];
+
+        $res = WorkingDay::where('doctor_id',$app->doctor_id)
+            ->where('day','=',$appointmentDayOfWeek)
+            ->where('from', '<', $appointmentHourOfDay)
+            ->where('to', '>', $appointmentHourOfDay)
+            ->get();
+        if(count($res) == 0)
+        {
+            $res = WorkingDay::where('doctor_id',$app->doctor_id)
+                ->where('day','=', $appointmentDayOfWeek)
+                ->first();
+            $message['error'] = true;
+            $message['message'] = 'Work hours for given day: '.$res->from.' to '.$res->to;
+        }
+
+        
 
         return $message;
 

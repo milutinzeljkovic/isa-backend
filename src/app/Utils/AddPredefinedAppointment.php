@@ -7,6 +7,7 @@ use App\Doctor;
 use Carbon\Carbon;
 use App\OperationsRoom;
 use Illuminate\Support\Facades\DB;
+use App\WorkingDay;
 use App\Utils\IAddAppointmentStrategy;
 
 class AddPredefinedAppointment implements IAddAppointmentStrategy
@@ -99,6 +100,29 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
                 $message['message'] = 'Operating room is not free';
             }
         }
+
+
+        $c = new Carbon($app->date);
+        $appointmentDayOfWeek = $c->dayOfWeek;
+        $c = new Carbon($app->date);
+        $pieces = explode(" ", $app->date);
+        $appointmentHourOfDay = $pieces[1];
+
+        $res = WorkingDay::where('doctor_id',$app->doctor_id)
+            ->where('day','=',$appointmentDayOfWeek)
+            ->where('from', '<', $appointmentHourOfDay)
+            ->where('to', '>', $appointmentHourOfDay)
+            ->get();
+        if(count($res) == 0)
+        {
+            $res = WorkingDay::where('doctor_id',$app->doctor_id)
+                ->where('day','=', $appointmentDayOfWeek)
+                ->first();
+            $message['error'] = true;
+            $message['message'] = 'Work hours for given day: '.$res->from.' to '.$res->to;
+        }
+
+
 
         return $message;
 

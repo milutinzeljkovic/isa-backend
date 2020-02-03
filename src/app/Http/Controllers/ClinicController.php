@@ -40,7 +40,7 @@ class ClinicController extends Controller
     public function doctors(Clinic $clinic, Request $request)
     {
        
-        $result = $clinic->doctors()->with('user')->with(['appointments' => function ($q) {
+        $result = $clinic->doctors()->with('workingDays')->with('user')->with(['appointments' => function ($q) {
             $q->where('patient_id','=',null)
               ->where('date', '>', Carbon::createFromTimestamp(Carbon::now()->getTimestamp())->toDateTimeString())
                 ->with('operationsRoom')
