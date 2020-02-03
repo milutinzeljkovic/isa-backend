@@ -24,7 +24,6 @@ class PatientService implements IPatientService
         $clinic = Clinic::where('id', $medicalStaff->clinic_id)->get()[0];
         $patient = $clinic->patients()->with('user')->get();
         
-
         return $patient;
 
     }
