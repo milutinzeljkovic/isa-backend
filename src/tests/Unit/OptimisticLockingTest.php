@@ -23,7 +23,7 @@ class OptimisticLockingTest extends TestCase
         $user1 = '2';
         $user2 = '5';
 
-        $appointment = DB::table('appointments')->where('id','7')->first();
+        $appointment = DB::table('appointments')->where('id','1')->first();
         $this->updateAppointment($appointment, $user2);
         $this->updateAppointment($appointment, $user1);
         $this->assertEquals('5', $appointment->patient_id);
