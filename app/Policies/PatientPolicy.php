@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Patient;
+use App\MedicalRecord;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PatientPolicy
@@ -105,5 +106,14 @@ class PatientPolicy
     public function forceDelete(User $user, Patient $patient)
     {
         //
+    }
+
+    public function viewMedicalRecord(User $user, $id)
+    {
+        $medicalRecord = MedicalRecord::where('patient_id',$id)->first();
+        $patient = Patient::find($id);
+        $ret = $user->userable_type == "App\Doctor" || $user->userable_type == "App\Nurse" || $user->userable_id == $id
+        || $user->userable_type == "App\ClinicAdmin" || $user->userable_type == "App\ClinicalCenterAdmin";
+        return $ret;
     }
 }
