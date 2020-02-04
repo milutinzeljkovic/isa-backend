@@ -15,12 +15,9 @@ class ClinicAdminService implements IClinicAdminService
         $user = Auth::user();
         $clinicAdmin = $user->userable()->get()[0];
 
-        $doctors1 = Doctor::where('clinic_id', $clinicAdmin->clinic_id)->get()[0];
-        
-        $user1 = $doctors1->with('user')->get();
-        //$doctors = User::where('userable_id', $doctors1::all()->id)->get()[0];
+        $doctors = Doctor::where('clinic_id', $clinicAdmin->clinic_id)->with('user')->get();
 
-        return $user1;
+        return $doctors;
     }
 
     function getAllFacilities(){
