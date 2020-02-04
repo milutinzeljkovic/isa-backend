@@ -8,6 +8,7 @@ use App\Appointment;
 use App\Doctor;
 use App\User;
 use App\WorkingDay;
+use App\Vacation;
 
 
 class DoctorController extends Controller
@@ -123,13 +124,25 @@ class DoctorController extends Controller
         $user = User::find($id);
         $doctor = Doctor::where('id', $user->userable_id)->get()[0];
 
-        $doctor->user()->get()->delete();
-        $doctor->delete();
-
+        //obrisati mu radne sate
         $workingDays = WorkingDay::where('doctor_id', $doctor->id)->get();
         foreach ($workingDays as $workingDay) {
             $workingDay->delete();
         }
+
+        $vacations = Vacation::where('user_id', $id)->get();
+        
+        //ukoliko je imao neke zahteve za odmor ili ceka na odobrenje da se obrisu
+        if(count($vacations) > 0){
+            foreach($vacations as $vacation){
+                $vacation->delete();
+            }
+        }
+
+        $doctor->user()->delete();
+        $doctor->delete();
+
+        
         return $doctor->id;
     }
 

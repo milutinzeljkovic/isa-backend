@@ -7,6 +7,7 @@ use App\OperationsRoom;
 use App\Clinic;
 use App\Appointment;
 use Auth;
+use Carbon\Carbon;
 
 class OperatingRoomService implements IOperatingRoomService
 {
@@ -49,5 +50,58 @@ class OperatingRoomService implements IOperatingRoomService
         }
 
         return response()->json(["false"], 200);
+    }
+
+    function searchOperatingRooms($name, $number, $date)
+    {
+        $list = collect();
+        if($date == "null"){
+            $date = null;
+        }
+
+        $query = OperationsRoom::query();
+        $query->where('name', 'like', '%'.$name.'%');
+        if($number != null){
+            $query->where('number', '=', $number);
+        }
+
+        $found = false;
+        if($date != null){
+            $month = explode('-', $date)[1];
+            $day = explode('-', $date)[2];
+
+            if(strlen($month) == 1){
+                $month = '0'.$month;
+            }
+
+            if(strlen($day) == 1){
+                $day = '0'.$day;
+            }
+
+            $datee = explode('-', $date)[0].'-'.$month.'-'.$day;  //formated date
+
+            $operatingRooms = $query->get();
+            foreach($operatingRooms as $opRoom){
+                $found = false;
+                $appointments = Appointment::where('operations_room_id', $opRoom->id)->whereDate('date', '>=', Carbon::now())->get();
+                if(count($appointments) > 0){
+                    foreach($appointments as $appointment){
+                        $date1 = explode(' ', $appointment->date)[0];
+                        if($date1 == $datee){
+                            $found = true;
+                        }
+                    }
+                    
+                    if($found == false){
+                        $list->push($opRoom);
+                    }
+                }else {
+                    $list->push($opRoom);
+                }
+            }
+        }else {
+            $list = $query->get();
+        }
+        return $list;
     }
 }
