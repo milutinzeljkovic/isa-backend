@@ -9,7 +9,7 @@ class Diagnose extends Model
     protected $fillable = 
     [
         'name',
-        'description'
+        'label'
     ];
 
     public function medicalReports()

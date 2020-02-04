@@ -1,28 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Services\OperatingRoomService;
-use App\Http\Requests\OperationRoomRequest;
-use App\Appointment;
-use App\OperationsRoom;
+use App\Services\IVacationService;
+use App\Vacation;
+use App\User;
+use App\Mail\DeclineMail;
 
 use Illuminate\Http\Request;
 
-class OperatingRoomController extends Controller
+class VacationController extends Controller
 {
+    private $_vacationService;
+
+    public function __construct(IVacationService $vacationService)
+    {
+        $this->_vacationService = $vacationService;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(OperatingRoomService $operatingRoomService)
+    public function index()
     {
-        $this->_operatingRoomService = $operatingRoomService;
-    }
-
-    public function index(Request $request)
-    {
-        return $this->_operatingRoomService->searchOperatingRooms($request->input('name'),$request->input('number'),$request->input('date'));
+        //
     }
 
     /**
@@ -41,9 +42,9 @@ class OperatingRoomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OperationRoomRequest $request)
+    public function store(Request $request)
     {
-        return $this->_operatingRoomService->addOperatingRoom($request->validated());
+        //
     }
 
     /**
@@ -77,11 +78,7 @@ class OperatingRoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $values = $request->all();
-
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->update($values);
-        return response()->json(['message' => "Operating room successfully updated"], 200);
+        //
     }
 
     /**
@@ -92,17 +89,28 @@ class OperatingRoomController extends Controller
      */
     public function destroy($id)
     {
-        $opRoom = OperationsRoom::find($id);
-        $opRoom->delete();
-        return $opRoom->id;
+        //
     }
 
-    public function getOpRooms(){
-        return $this->_operatingRoomService->getOperatingRooms();
-    }
-
-    public function seeIfOpRoomBooked($id)
+    public function getVacationRequests()
     {
-        return $this->_operatingRoomService->seeIfOpRoomBooked($id);
+        return $this->_vacationService->getVacationRequests();
+    }
+
+    public function approveVacationRequest($id)
+    {
+        return $this->_vacationService->approveVacationRequest($id);
+    }
+
+    public function declineVacationRequest(Request $request, $id)
+    {
+        $vacation = Vacation::where('id', $id)->get()[0];
+        $user = User::where('id', $vacation->user_id)->get()[0];
+        $msgs = $request->query('msg');
+        \Mail::to($user)->send(new DeclineMail($user, $msgs));
+        $vacation->approved = 0;
+        $vacation->save();
+
+        return $vacation->id;
     }
 }

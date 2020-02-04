@@ -10,6 +10,7 @@ interface IDoctorService
     function getApointments();
     function medicalReportForAppointment(array $userData);
     function getDataForDoctor($appointment_id);
+    function sheduleAnOperation(array $userData);
 
     function seeIfDoctorUsed($id);
     function getWorkingHours($id);

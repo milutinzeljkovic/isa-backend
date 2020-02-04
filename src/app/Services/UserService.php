@@ -236,7 +236,6 @@ class UserService
         $user->confirmed = 1;
         $user->activated = 1;
 
-
         $role = array_get($userData, 'role');
 
         if($role === 'nurse'){
@@ -306,42 +305,42 @@ class UserService
             $monday = new WorkingDay();
             $monday->from = array_get($userData, 'mondayFrom');
             $monday->to = array_get($userData, 'mondayTo');
-            $monday->$doctor->id = $doctor->id;
+            $monday->doctor_id = $doctor->id;
             $monday->day = 1;
             $monday->save();
 
             $tuesday = new WorkingDay();
             $tuesday->from = array_get($userData, 'tuesdayFrom');
             $tuesday->to = array_get($userData, 'tuesdayTo');
-            $tuesday->$doctor->id = $doctor->id;
+            $tuesday->doctor_id = $doctor->id;
             $tuesday->day = 2;
             $tuesday->save();
 
             $wednesday = new WorkingDay();
             $wednesday->from = array_get($userData, 'wednesdayFrom');
             $wednesday->to = array_get($userData, 'wednesdayTo');
-            $wednesday->$doctor->id = $doctor->id;
+            $wednesday->doctor_id = $doctor->id;
             $wednesday->day = 3;
             $wednesday->save();
 
             $thursday = new WorkingDay();
             $thursday->from = array_get($userData, 'thursdayFrom');
             $thursday->to = array_get($userData, 'thursdayTo');
-            $thursday->$doctor->id = $doctor->id;
+            $thursday->doctor_id = $doctor->id;
             $thursday->day = 4;
             $thursday->save();
 
             $friday = new WorkingDay();
             $friday->from = array_get($userData, 'fridayFrom');
             $friday->to = array_get($userData, 'fridayTo');
-            $friday->$doctor->id = $doctor->id;
+            $friday->doctor_id = $doctor->id;
             $friday->day = 5;
             $friday->save();
 
             $saturday = new WorkingDay();
             $saturday->from = array_get($userData, 'saturdayFrom');
             $saturday->to = array_get($userData, 'saturdayTo');
-            $saturday->$doctor->id = $doctor->id;
+            $saturday->doctor_id = $doctor->id;
             $saturday->day = 6;
             $saturday->save();
 
