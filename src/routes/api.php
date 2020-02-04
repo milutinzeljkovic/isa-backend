@@ -24,8 +24,8 @@ Route::group([
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('register', 'Auth\AuthController@register');
     Route::post('register/staff', 'Auth\AuthController@registerMedicalStaff');
-    Route::post('register/clinic-admin/{clinic_id}', 'Auth\AuthController@registerClinicAdmin');
-    Route::post('register/clinical-center-admin', 'Auth\AuthController@registerClinicalCenterAdmin');
+    Route::post('register/clinic-admin/{clinic_id}', 'Auth\AuthController@registerClinicAdmin')->middleware('can:addClinicAdmin,App\ClinicAdmin');
+    Route::post('register/clinical-center-admin', 'Auth\AuthController@registerClinicalCenterAdmin')->middleware('can:addClinicAdmin,App\ClinicAdmin');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('me', 'Auth\AuthController@me');
@@ -45,7 +45,7 @@ Route::group([
     Route::get('{id}', 'PatientsController@view')->middleware('can:view,App\Patient,id');
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
     Route::get('show/{id}', 'PatientsController@view');
-    Route::get('medical-record/{id}', 'PatientsController@medicalRecord');
+    Route::get('medical-record/{id}', 'PatientsController@medicalRecord')->middleware('can:viewMedicalRecord,App\Patient,id');
 });
 
 Route::group([
@@ -54,7 +54,7 @@ Route::group([
 ], function ($router){
     Route::get('','ClinicController@index');
     Route::get('{id}','ClinicController@show');
-    Route::post('','ClinicController@store');
+    Route::post('','ClinicController@store')->middleware('can:add,App\Clinic');
     Route::get('/doctors/{clinic}','ClinicController@doctors');
 });
 
@@ -108,9 +108,9 @@ Route::group([
 ], function ($router){
     
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
-    Route::get('facilities', 'ClinicAdminController@getAllFacilities');
+    Route::get('facilities', 'ClinicAdminController@getAllFacilities')->middleware('can:fetchFacilities,App\Clinic');
     Route::get('clinic', 'ClinicAdminController@getAdminsClinic');
-    Route::put('clinic/update', 'ClinicAdminController@updateClinic');
+    Route::put('clinic/update', 'ClinicAdminController@updateClinic')->middleware('can:update,App\Clinic');
     Route::get('doctors/clinic', 'ClinicAdminController@clinicDoctors');
 
 });
@@ -165,8 +165,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'reactions'
 ], function ($router){
-    Route::post('/{id}', 'ReactionController@store');
-    Route::post('/doctor/{id}', 'ReactionController@storeDoctorRecension');
+    Route::post('/{id}', 'ReactionController@store')->middleware('can:rate,App\Clinic,id');
+    Route::post('/doctor/{id}', 'ReactionController@storeDoctorRecension')->middleware('can:rateDoctor,App\Clinic,id');
 });
 
 Route::group([

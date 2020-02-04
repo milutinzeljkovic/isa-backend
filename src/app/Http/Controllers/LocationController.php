@@ -17,7 +17,7 @@ class LocationController extends Controller
             // Base URI is used with relative requests
             'base_uri' => 'https://maps.googleapis.com/maps/api/place/textsearch/json?query='.$location.'&key='.(string)$apiKey,
             // You can set any number of default request options.
-            'timeout'  => 2.0,
+            'timeout'  => 10.0,
         ]);
 
         $response = $client->request('GET', '');
