@@ -71,6 +71,7 @@ Route::group([
 ],function ($router){
     Route::post('finish-report','DoctorController@medicalReportForAppointment');
     Route::get('get-data/{id}','DoctorController@getDataForDoctor');
+    Route::post('shedule-operation','DoctorController@sheduleAnOperation');
 
     Route::get('calendar','DoctorController@getApointments');
     Route::get('{id}','DoctorController@show');

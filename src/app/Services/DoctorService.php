@@ -13,6 +13,8 @@ use App\MedicalRecord;
 use App\Medicine;
 use App\Prescription;
 use App\Diagnose;
+use App\Operations;
+
 
 use Auth;
 use Log;
@@ -203,6 +205,30 @@ class DoctorService implements IDoctorService
                     
                         
     }
+
+    function sheduleAnOperation(array $userData)
+    {
+        $user = Auth::user();
+        $doctor = $user->userable()->get()[0];
+
+        
+        $appointment_id = array_get($userData, 'appointment_id');
+        $date = array_get($userData, 'date');
+
+        $appointment =  Appointment::where('id',$appointment_id )->first();
+
+        $operation = new Operations;
+        $operation->clinic_id=$doctor->clinic_id;
+        $operation->patient_id=$appointment->patient_id;
+        $operation->date=$date;
+
+        $operation->save();
+
+        return response()->json(['created' => 'Operation has been created'], 201);
+
+
+    }
+
 
 
     function seeIfDoctorUsed($id)

@@ -86,6 +86,14 @@ class DoctorController extends Controller
         return $this->_doctorService->medicalReportForAppointment($credentials);
     }
 
+    public function sheduleAnOperation(Request $request)
+    {
+
+        $credentials = $request->only('appointment_id', 'date');
+
+        return $this->_doctorService->sheduleAnOperation($credentials);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
