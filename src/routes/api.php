@@ -133,6 +133,8 @@ Route::group([
     Route::put('update/{id}', 'OperatingRoomController@update');
     Route::delete('delete/{id}', 'OperatingRoomController@destroy');
     Route::get('used/{id}', 'OperatingRoomController@seeIfOpRoomBooked');
+    Route::get('', 'OperatingRoomController@index');
+    
 });
 
 Route::group([
@@ -172,5 +174,14 @@ Route::group([
 ], function ($router){
     Route::get('doctors/{id}', 'WorkingDayController@getDoctorsWorkingHours');
     Route::put('update-doctors/{id}', 'WorkingDayController@updateDoctorsWorkingHours');
+});
+
+Route::group([
+    'middleware' => ['api', 'jwt.verify', 'jsonify'],
+    'prefix' => 'vacation' 
+], function ($router){
+    Route::get('', 'VacationController@getVacationRequests');
+    Route::put('approve/{id}', 'VacationController@approveVacationRequest');
+    Route::put('decline/{id}', 'VacationController@declineVacationRequest');
 });
 

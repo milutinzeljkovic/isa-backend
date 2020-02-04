@@ -6,4 +6,5 @@ interface IOperatingRoomService
 {
     function addOperatingRoom(array $operatingRoomData);
     function seeIfOpRoomBooked($id);
+    function searchOperatingRooms($name, $number, $date);
 }

@@ -12,6 +12,7 @@ use App\Services\AppointmentService;
 use App\Utils\AddPredefinedAppointment;
 use App\Utils\IAddAppointmentStrategy;
 use App\Services\WorkingDayService;
+use App\Services\VacationService;
 
 use Illuminate\Support\Facades\Log;
 use DB;
@@ -77,6 +78,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Services\IWorkingDayService',
             WorkingDayService::class
+        );
+
+        $this->app->bind(
+            'App\Services\IVacationService',
+            VacationService::class
         );
     }
 }
