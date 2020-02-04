@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Medicine extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name','label'];
 
     //kom klinickom centru pripada taj lek
     public function clinicalCenter()
