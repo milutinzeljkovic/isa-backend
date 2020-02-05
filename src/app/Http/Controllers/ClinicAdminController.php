@@ -97,6 +97,11 @@ class ClinicAdminController extends Controller
         return $this->_clinicAdminService->getAdminsClinic();
     }
 
+    public function getOperations()
+    {
+        return $this->_clinicAdminService->getOperations();
+    }
+
     public function updateClinic(Request $request)
     {
         $credentials = $request->only('name', 'description', 'id', 'clinic_center', 'address');

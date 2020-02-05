@@ -89,7 +89,7 @@ class DoctorController extends Controller
     public function sheduleAnOperation(Request $request)
     {
 
-        $credentials = $request->only('appointment_id', 'date');
+        $credentials = $request->only('appointment_id', 'date', 'info');
 
         return $this->_doctorService->sheduleAnOperation($credentials);
     }

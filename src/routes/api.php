@@ -106,7 +106,7 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'clinic-admin'
 ], function ($router){
-    
+    Route::get('operations', 'ClinicAdminController@getOperations');
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
     Route::get('facilities', 'ClinicAdminController@getAllFacilities')->middleware('can:fetchFacilities,App\Clinic');
     Route::get('clinic', 'ClinicAdminController@getAdminsClinic');

@@ -7,6 +7,7 @@ use Auth;
 use App\Clinic;
 use App\User;
 use App\Doctor;
+use App\Operations;
 
 class ClinicAdminService implements IClinicAdminService
 {
@@ -29,6 +30,23 @@ class ClinicAdminService implements IClinicAdminService
 
         return $facilities;
     }
+
+    function getOperations(){
+        $user = Auth::user();
+        $clinicAdmin = $user->userable()->get()[0];
+
+        $operations = Operations::where('clinic_id', $clinicAdmin->clinic_id)
+                        ->with(['patient' => function($q) {
+                            $q->with('user');
+                        }])->get();
+
+
+        return $operations;
+
+
+
+    }
+
 
 
     function getAdminsClinic()
