@@ -134,7 +134,8 @@ Route::group([
     Route::delete('delete/{id}', 'OperatingRoomController@destroy');
     Route::get('used/{id}', 'OperatingRoomController@seeIfOpRoomBooked');
     Route::get('', 'OperatingRoomController@index');
-    
+    Route::get('availability/{id}', 'OperatingRoomController@getAppointments');
+    Route::get('recommendation/{id}', 'OperatingRoomController@getFirstFreeDate');
 });
 
 Route::group([
