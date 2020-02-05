@@ -112,6 +112,7 @@ Route::group([
     Route::get('clinic', 'ClinicAdminController@getAdminsClinic');
     Route::put('clinic/update', 'ClinicAdminController@updateClinic')->middleware('can:update,App\Clinic');
     Route::get('doctors/clinic', 'ClinicAdminController@clinicDoctors');
+    Route::post('reserve-operation', 'ClinicAdminController@reserveOperation');
 
 });
 

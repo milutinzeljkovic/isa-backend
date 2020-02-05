@@ -9,7 +9,7 @@ class Operations extends Model
      protected $fillable = [
         'date',
         'lock_version',
-        'operations_room_id',
+        'operations_rooms_id',
         'duration',
         'clinic_id',
         'patient_id'
@@ -23,7 +23,8 @@ class Operations extends Model
 
     public function operationsRoom()
     {
-        return $this->belongsTo('App\OperationsRoom');
+        return $this->belongsTo('App\OperationsRoom');  
+                    
     }
 
     public function patient()

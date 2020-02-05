@@ -115,4 +115,9 @@ class ClinicAdminController extends Controller
         $clinic = $admin->clinic()->first();
         return $clinic->doctors()->with('user')->get();
     }
+
+    public function reserveOperation(Request $request)
+    {
+        return $this->_clinicAdminService->reserveOperation($request->input('operations_room_id'),$request->input('operation_id'));
+    }
 }

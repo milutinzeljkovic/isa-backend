@@ -9,5 +9,6 @@ interface IClinicAdminService
     function getAdminsClinic();
     function updateClinic(array $clinicData);
     function getOperations();
+    function reserveOperation($operations_room_id, $operation_id);
     //function defineAvailableAppointment();
 }
