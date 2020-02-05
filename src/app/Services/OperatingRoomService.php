@@ -29,22 +29,29 @@ class OperatingRoomService implements IOperatingRoomService
         return response()->json(['created' => 'Operating room has been created'], 201);
     }
 
-    public function getOperatingRooms(){
+    public function getOperatingRooms()
+    {
         $user = Auth::user();
         $clinicAdmin = $user->userable()->first();
-
         $clinic = Clinic::where('id', $clinicAdmin->clinic_id)->first();
         $facilities = $clinic->operationRooms;
 
         return $facilities;
     }
 
-    public function seeIfOpRoomBooked($id){
-        $allApps = Appointment::all();
+    public function seeIfOpRoomBooked($id)
+    {
 
-        foreach($allApps as $appointment){
-            if($appointment->operations_room_id != null){
-                if($appointment->operations_room_id == $id){    //za sad ne proverava da li je termin zakazan
+        //miki dan mu jebem
+        $allApps = Appointment::where('date','>',Carbon::now())
+            ->where('done',0)
+            ->get();
+        foreach($allApps as $appointment)
+        {
+            if($appointment->operations_room_id != null)
+            {
+                if($appointment->operations_room_id == $id)
+                {   
                     return response()->json(["true"], 200);
                 }
             }
