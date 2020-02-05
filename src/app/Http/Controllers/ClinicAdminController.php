@@ -120,4 +120,17 @@ class ClinicAdminController extends Controller
     {
         return $this->_clinicAdminService->reserveOperation($request->input('operations_room_id'),$request->input('operation_id'));
     }
+
+    public function reserveAppointmentRoom(Request $request)
+    {
+        return $this->_clinicAdminService->reserveAppointmentRoom($request->input('operations_room_id'),$request->input('appointment_id'));
+
+    }
+
+    public function pendingAppointmentRequests()
+    {
+        return $this->_clinicAdminService->pendingAppointmentRequests();
+
+    }
+
 }

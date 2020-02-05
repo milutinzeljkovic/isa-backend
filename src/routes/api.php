@@ -113,6 +113,9 @@ Route::group([
     Route::put('clinic/update', 'ClinicAdminController@updateClinic')->middleware('can:update,App\Clinic');
     Route::get('doctors/clinic', 'ClinicAdminController@clinicDoctors');
     Route::post('reserve-operation', 'ClinicAdminController@reserveOperation');
+    Route::post('reserve-appointment', 'ClinicAdminController@reserveAppointmentRoom');
+    Route::get('pending-appointment-requests', 'ClinicAdminController@pendingAppointmentRequests');
+    
 
 });
 

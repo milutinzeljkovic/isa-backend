@@ -153,8 +153,106 @@ class ClinicAdminService implements IClinicAdminService
             return $message;
         }
 
+    }
+
+    function reserveAppointmentRoom($operations_room_id, $appointment_id)
+    {
+        $message = array('error' => false, 'message' => '');
+
+        $appointment = Appointment::find($appointment_id);
+        
+        $operaitonRoom =  OperationsRoom::find($operations_room_id);
+
+        if($appointment->duration == null)
+        {
+            $appointment->duration = 1;
+        }
+
+        $appointmentsInRoom = Appointment::where('operations_room_id',$operations_room_id)
+            ->where('date','=',$appointment->date)
+            ->where('done',0)
+            ->get();
+        
+        $operationDateStart = Carbon::parse($appointment->date);
+        $operationDateEnd = Carbon::parse($appointment->date);
+        $operationDateEnd->addSeconds($appointment->duration);
+
+        foreach ($appointmentsInRoom as $a) 
+        {
+            $start = Carbon::parse($a->date);
+            $duration = $a->duration;
+            $end = Carbon::parse($start);
+            $end->addSeconds($duration*3600);
+            if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Appointment beginning is overlapping';
+            }
+            if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Appointment ending is overlapping';
+            }  
+            if($operationDateStart == $start )
+            {
+                $message['error'] = true;
+                $message['message'] = 'Operating room is not free';
+            }
+        }
+
+        $operationsInRoom = Operations::where('operations_rooms_id',$operations_room_id)
+            ->where('date','=',$appointment->date)
+            ->get();
+        
+        foreach ($operationsInRoom as $a) 
+        {
+            $start = Carbon::parse($a->date);
+            $duration = $a->duration;
+            $end = Carbon::parse($start);
+            $end->addSeconds($duration*3600);
+            if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Appointment beginning is overlapping with operation';
+            }
+            if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Appointment ending is overlapping';
+            }  
+            if($operation->date == $a->date)
+            {
+                $message['error'] = true;
+                $message['message'] = 'Operating room not free';
+            }
+        }
+
+        if($message['error'] == false)
+        {
+            $appointment->operations_room_id = $operaitonRoom->id;
+            $appointment->save();
+            return $appointment;
+        }
+        else
+        {
+            return $message;
+        }
 
 
+    }
+
+    function pendingAppointmentRequests()
+    {
+        $user = Auth::user();
+        $admin = $user->userable()->first();
+        $clinic_id = $admin->clinic_id;
+        
+        $res = Appointment::where('clinic_id',$clinic_id)
+            ->where('done',0)
+            ->where('date','>',Carbon::now())
+            ->where('operations_room_id','=',null)
+            ->get(); 
+        return $res;
     }
 
 }
