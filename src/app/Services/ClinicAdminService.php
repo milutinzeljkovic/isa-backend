@@ -106,7 +106,7 @@ class ClinicAdminService implements IClinicAdminService
             if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation beginning is overlapping with doctors appointment';
+                $message['message'] = 'Operation beginning is overlapping';
             }
             if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
             {
@@ -116,10 +116,9 @@ class ClinicAdminService implements IClinicAdminService
         }
 
         $operationsInRoom = Operations::where('operations_rooms_id',$operations_room_id)
-            ->whereDate('date',$operation->date)
+            ->where('date','=',$operation->date)
             ->get();
         
-
         foreach ($operationsInRoom as $a) 
         {
             $start = Carbon::parse($a->date);
@@ -129,13 +128,18 @@ class ClinicAdminService implements IClinicAdminService
             if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation beginning is overlapping with doctors appointment';
+                $message['message'] = 'Operation beginning is overlapping with antother operation';
             }
             if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
                 $message['message'] = 'Operation ending is overlapping';
             }  
+            if($operation->date == $a->date)
+            {
+                $message['error'] = true;
+                $message['message'] = 'Operating room not free';
+            }
         }
 
         if($message['error'] == false)
