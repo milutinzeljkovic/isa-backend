@@ -129,7 +129,7 @@ class AppointmentService implements IAppointmentService
         $requestedAppointment->doctor_id = $doctor->id;
         $requestedAppointment->date = array_get($appointment, 'date');
         $requestedAppointment->appointment_type_id = array_get($appointment, 'appointment_type');
-        $requestedAppointment->patient_id = Auth::user()->id;
+        $requestedAppointment->patient_id = Auth::user()->userable()->first()->id;
         $requestedAppointment->clinic_id = $doctor->clinic_id;
         $requestedAppointment->price = $price != null ? $price->price : 1000;
         $requestedAppointment->approved = 0;
