@@ -145,137 +145,77 @@ class OperatingRoomService implements IOperatingRoomService
 
         $prestupna = false;
 
-        if($month == 2){
-            while($day <= 29){
-                if($day < 10){
-                    if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
-                        return $year.'-'.$month.'-'.$day;
-                    }
-                }else{
-                    if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
-                        return $year.'-'.$month.'-'.$day;
-                    }
-                }
-                $day++;
-            }
+        if($year % 4 == 0){
+            $prestupna = true;
         }
-                
-        
-            /*if($month % 2 == 0){
-                if($prestupna){
-                    if($month == 2){
+
+        while($month <= 12){
+            if($month % 2 == 0){
+                if($month == 2){
+                    if($prestupna){  //ako je februar
                         while($day <= 29){
-                            foreach($sortedDates as $sortedDate){
-                                $yearSort = (int)explode('-', $sortedDate->date)[0];
-                                $monthSort = (int)explode('-', $sortedDate->date)[1];
-                                $daySort = (int)explode('-', $sortedDate->date)[2];
-                    
-                                if($year > $yearSort){
-                                    continue;
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
                                 }
-
-                                if($year == $yearSort && $month > $monthSort){
-                                    continue;
-                                }
-
-                                if($year == $yearSort && $month == $monthSort && $day > $daySort){
-                                    continue;
-                                }
-
-                                if($year == $yearSort && $month == $monthSort && $day == $daySort){
-                                    break;
-                                }
-
-                                if($year != $yearSort || $month != $monthSort || $day != $daySort){
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
                                     return $year.'-'.$month.'-'.$day;
                                 }
                             }
-                            $day = $day + 1;
+                            $day++;
                         }
-                        $day = 1;
-                        if(($month + 1) > 12){
-                            $month = 1;
-                            $year = $year + 1;
-                        }else {
-                            $month = $month + 1;
-                        }
-                        return "Jeca";
                     }else {
-                        //svaki paran mesec a da nije februar
+                        while($day <= 28){
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                            $day++;
+                        }
                     }
-                }else {
+                }else{
                     while($day <= 30){
-                        foreach($sortedDates as $sortedDate){
-                            $yearSort = (int)explode('-', $sortedDate->date)[0];
-                            $monthSort = (int)explode('-', $sortedDate->date)[1];
-                            $daySort = (int)explode('-', $sortedDate->date)[2];
-                
-                            if($year > $yearSort){
-                                continue;
+                        if($day < 10){
+                            if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                return $year.'-'.$month.'-'.$day;
                             }
-
-                            if($year == $yearSort && $month > $monthSort){
-                                continue;
-                            }
-
-                            if($year == $yearSort && $month == $monthSort && $day > $daySort){
-                                continue;
-                            }
-
-                            if($year == $yearSort && $month == $monthSort && $day == $daySort){
-                                break;
-                            }
-
-                            if($year != $yearSort || $month != $monthSort || $day != $daySort){
+                        }else{
+                            if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
                                 return $year.'-'.$month.'-'.$day;
                             }
                         }
-                        $day = $day + 1;
-                    }
-                    $day = 1;
-                    if(($month + 1) > 12){
-                        $month = 1;
-                        $year = $year + 1;
-                    }else {
-                        $month = $month + 1;
+                        $day++;
                     }
                 }
             }else {
                 while($day <= 31){
-                    foreach($sortedDates as $sortedDate){
-                        $yearSort = (int)explode('-', $sortedDate->date)[0];
-                        $monthSort = (int)explode('-', $sortedDate->date)[1];
-                        $daySort = (int)explode('-', $sortedDate->date)[2];
-            
-                        if($year > $yearSort){
-                            continue;
+                    if($day < 10){
+                        if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                            return $year.'-'.$month.'-'.$day;
                         }
-
-                        if($year == $yearSort && $month > $monthSort){
-                            continue;
-                        }
-
-                        if($year == $yearSort && $month == $monthSort && $day > $daySort){
-                            continue;
-                        }
-
-                        if($year == $yearSort && $month == $monthSort && $day == $daySort){
-                            break;
-                        }
-
-                        if($year != $yearSort || $month != $monthSort || $day != $daySort){
+                    }else{
+                        if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
                             return $year.'-'.$month.'-'.$day;
                         }
                     }
-                    $day = $day + 1;
+                    $day++;
                 }
-                $day = 1;
-                if(($month + 1) > 12){
-                    $month = 1;
-                    $year = $year + 1;
-                }else {
-                    $month = $month + 1;
-                }
-            }*/
+            }
+
+            //za iteriranje
+            $day = 1;
+            if($month + 1 > 12){
+                $month = 1;
+                $year++;
+            }else {
+                $month++;
+            }
+        }
     }
 }
