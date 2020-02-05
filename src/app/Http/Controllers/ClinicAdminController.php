@@ -108,6 +108,12 @@ class ClinicAdminController extends Controller
         return $this->_clinicAdminService->updateClinic($credentials);
     }
 
+    public function editOperation(Request $request)
+    {
+        $credentials = $request->only('doctors', 'duration', 'operation_id');
+        return $this->_clinicAdminService->editOperation($credentials);
+    }
+
     public function clinicDoctors()
     {
         $user = Auth::user();

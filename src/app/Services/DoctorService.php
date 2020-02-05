@@ -111,6 +111,21 @@ class DoctorService implements IDoctorService
         return $appointments;
     }
 
+    function getOperations()
+    {
+        $user = Auth::user();
+        $doctor = $user->userable()->get()[0];
+
+        $operations = $doctor->operations() 
+                            ->with(['patient' => function($q) {
+                                $q->with('user');
+                            }])
+                            ->get();
+        
+
+        return $operations;
+    }
+
     function medicalReportForAppointment(array $userData)
     {
         

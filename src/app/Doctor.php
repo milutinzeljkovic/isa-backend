@@ -36,4 +36,11 @@ class Doctor extends Model
     {
         return $this->hasMany('App\WorkingDay');
     }
+
+    public function operations()
+    {
+        return $this->belongsToMany('App\Operations')
+                    ->as('operation_doctor');
+
+    }
 }

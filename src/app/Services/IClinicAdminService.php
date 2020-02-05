@@ -9,5 +9,6 @@ interface IClinicAdminService
     function getAdminsClinic();
     function updateClinic(array $clinicData);
     function getOperations();
+    function editOperation(array $userData);
     //function defineAvailableAppointment();
 }

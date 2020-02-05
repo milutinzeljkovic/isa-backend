@@ -162,4 +162,8 @@ class DoctorController extends Controller
     public function getWorkingHours($id){
         return $this->_doctorService->getWorkingHours($id);
     }
+
+    public function getOperations(){
+        return $this->_doctorService->getOperations();
+    }
 }
