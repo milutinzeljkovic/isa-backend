@@ -69,10 +69,11 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'doctors'
 ],function ($router){
+    Route::get('operations','DoctorController@getOperations');
+
     Route::post('finish-report','DoctorController@medicalReportForAppointment');
     Route::get('get-data/{id}','DoctorController@getDataForDoctor');
     Route::post('shedule-operation','DoctorController@sheduleAnOperation');
-
     Route::get('calendar','DoctorController@getApointments');
     Route::get('{id}','DoctorController@show');
     Route::get('appointments/{id}', 'DoctorController@showDoctorAppointments');
@@ -106,6 +107,7 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'clinic-admin'
 ], function ($router){
+    Route::post('edit-operations', 'ClinicAdminController@editOperation');
     Route::get('operations', 'ClinicAdminController@getOperations');
     Route::get('doctors', 'ClinicAdminController@getAllDoctors');
     Route::get('facilities', 'ClinicAdminController@getAllFacilities')->middleware('can:fetchFacilities,App\Clinic');

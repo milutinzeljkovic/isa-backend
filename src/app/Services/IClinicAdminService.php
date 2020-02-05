@@ -13,5 +13,6 @@ interface IClinicAdminService
     function reserveAppointmentRoom($operations_room_id, $appointment_id);
     function pendingAppointmentRequests();
 
+    function editOperation(array $userData);
     //function defineAvailableAppointment();
 }

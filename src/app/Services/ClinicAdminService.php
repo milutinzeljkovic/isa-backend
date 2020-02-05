@@ -39,6 +39,8 @@ class ClinicAdminService implements IClinicAdminService
         $clinicAdmin = $user->userable()->get()[0];
 
         $operations = Operations::where('clinic_id', $clinicAdmin->clinic_id)
+                        ->where('operations_rooms_id',null)
+                        ->with('doctors')
                         ->with(['patient' => function($q) {
                             $q->with('user');
                         }])->get();
@@ -46,6 +48,30 @@ class ClinicAdminService implements IClinicAdminService
 
         return $operations;
 
+
+
+    }
+
+    function editOperation(array $userData){
+
+
+        $doctors = array_get($userData, 'doctors');
+        $duration = array_get($userData, 'duration');
+        $operation_id = array_get($userData, 'operation_id');
+
+        $operation = Operations::where('id', $operation_id)->first();
+
+        $operation->duration=$duration;
+        $operation->save();
+
+        foreach($doctors as $d){
+
+            $doctor= Doctor::where('id',$d['id'])->first();
+            $operation->doctors()->attach($doctor);
+        }
+
+
+        return response()->json(['updated' => 'Operation has been updated'], 201);
 
 
     }
