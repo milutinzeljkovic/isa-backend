@@ -105,4 +105,14 @@ class OperatingRoomController extends Controller
     {
         return $this->_operatingRoomService->seeIfOpRoomBooked($id);
     }
+
+    public function getAppointments($id)
+    {
+        return $this->_operatingRoomService->getAppointments($id);
+    }
+
+    public function getFirstFreeDate($id)
+    {
+        return $this->_operatingRoomService->getFirstFreeDate($id);
+    }
 }

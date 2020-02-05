@@ -8,6 +8,7 @@ use App\Clinic;
 use App\Appointment;
 use Auth;
 use Carbon\Carbon;
+use stdClass;
 
 class OperatingRoomService implements IOperatingRoomService
 {
@@ -103,5 +104,118 @@ class OperatingRoomService implements IOperatingRoomService
             $list = $query->get();
         }
         return $list;
+    }
+
+    public function getAppointments($id)
+    {
+        $user = Auth::user();
+        $clinicAdmin = $user->userable()->first();
+
+        $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
+        $appointments = Appointment::where('operations_room_id', $operatingRoom->id)->where('clinic_id', $clinicAdmin->clinic_id)->where('approved', '=', 1)->where('patient_id', '!=', null)->with('appointmentType')
+        ->with(['patient' => function($q) {
+            $q->with('user');
+        }])->get();
+
+        return $appointments;
+    }
+
+    public function getFirstFreeDate($id)
+    {
+        $user = Auth::user();
+        $clinicAdmin = $user->userable()->first();
+
+        $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
+
+        $appointments = Appointment::where('operations_room_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('approved', '=', 1)->where('patient_id', '!=', null)->where('clinic_id', $clinicAdmin->clinic_id)->get();
+
+        $year = (int)explode('-', date("Y-m-d"))[0];
+        $month = (int)explode('-', date("Y-m-d"))[1];
+        $day = (int)explode('-', date("Y-m-d"))[2];
+        $day = $day + 1;
+
+        if(count($appointments) == 0){
+            return $year.'-'.$month.'-'.$day;
+        }
+
+        $dates = array();
+        foreach($appointments as $appointment){
+           $dates[] = explode(' ', $appointment->date)[0];
+        }
+
+        $prestupna = false;
+
+        if($year % 4 == 0){
+            $prestupna = true;
+        }
+
+        while($month <= 12){
+            if($month % 2 == 0){
+                if($month == 2){
+                    if($prestupna){  //ako je februar
+                        while($day <= 29){
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                            $day++;
+                        }
+                    }else {
+                        while($day <= 28){
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                            $day++;
+                        }
+                    }
+                }else{
+                    while($day <= 30){
+                        if($day < 10){
+                            if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }else{
+                            if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }
+                        $day++;
+                    }
+                }
+            }else {
+                while($day <= 31){
+                    if($day < 10){
+                        if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                            return $year.'-'.$month.'-'.$day;
+                        }
+                    }else{
+                        if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                            return $year.'-'.$month.'-'.$day;
+                        }
+                    }
+                    $day++;
+                }
+            }
+
+            //za iteriranje
+            $day = 1;
+            if($month + 1 > 12){
+                $month = 1;
+                $year++;
+            }else {
+                $month++;
+            }
+        }
     }
 }
