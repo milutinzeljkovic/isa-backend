@@ -55,12 +55,17 @@ class OperatingRoomService implements IOperatingRoomService
 
     function searchOperatingRooms($name, $number, $date)
     {
+        $user = Auth::user();
+        $clinicAdmin = $user->userable()->first();
         $list = collect();
         if($date == "null"){
             $date = null;
         }
 
+
         $query = OperationsRoom::query();
+        $query->where('clinic_id',$clinicAdmin->clinic_id);
+        //miki jebem te
         $query->where('name', 'like', '%'.$name.'%');
         if($number != null){
             $query->where('number', '=', $number);
