@@ -7,12 +7,14 @@ use App\AppointmentType;
 use App\Clinic;
 use Auth;
 use App\Appointment;
+use App\Utils\SimpleFactory;
 
 class AppointmentTypeService implements IAppointmentTypeService
 {
     public function addAppointmentType(array $appTypeData)
     {
-        $appType = new AppointmentType();
+        $factory = new SimpleFactory();
+        $appType = $factory->createAppointmentType();
 
         $appType->name = array_get($appTypeData, 'name');
         $user = Auth::user()->userable()->first();

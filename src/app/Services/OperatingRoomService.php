@@ -9,15 +9,17 @@ use App\Appointment;
 use Auth;
 use Carbon\Carbon;
 use stdClass;
+use App\Utils\SimpleFactory;
 
 class OperatingRoomService implements IOperatingRoomService
 {
     public function addOperatingRoom(array $operatingRoomData)
     {
+        $factory = new SimpleFactory();
         $user = Auth::user();
         $clinicAdmin = $user->userable()->first();
 
-        $opRoom = new OperationsRoom();
+        $opRoom = $factory->createOperatingRoom();
 
         $opRoom->name = array_get($operatingRoomData, 'name');
         $opRoom->number = array_get($operatingRoomData, 'number');

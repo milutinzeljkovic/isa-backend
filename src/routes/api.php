@@ -46,6 +46,7 @@ Route::group([
     Route::put('{id}', 'PatientsController@update')->middleware('can:update,App\Patient,id');
     Route::get('show/{id}', 'PatientsController@view');
     Route::get('medical-record/{id}', 'PatientsController@medicalRecord')->middleware('can:viewMedicalRecord,App\Patient,id');
+    Route::get('appointments/{id}', 'PatientsController@getAppointments');
 });
 
 Route::group([

@@ -7,4 +7,5 @@ interface IPatientService
     function getPatientsByClinic();
     function searchPatients(array $searchParameters);
     function getMedicalRecord($id);
+    function getAppointments($id);
 }
