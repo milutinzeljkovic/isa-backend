@@ -10,8 +10,6 @@ class Appointment extends Model
 
     //use OptimisticLocking;
 
-    
-
     protected $fillable = [
         'date',
         'price',

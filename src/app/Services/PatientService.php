@@ -5,9 +5,13 @@ namespace App\Services;
 use App\Services\IPatientService;
 use App\Clinic;
 use App\User;
+use App\Doctor;
+use App\Patient;
 use Auth;
 use App\ClinicalCenterAdmin;
 use App\MedicalRecord;
+use App\Appointment;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,19 +34,26 @@ class PatientService implements IPatientService
 
     function searchPatients(array $searchParameters)
     {
+        $user = Auth::user();
+        $doctor = $user->userable()->get()[0];
 
         $name = array_get($searchParameters, 'name');
         $lastName = array_get($searchParameters, 'last_name');
         $ensurance_id = array_get($searchParameters, 'ensurance_id');
 
-        $patients = User::where('userable_type', 'App\Patient' )
-                        ->where(function ($query) use($name, $lastName, $ensurance_id) {
-                            $query->where('name', 'like', '%'.$name.'%')
+        $patients = DB::table('users')->where('userable_type', 'App\Patient')
+                    ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor) {
+                        $query->join('clinic_patient', function ($join) use ($name, $lastName, $ensurance_id, $doctor){
+                            $join->on('users.userable_id', '=', 'clinic_patient.patient_id')
+                            ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor){
+                                $query->where('name', 'like', '%'.$name.'%')
                                 ->where('last_name', 'like', '%'.$lastName.'%')
-                                ->where('ensurance_id', 'like', '%'.$ensurance_id.'%');
-                        })
-                        ->get();
-
+                                ->where('ensurance_id', 'like', '%'.$ensurance_id.'%')
+                                ->where('clinic_patient.clinic_id', $doctor->clinic_id);
+                            });
+                        });
+                    })
+                    ->get();
         
         return $patients;
     }
@@ -72,6 +83,18 @@ class PatientService implements IPatientService
 
         }])
             ->where('patient_id',$id)->first();
+    }
+
+    public function getAppointments($id)
+    {
+        $user = Auth::user();
+        $doctor = Doctor::where('id', $user->userable_id)->first();
+        $patient = Patient::where('id', $id)->first();
+
+        $appointments = Appointment::where('patient_id', $id)->where('doctor_id', $doctor->id)->where('approved', '=', '1')
+        ->with('appointmentType')->get();
+
+        return $appointments;
     }
 
 }

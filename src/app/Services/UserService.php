@@ -12,7 +12,7 @@ use App\Doctor;
 use App\ClinicAdmin;
 use App\Vacation;
 use App\MedicalRecord;
-
+use App\Utils\SimpleFactory;
 use App\WorkingDay;
 
 
@@ -222,6 +222,7 @@ class UserService
 
         $clinicAdmin = $currentUser->userable()->get()[0];
 
+        $factory = new SimpleFactory();
 
         $user = new User;
         $user->email = array_get($userData, 'email');
@@ -239,54 +240,54 @@ class UserService
         $role = array_get($userData, 'role');
 
         if($role === 'nurse'){
-            $nurse = new Nurse();
+            $nurse = $factory->createNurse();
             $nurse->clinic_id = $clinicAdmin->clinic_id;
             $nurse->save();
             $nurse->user()->save($user);
 
-            $monday = new WorkingDay();
+            $monday = $factory->createWorkingDay();
             $monday->from = array_get($userData, 'mondayFrom');
             $monday->to = array_get($userData, 'mondayTo');
             $monday->nurse_id = $nurse->id;
             $monday->day = 1;
             $monday->save();
 
-            $tuesday = new WorkingDay();
+            $tuesday = $factory->createWorkingDay();
             $tuesday->from = array_get($userData, 'tuesdayFrom');
             $tuesday->to = array_get($userData, 'tuesdayTo');
             $tuesday->nurse_id = $nurse->id;
             $tuesday->day = 2;
             $tuesday->save();
 
-            $wednesday = new WorkingDay();
+            $wednesday = $factory->createWorkingDay();
             $wednesday->from = array_get($userData, 'wednesdayFrom');
             $wednesday->to = array_get($userData, 'wednesdayTo');
             $wednesday->nurse_id = $nurse->id;
             $wednesday->day = 3;
             $wednesday->save();
 
-            $thursday = new WorkingDay();
+            $thursday = $factory->createWorkingDay();
             $thursday->from = array_get($userData, 'thursdayFrom');
             $thursday->to = array_get($userData, 'thursdayTo');
             $thursday->nurse_id = $nurse->id;
             $thursday->day = 4;
             $thursday->save();
 
-            $friday = new WorkingDay();
+            $friday = $factory->createWorkingDay();
             $friday->from = array_get($userData, 'fridayFrom');
             $friday->to = array_get($userData, 'fridayTo');
             $friday->nurse_id = $nurse->id;
             $friday->day = 5;
             $friday->save();
 
-            $saturday = new WorkingDay();
+            $saturday = $factory->createWorkingDay();
             $saturday->from = array_get($userData, 'saturdayFrom');
             $saturday->to = array_get($userData, 'saturdayTo');
             $saturday->nurse_id = $nurse->id;
             $saturday->day = 6;
             $saturday->save();
 
-            $sunday = new WorkingDay();
+            $sunday = $factory->createWorkingDay();
             $sunday->from = array_get($userData, 'sundayFrom');
             $sunday->to = array_get($userData, 'sundayTo');
             $sunday->nurse_id = $nurse->id;
@@ -297,57 +298,57 @@ class UserService
         }
 
         if($role === 'doctor'){
-            $doctor = new Doctor();
+            $doctor = $factory->createDoctor();
             $doctor->clinic_id = $clinicAdmin->clinic_id;
             $doctor->save();
             $doctor->user()->save($user);
 
-            $monday = new WorkingDay();
+            $monday = $factory->createWorkingDay();
             $monday->from = array_get($userData, 'mondayFrom');
             $monday->to = array_get($userData, 'mondayTo');
             $monday->doctor_id = $doctor->id;
             $monday->day = 1;
             $monday->save();
 
-            $tuesday = new WorkingDay();
+            $tuesday = $factory->createWorkingDay();
             $tuesday->from = array_get($userData, 'tuesdayFrom');
             $tuesday->to = array_get($userData, 'tuesdayTo');
             $tuesday->doctor_id = $doctor->id;
             $tuesday->day = 2;
             $tuesday->save();
 
-            $wednesday = new WorkingDay();
+            $wednesday = $factory->createWorkingDay();
             $wednesday->from = array_get($userData, 'wednesdayFrom');
             $wednesday->to = array_get($userData, 'wednesdayTo');
             $wednesday->doctor_id = $doctor->id;
             $wednesday->day = 3;
             $wednesday->save();
 
-            $thursday = new WorkingDay();
+            $thursday = $factory->createWorkingDay();
             $thursday->from = array_get($userData, 'thursdayFrom');
             $thursday->to = array_get($userData, 'thursdayTo');
             $thursday->doctor_id = $doctor->id;
             $thursday->day = 4;
             $thursday->save();
 
-            $friday = new WorkingDay();
+            $friday = $factory->createWorkingDay();
             $friday->from = array_get($userData, 'fridayFrom');
             $friday->to = array_get($userData, 'fridayTo');
             $friday->doctor_id = $doctor->id;
             $friday->day = 5;
             $friday->save();
 
-            $saturday = new WorkingDay();
+            $saturday = $factory->createWorkingDay();
             $saturday->from = array_get($userData, 'saturdayFrom');
             $saturday->to = array_get($userData, 'saturdayTo');
             $saturday->doctor_id = $doctor->id;
             $saturday->day = 6;
             $saturday->save();
 
-            $sunday = new WorkingDay();
+            $sunday = $factory->createWorkingDay();
             $sunday->from = array_get($userData, 'sundayFrom');
             $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->$doctor->id = $doctor->id;
+            $sunday->doctor_id = $doctor->id;
             $sunday->day = 0;
             $sunday->save();
 

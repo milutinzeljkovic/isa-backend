@@ -80,4 +80,9 @@ class PatientsController extends Controller
     {
         return $this->_patientService->getMedicalRecord($id);
     }
+
+    function getAppointments($id)
+    {
+        return $this->_patientService->getAppointments($id);
+    }
 }
