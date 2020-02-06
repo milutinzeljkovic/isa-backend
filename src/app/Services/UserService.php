@@ -347,7 +347,7 @@ class UserService
             $sunday = new WorkingDay();
             $sunday->from = array_get($userData, 'sundayFrom');
             $sunday->to = array_get($userData, 'sundayTo');
-            $sunday->$doctor->id = $doctor->id;
+            $sunday->doctor_id = $doctor->id;
             $sunday->day = 0;
             $sunday->save();
 
