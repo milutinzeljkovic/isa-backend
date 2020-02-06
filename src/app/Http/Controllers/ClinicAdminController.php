@@ -110,8 +110,14 @@ class ClinicAdminController extends Controller
 
     public function editOperation(Request $request)
     {
-        $credentials = $request->only('doctors', 'duration', 'operation_id');
+        $credentials = $request->only('doctors', 'operation_id');
         return $this->_clinicAdminService->editOperation($credentials);
+    }
+
+    public function addDuration(Request $request)
+    {
+        $credentials = $request->only('duration', 'operation_id');
+        return $this->_clinicAdminService->addDuration($credentials);
     }
 
     public function clinicDoctors()

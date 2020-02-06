@@ -11,6 +11,9 @@ use App\User;
 use App\Doctor;
 use App\Operations;
 use Carbon\Carbon;
+use App\Mail\AddToOperationMail;
+use DB;
+
 
 class ClinicAdminService implements IClinicAdminService
 {
@@ -38,15 +41,43 @@ class ClinicAdminService implements IClinicAdminService
         $user = Auth::user();
         $clinicAdmin = $user->userable()->get()[0];
 
+
         $operations = Operations::where('clinic_id', $clinicAdmin->clinic_id)
-                        ->where('operations_rooms_id',null)
                         ->with('doctors')
                         ->with(['patient' => function($q) {
                             $q->with('user');
                         }])->get();
 
+    
+        $newOperations = array();
+        foreach($operations as $o){
+            if(count($o->doctors()->get()) == 0){
+                array_push($newOperations, $o);
+            }
 
-        return $operations;
+        }
+
+        
+     
+
+
+        return $newOperations;
+
+
+
+    }
+
+    function addDuration(array $userData){
+        $duration = array_get($userData, 'duration');
+
+        $operation_id = array_get($userData, 'operation_id');
+        $operation = Operations::where('id', $operation_id)->first();
+
+        $operation->duration=$duration;
+        $operation->save();
+
+
+        return response()->json(['updated' => 'Operation has been updated'], 201);
 
 
 
@@ -56,17 +87,16 @@ class ClinicAdminService implements IClinicAdminService
 
 
         $doctors = array_get($userData, 'doctors');
-        $duration = array_get($userData, 'duration');
         $operation_id = array_get($userData, 'operation_id');
-
         $operation = Operations::where('id', $operation_id)->first();
-
-        $operation->duration=$duration;
-        $operation->save();
-
+        $room=OperationsRoom::where('id',$operation->operations_rooms_id)->first();
         foreach($doctors as $d){
 
             $doctor= Doctor::where('id',$d['id'])->first();
+            $user=$doctor->user()->first();
+            
+
+            \Mail::to($user)->send(new AddToOperationMail($user, $operation,$room));
             $operation->doctors()->attach($doctor);
         }
 
@@ -108,20 +138,16 @@ class ClinicAdminService implements IClinicAdminService
         $operation = Operations::find($operation_id);
         $operaitonRoom =  OperationsRoom::find($operations_room_id);
 
-        $result = $operaitonRoom->with(['appointments' => function ($q) use($operation) {
-            $q->where('done',0)
-                ->where('date', '=', $operation->date);
-        }])->get();
 
         $appointmentsInRoom = Appointment::where('operations_room_id',$operations_room_id)
-            ->whereDate('date',$operation->date)
+            ->where('date','>',Carbon::now())
             ->where('done',0)
             ->get();
+        
         
         $operationDateStart = Carbon::parse($operation->date);
         $operationDateEnd = Carbon::parse($operation->date);
         $operationDateEnd->addSeconds($operation->duration * 3600);
-
         foreach ($appointmentsInRoom as $a) 
         {
             $start = Carbon::parse($a->date);
@@ -131,39 +157,49 @@ class ClinicAdminService implements IClinicAdminService
             if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation beginning is overlapping';
+                $message['message'] = 'Operating room not free1';
             }
             if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation ending is overlapping';
+                $message['message'] = 'Operating room not free2';
+            }  
+            if($operationDateStart->lessThanOrEqualTo($start) && $operationDateEnd->greaterThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Operating room not free3';
             }  
         }
 
         $operationsInRoom = Operations::where('operations_rooms_id',$operations_room_id)
-            ->where('date','=',$operation->date)
-            ->get();
-        
+                ->where('date','>',Carbon::now())
+                ->get();
+                
         foreach ($operationsInRoom as $a) 
         {
             $start = Carbon::parse($a->date);
             $duration = $a->duration;
             $end = Carbon::parse($start);
             $end->addSeconds($duration*3600);
-            if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThanOrEqualTo($end))
+            if($operationDateStart->greaterThanOrEqualTo($start) && $operationDateStart->lessThan($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation beginning is overlapping with antother operation';
+                $message['message'] = 'Operating room not free4';
             }
-            if($operationDateEnd->greaterThanOrEqualTo($start) && $operationDateEnd->lessThanOrEqualTo($end))
+            if($operationDateEnd->greaterThan($start) && $operationDateEnd->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operation ending is overlapping';
-            }  
+                $message['message'] = 'Operating room not free5';
+            }
+            if($operationDateStart->lessThanOrEqualTo($start) && $operationDateEnd->greaterThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Operating room not free6';
+            }    
             if($operation->date == $a->date)
             {
                 $message['error'] = true;
-                $message['message'] = 'Operating room not free';
+                $message['message'] = 'Operating room not free7';
             }
         }
 

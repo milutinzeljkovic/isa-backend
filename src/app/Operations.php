@@ -41,7 +41,7 @@ class Operations extends Model
     public function doctors()
     {
         return $this->belongsToMany('App\Doctor')
-                    ->as('operation_doctor');
+                    ->as('doctor_operations');
     }
 
 
