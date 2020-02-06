@@ -61,7 +61,7 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
         
         $appointmentDate = Carbon::parse($app->date);
         $appointmentDateEnd = Carbon::parse($app->date);
-        $appointmentDateEnd->addSeconds($app->duration);
+        $appointmentDateEnd->addSeconds($app->duration*3600);
 
         foreach ($doctorAppointments as $a) 
         {
@@ -92,7 +92,7 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
             if($appointmentDate->greaterThanOrEqualTo($start) && $appointmentDate->lessThanOrEqualTo($end))
             {
                 $message['error'] = true;
-                $message['message'] = 'Operating room is not free';
+                $message['message'] = 'Operating room is not free!';
             }
             if($appointmentDateEnd->greaterThanOrEqualTo($start) && $appointmentDateEnd->lessThanOrEqualTo($end))
             {

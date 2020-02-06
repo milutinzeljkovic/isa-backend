@@ -106,7 +106,6 @@ class ClinicAdminService implements IClinicAdminService
         $message = array('error' => false, 'message' => '');
 
         $operation = Operations::find($operation_id);
-        $operation->duration = 2;
         $operaitonRoom =  OperationsRoom::find($operations_room_id);
 
         $result = $operaitonRoom->with(['appointments' => function ($q) use($operation) {
@@ -121,7 +120,7 @@ class ClinicAdminService implements IClinicAdminService
         
         $operationDateStart = Carbon::parse($operation->date);
         $operationDateEnd = Carbon::parse($operation->date);
-        $operationDateEnd->addSeconds($operation->duration);
+        $operationDateEnd->addSeconds($operation->duration * 3600);
 
         foreach ($appointmentsInRoom as $a) 
         {
@@ -195,13 +194,13 @@ class ClinicAdminService implements IClinicAdminService
         }
 
         $appointmentsInRoom = Appointment::where('operations_room_id',$operations_room_id)
-            ->where('date','=',$appointment->date)
+            ->where('date','>',Carbon::now())
             ->where('done',0)
             ->get();
         
         $operationDateStart = Carbon::parse($appointment->date);
         $operationDateEnd = Carbon::parse($appointment->date);
-        $operationDateEnd->addSeconds($appointment->duration);
+        $operationDateEnd->addSeconds($appointment->duration* 3600);
 
         foreach ($appointmentsInRoom as $a) 
         {
@@ -276,7 +275,14 @@ class ClinicAdminService implements IClinicAdminService
         $res = Appointment::where('clinic_id',$clinic_id)
             ->where('done',0)
             ->where('date','>',Carbon::now())
+            ->where('patient_id','!=',null)
             ->where('operations_room_id','=',null)
+            ->with(['doctor' => function($q) {
+                $q->with('user');
+            }])
+            ->with(['patient' => function($q) {
+                $q->with('user');
+            }])
             ->get(); 
         return $res;
     }
