@@ -7,6 +7,7 @@ use Auth;
 use App\Clinic;
 use App\OperationsRoom;
 use App\Appointment;
+use App\AppointmentType;
 use App\User;
 use App\Doctor;
 use App\Operations;
@@ -16,6 +17,8 @@ use App\Mail\AddToOperationMail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
+use App\ClinicAdmin;
+use App\Recension;
 
 class ClinicAdminService implements IClinicAdminService
 {
@@ -441,4 +444,92 @@ class ClinicAdminService implements IClinicAdminService
         return $res;
     }
 
+    function getByAppType($id){
+        $appType = AppointmentType::where('id', $id)->get()[0];
+
+        $doctors1 = DB::table('appointment_type_doctor')->where('appointment_type_id', $id)->get();
+        $doctors = collect();
+        foreach($doctors1 as $doc){
+            $user = Doctor::where('id', $doc->doctor_id)->with('user')->first();
+            $doctors->push($user);
+        }
+
+        return $doctors;
+    }
+
+    function specializeDoctor($id, $data){
+        $user = User::where('id', $id)->first();
+        $doctor = Doctor::where('id', $user->userable_id)->first();
+
+        $collection = collect();
+        foreach($data as $detail){
+            $at = AppointmentType::where('id', $detail['id'])->first();
+            $collection->push($at);
+        }
+        
+        if(count($data) > 0) {
+            foreach($collection as $detail){
+                $doctor->appointmentTypes()->save($detail);
+            }
+
+            return response()->json(['message' => 'Doctor is now more specialized']);
+        }
+        
+        return response()->json(['message' => 'Doctor did not learn anything new']);
+    }
+
+    function updateAppointmentRequest($data){
+        $discount = (int)(explode('%', array_get($data, 'discount'))[0]);
+        $duration = (int)(explode(' ', array_get($data, 'duration'))[0]);
+
+        if($discount > 99){
+            return response()->json(['message' => 'Bad request'], 401);
+        }
+        $id = (int)(array_get($data, 'app'));
+
+        $appointment = Appointment::where('id', $id)->first();
+        $appointment->discount = $discount;
+        $appointment->duration = $duration;
+
+        $appointment->save();
+
+        return response()->json(['message' => 'Successfully updated appointment request'], 201);
+    }
+
+    function getAverageClinicRating()
+    {
+        $user = Auth::user();
+        $clinicAdmin = ClinicAdmin::where('id', $user->userable_id)->first();
+
+        $recensions = Recension::where('clinic_id', $clinicAdmin->clinic_id)->get();
+
+        $sum = 0;
+        foreach($recensions as $recension){
+            $sum = $sum + $recension->stars_count;
+        }
+
+        return round($sum/count($recensions),2);
+    }
+
+    function getAverageRatingDoctor($id){
+        $user = User::where('id', $id)->first();
+        
+        $recensions = Recension::where('doctor_id', $user->userable_id)->get();
+
+        $sum = 0;
+        if(count($recensions) == 0){
+            return 0;
+        }
+
+        foreach($recensions as $recension){
+            $sum = $sum + $recension->stars_count;
+        }
+
+        return round($sum/count($recensions),2);
+    }
+
+    /*function earnedMoneyInPeriod($start, $end){
+        $user = Auth::user();
+        $clinicAdmin = ClinicAdmin::
+    }*/
 }

@@ -8,6 +8,9 @@ use App\AppointmentType;
 use App\Appointment;
 use Illuminate\Support\Facades\DB;
 
+use App\ClinicAdmin;
+use App\Price;
+use Auth;
 
 class AppointmentTypeController extends Controller
 {
@@ -120,8 +123,20 @@ class AppointmentTypeController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
+        $cA = ClinicAdmin::where('id', $user->userable_id)->first();
+
         $appType = AppointmentType::find($id);
         $appType->delete();
+
+        $appTypDoctor = DB::table('appointment_type_doctor')->where('appointment_type_id', $id)->get();
+        foreach($appTypDoctor as $atd){
+            $atd->delete();
+        }
+        
+        $appTypDoctor1 = DB::table('appointment_type_clinic')->where('appointment_type_id', $id)->where('clinic_id', $cA->clinic_id)->delete();
+
+        $appsTyp = Price::where('appointment_type_id', $id)->where('clinic_id', $cA->clinic_id)->delete();
 
         return $appType->id;
     }
@@ -139,5 +154,10 @@ class AppointmentTypeController extends Controller
     public function seeIfAppTypeUsed($id)
     {   
         return $this->_appointmentTypeService->seeIfAppTypeUsed($id);
+    }
+
+    public function getDoctorsOptions($id)
+    {
+        return $this->_appointmentTypeService->getDoctorsOptions($id);
     }
 }

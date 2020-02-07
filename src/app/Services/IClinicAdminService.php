@@ -14,5 +14,9 @@ interface IClinicAdminService
     function pendingAppointmentRequests();
     function addDuration(array $userData);
     function editOperation(array $userData);
-    //function defineAvailableAppointment();
+    function getByAppType($id);
+    function specializeDoctor($id, $data);
+    function updateAppointmentRequest($data);
+    function getAverageClinicRating();
+    function getAverageRatingDoctor($id);
 }
