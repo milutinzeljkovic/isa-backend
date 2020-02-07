@@ -16,6 +16,7 @@ cache:
 
 before_script:
   - cd src
+  - pwd
   - cp .env.travis .env
   - sudo mysql -e 'CREATE DATABASE isa;'
   - composer self-update
