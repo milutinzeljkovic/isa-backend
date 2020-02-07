@@ -9,7 +9,8 @@ class Prescription extends Model
 {
 
     protected $fillable = [
-        'info'
+        'info',
+        'nurse_id'
     ];
 
     public function medicalReport()

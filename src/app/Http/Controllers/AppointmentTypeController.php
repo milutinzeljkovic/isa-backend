@@ -6,6 +6,8 @@ use App\Http\Requests\AppointmentTypeRequest;
 use Illuminate\Http\Request;
 use App\AppointmentType;
 use App\Appointment;
+use Illuminate\Support\Facades\DB;
+
 
 class AppointmentTypeController extends Controller
 {
@@ -79,10 +81,35 @@ class AppointmentTypeController extends Controller
     {
         $values = $request->all();
 
+
         $appType = AppointmentType::find($id);
-        $appType->update($values);
+        $name = array_get($values, 'name');
+
+        DB::transaction(function () use($name, $id)
+        {
+            $at =  DB::table('appointment_types')
+                ->where('id', $id)
+                ->first();
+            DB::table('appointment_types')
+                ->where('id', $id)
+                ->where('lock_version', $at->lock_version)
+                ->update([
+                        'name' => $name,
+                        'lock_version' => $at->lock_version +1
+                    ]);            
+        });
+
+        $updatedAt = AppointmentType::find($id);
+
+        if($updatedAt->name != $name)
+        {
+            return response('Error '.json_encode($updatedClinic),400);
+        }
+        else
+        {
+            return response()->json(['message' => "Appointment type successfully updated"], 200);
+        }
         
-        return response()->json(['message' => "Appointment type successfully updated"], 200);
     }
 
     /**

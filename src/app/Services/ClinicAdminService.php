@@ -87,21 +87,24 @@ class ClinicAdminService implements IClinicAdminService
 
     function editOperation(array $userData){
 
-
         $doctors = array_get($userData, 'doctors');
         $operation_id = array_get($userData, 'operation_id');
         $operation = Operations::where('id', $operation_id)->first();
         $room=OperationsRoom::where('id',$operation->operations_rooms_id)->first();
         
+        $c = 0;
+
         foreach($doctors as $d)
         {
+            $c++;
             try
             {
+
                 DB::beginTransaction();
 
-                DB::table('doctor_operations')
+                $res = DB::table('doctor_operations')
                     ->insert(['date' => $operation->date, 'doctor_id' => $d['id']]);
-
+                
                 $reservation = DB::table('doctor_operations')
                     ->where('date', '=', $operation->date)
                     ->where('doctor_id', '=', $d['id'])
@@ -121,7 +124,8 @@ class ClinicAdminService implements IClinicAdminService
                     ->where('doctor_id', '=', $d['id'])
                     ->update(['operations_id' => $operation->id
                 ]);
-                DB::commit();
+
+                 DB::commit();
             }
             catch(\Exception $exception)
             {
@@ -132,9 +136,7 @@ class ClinicAdminService implements IClinicAdminService
             $doctor= Doctor::where('id',$d['id'])->first();
             $user=$doctor->user()->first();
             \Mail::to($user)->send(new AddToOperationMail($user, $operation,$room));
-            $operation->doctors()->attach($doctor);
         }
-
 
         return response()->json(['updated' => 'Operation has been updated'], 201);
 
@@ -161,9 +163,32 @@ class ClinicAdminService implements IClinicAdminService
         $clinic->clinical_center_id = array_get($newClinicData, 'clinic_center');
         $clinic->address = array_get($newClinicData, 'address');
 
-        $clinic->save();
+        DB::transaction(function () use($clinic, $newClinicData){
+            $cl =  DB::table('clinics')
+                ->where('id', array_get($newClinicData, 'id'))
+                ->first();
+            DB::table('clinics')
+                ->where('id', $cl->id)
+                ->where('lock_version', $cl->lock_version)
+                ->update([
+                        'name' => $clinic->name,
+                        'description' => $clinic->description,
+                        'address' => $clinic->address,
+                        'lock_version' => $cl->lock_version +1
+                    ]);            
+        });
 
-        return response()->json(['updated' => 'Clinic has been updated'], 201);
+        $updatedClinic = Clinic::find(array_get($newClinicData, 'id'));
+
+        if($clinic->description != $updatedClinic->description)
+        {
+            return response('Error '.json_encode($updatedClinic),400);
+        }
+        else
+        {
+            return response()->json(['updated' => 'Clinic has been updated'], 201);
+
+        }
     }
 
     function reserveOperation($operations_room_id, $operation_id)
@@ -348,21 +373,44 @@ class ClinicAdminService implements IClinicAdminService
 
         if($message['error'] == false)
         {
-            $appointment->operations_room_id = $operaitonRoom->id;
             $patient = $appointment->patient_id;
             $clinic = Clinic::find($appointment->clinic_id);
-
             $doctor = User::where('userable_id',$appointment->doctor_id)
                 ->where('userable_type','App\\Doctor')
                 ->first();
             $user = User::where('userable_id',$patient)
                 ->where('userable_type','App\\Patient')
                 ->first();
-            $encrypted = Crypt::encryptString($appointment->id);
-            \Mail::to($user)->send(new AppointmentReservedMail($user,$appointment,$doctor,$operaitonRoom,$clinic,$encrypted));
 
-            $appointment->save();
-            return $appointment;
+
+            $operaiton_room_id = $operaitonRoom->id;
+            DB::transaction(function () use($appointment, $operaiton_room_id)
+            {
+                $app =  DB::table('appointments')
+                    ->where('id', $appointment->id)
+                    ->first();
+                DB::table('appointments')
+                    ->where('id', $app->id)
+                    ->where('lock_version', $app->lock_version)
+                    ->update([
+                            'operations_room_id' => $operaiton_room_id,
+                            'lock_version' => $app->lock_version +1,
+                        ]);            
+            });
+
+            $updatedAppointment = Appointment::find($appointment_id);
+
+            if($operaiton_room_id != $updatedAppointment->operations_room_id)
+            {
+                return response('Error', 400);
+            }
+            else
+            {
+                $encrypted = Crypt::encryptString($appointment->id);
+                \Mail::to($user)->send(new AppointmentReservedMail($user,$appointment,$doctor,$operaitonRoom,$clinic,$encrypted));
+                return $updatedAppointment;
+            } 
+
         }
         else
         {
