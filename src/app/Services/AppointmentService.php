@@ -85,19 +85,16 @@ class AppointmentService implements IAppointmentService
         }
         $id = $user->id;
         DB::transaction(function () use($appointment, $id){
-
-            DB::table('appointments')
+            $app =  DB::table('appointments')
                 ->where('id', $appointment->id)
-                ->where('lock_version', $appointment->lock_version)
-                ->update(['patient_id' => $id]);
+                ->first();
             DB::table('appointments')
-                ->where('id', $appointment->id)
-                ->where('lock_version', $appointment->lock_version)
-                ->update(['lock_version' => $appointment->lock_version +1]);
-            DB::table('appointments')
-                ->where('id', $appointment->id)
-                ->update(['date' => $appointment->date]);
-            
+                ->where('id', $app->id)
+                ->where('lock_version', $app->lock_version)
+                ->update([
+                        'patient_id' => $id,
+                        'lock_version' => $app->lock_version +1
+                    ]);            
         });
 
         $updatedAppointment = Appointment::find($appointment_id);
