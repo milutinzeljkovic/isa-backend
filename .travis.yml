@@ -1,0 +1,40 @@
+# .travis.yml
+dist: precise
+
+language: php
+
+php:
+  - 7.2
+
+addons:
+  mariadb: 10.4
+
+cache:
+  directories:
+    - node_modules
+    - vendor
+
+before_script:
+  - cd src
+  - cp .env.travis .env
+  - sudo mysql -e 'CREATE DATABASE isa;'
+  - composer self-update
+  - composer install --no-interaction
+  - php artisan migrate --no-interaction -vvv
+
+script:
+  - vendor/bin/phpunit
+
+env:
+    - APP_NAME="Laravel JWT Boilerplate"
+    - APP_ENV=local
+    - APP_KEY=base64:/HhrmYcqI8CQNMxjah/0ueNlKisxpaa5vriN49I02aU=
+    - APP_DEBUG=true
+
+
+    - DB_CONNECTION=mysql
+    - DB_HOST=127.0.0.1
+    - DB_PORT=3306
+    - DB_DATABASE=isa
+    - DB_USERNAME=root
+    - DB_PASSWORD=root
