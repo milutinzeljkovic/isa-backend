@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Clinic;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ClinicSearchTest extends TestCase
@@ -15,56 +16,21 @@ class ClinicSearchTest extends TestCase
      */
     public function testExample()
     {
-        //neautentifikovan korinsik dobija status 401 kad zatrazi klinike
-        $response = $this->get('/api/clinics');
-        $response->assertStatus(401);
+        $clinic = Clinic::find(1);
+        $clinics = Clinic::where('name','%like%',$clinic->name)->get();
+        $this->assertTrue($clinics != []);
 
-        $response = $this->withHeaders([
-            'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => 'nada@gmail.com', 'password' => '123']);
+        $clinics = Clinic::where('address', '%like%', $clinic->address)->get();
+        $this->assertTrue($clinics != []);
 
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                'access_token' => true,
-            ]);
-        $token = $response->json()['access_token'];
+        $clinics = Clinic::where('stars_count', '=', $clinic->stars_count)->get();
+        $this->assertTrue($clinics != []);
 
-        $bearer = "bearer " .$token;
-
-        $response = $this->withHeaders([
-            'X-Header' => 'Value',
-            'Authorization' => $bearer,
-        ])->json('GET', '/api/clinics');
-
-        $response
-            ->assertStatus(200);
-        
-        $response = $this->withHeaders([
-            'X-Header' => 'Value',
-            'Authorization' => $bearer,
-        ])->json('GET', '/api/clinics');
-
-        $response
-            ->assertStatus(200);
-
-        $response = $this->withHeaders([
-            'X-Header' => 'Value',
-            'Authorization' => $bearer,
-        ])->json('GET', '/api/clinics?name=nada diva');
-
-        $response
-            ->assertStatus(200);
-        
-        $response = $this->withHeaders([
-            'X-Header' => 'Value',
-            'Authorization' => $bearer,
-        ])->json('GET', '/api/clinics?name=123');
-
-        $response
-            ->assertStatus(200)
-            ->assertExactJson([]);
-        
+        $clinics = Clinic::where('stars_count', '=', $clinic->stars_count)
+            ->where('address', '%like%', $clinic->address)
+            ->where('name','%like%',$clinic->name)
+        ->get();
+        $this->assertTrue($clinics != []);
 
     }
 }
