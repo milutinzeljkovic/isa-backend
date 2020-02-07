@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Appointment;
 
 
-class OptimisticLockingTest extends TestCase
+class PredefinedAppointmentReservationTest extends TestCase
 {
     /**
      * A basic test example.
