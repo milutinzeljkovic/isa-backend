@@ -3,6 +3,8 @@
 namespace App\Utils;
 use App\AppointmentType;
 use App\WorkingDay;
+use App\Doctor;
+use App\Nurse;
 use App\OperationsRoom;
 
 class SimpleFactory 

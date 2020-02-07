@@ -92,12 +92,45 @@ class ClinicAdminService implements IClinicAdminService
         $operation_id = array_get($userData, 'operation_id');
         $operation = Operations::where('id', $operation_id)->first();
         $room=OperationsRoom::where('id',$operation->operations_rooms_id)->first();
-        foreach($doctors as $d){
+        
+        foreach($doctors as $d)
+        {
+            try
+            {
+                DB::beginTransaction();
+
+                DB::table('doctor_operations')
+                    ->insert(['date' => $operation->date, 'doctor_id' => $d['id']]);
+
+                $reservation = DB::table('doctor_operations')
+                    ->where('date', '=', $operation->date)
+                    ->where('doctor_id', '=', $d['id'])
+                    ->where('operations_id', null)
+                    ->lockForUpdate()
+                    ->first();
+
+                
+                if($reservation == null)
+                {
+                    return response('Error',400);
+                }
+
+
+                DB::table('doctor_operations')
+                    ->where('date', '=', $operation->date)
+                    ->where('doctor_id', '=', $d['id'])
+                    ->update(['operations_id' => $operation->id
+                ]);
+                DB::commit();
+            }
+            catch(\Exception $exception)
+            {
+                DB::rollback();
+                return response('Error',400);
+            }
 
             $doctor= Doctor::where('id',$d['id'])->first();
             $user=$doctor->user()->first();
-            
-
             \Mail::to($user)->send(new AddToOperationMail($user, $operation,$room));
             $operation->doctors()->attach($doctor);
         }
@@ -208,28 +241,36 @@ class ClinicAdminService implements IClinicAdminService
         if($message['error'] == false)
         {
             $operaiton_room_id = $operaitonRoom->id;
-            DB::transaction(function () use($operation, $ooperaiton_room_id){
+            DB::transaction(function () use($operation, $operaiton_room_id){
+                $oper =  DB::table('operations')
+                    ->where('id', $operation->id)
+                    ->first();
                 DB::table('operations')
-                    ->where('id',$operaiton_room_id)
-                    ->where('lock_version',$operation->lock_version)
-                    ->update(['operations_rooms_id' => $operaiton_room_id]);
-                DB::table('operations')
-                    ->where('id', $operaiton_room_id)
-                    ->update(['lock_version', $operation->lock_version+1]);
+                    ->where('id', $oper->id)
+                    ->where('lock_version', $oper->lock_version)
+                    ->update([
+                            'operations_rooms_id' => $operaiton_room_id,
+                            'lock_version' => $oper->lock_version +1
+                        ]);            
             });
-            if($operaiton_room_id !== $oeration->operations_rooms_id)
+
+            $updatedOperation = Operations::find($operation_id);
+
+            if($operaiton_room_id != $updatedOperation->operations_rooms_id)
             {
                 return response('Error', 400);
             }
             else
             {
                 return $operation;
-            }            
+            }       
         }
         else
         {
             return $message;
         }
+
+        
 
     }
 

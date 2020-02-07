@@ -107,32 +107,6 @@ class AppointmentService implements IAppointmentService
         {
             return $updatedAppointment;
         }
-
-        // try {
-
-        //     DB::beginTransaction();
-
-        //     $appointmentForUpdate = DB::table('appointments')->where('id', $appointment->id)
-        //         ->where('patient_id',null)
-        //         ->lockForUpdate()->first();
-
-        //     \Log::Info("Unsold Phone Details:" . json_encode($appointmentForUpdate, true));
-
-        //     if (empty($appointmentForUpdate))
-        //         return response()->json("All phone sold out.");
-
-        //     DB::table('appointments')->where('id', $appointment->id)->update([
-        //         'patient_id' => $id,
-        //     ]);
-        //     DB::commit();
-
-        //     return response()->json("appointment reserved successfully!");
-        // } catch (\Exception $exception) {
-        //     DB::rollBack();
-        //     \Log::error($exception->getMessage());
-        //     return response()->json('order failed!');
-        // }
-
     }
 
     //id doktora i pregled koji pacijent oce da rezervise
@@ -151,7 +125,7 @@ class AppointmentService implements IAppointmentService
         $requestedAppointment->doctor_id = $doctor->id;
         $requestedAppointment->date = array_get($appointment, 'date');
         $requestedAppointment->appointment_type_id = array_get($appointment, 'appointment_type');
-        $requestedAppointment->patient_id = Auth::user()->userable()->first()->id;
+        $patientId = Auth::user()->userable()->first()->id;
         $requestedAppointment->clinic_id = $doctor->clinic_id;
         $requestedAppointment->price = $price != null ? $price->price : 1000;
         $requestedAppointment->approved = 0;
@@ -162,8 +136,35 @@ class AppointmentService implements IAppointmentService
         
         if($message['error'] == false)
         {
+
+        try 
+        {
+            $requestedAppointment->patient_id = null;
             $requestedAppointment->save();
+            DB::beginTransaction();
+            $appointmentForUpdate = DB::table('appointments')
+                ->where('date', '=', $requestedAppointment->date)
+                ->where('doctor_id', '=', $requestedAppointment->doctor_id)
+                ->where('patient_id', null)
+                ->lockForUpdate()
+                ->first();
+
+            if ($appointmentForUpdate == null)
+                return response('Error',400);
+
+            DB::table('appointments')
+                ->where('id', $requestedAppointment->id)->update([
+                'patient_id' => $patientId,
+            ]);
+            DB::commit();
+
             return $requestedAppointment;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            \Log::error($exception->getMessage());
+            return response()->json('order failed!');
+        }
+
         }
         else
         {
