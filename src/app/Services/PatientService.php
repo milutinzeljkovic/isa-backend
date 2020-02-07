@@ -35,25 +35,59 @@ class PatientService implements IPatientService
     function searchPatients(array $searchParameters)
     {
         $user = Auth::user();
-        $doctor = $user->userable()->get()[0];
+        $doctor = $user->userable()->first();
+
+        $clinic = Clinic::find($doctor->clinic_id);
+
 
         $name = array_get($searchParameters, 'name');
         $lastName = array_get($searchParameters, 'last_name');
         $ensurance_id = array_get($searchParameters, 'ensurance_id');
 
-        $patients = DB::table('users')->where('userable_type', 'App\Patient')
-                    ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor) {
-                        $query->join('clinic_patient', function ($join) use ($name, $lastName, $ensurance_id, $doctor){
-                            $join->on('users.userable_id', '=', 'clinic_patient.patient_id')
-                            ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor){
-                                $query->where('name', 'like', '%'.$name.'%')
-                                ->where('last_name', 'like', '%'.$lastName.'%')
-                                ->where('ensurance_id', 'like', '%'.$ensurance_id.'%')
-                                ->where('clinic_patient.clinic_id', $doctor->clinic_id);
-                            });
-                        });
-                    })
-                    ->get();
+        $patients = $clinic
+            ->patients()
+            ->with(['user' => function($q) use($name, $lastName, $ensurance_id){
+                $q
+                ->where('name', 'like', '%'.$name.'%')
+                ->where('last_name', 'like', '%'.$lastName.'%')
+                ->where('ensurance_id', 'like', '%'.$ensurance_id.'%');
+            }])
+            ->with(['appointments' => function($q){
+                $q
+                    ->with('appointmentType')
+                    ->where('done',1);
+            }])
+            ->distinct()
+            ->get();
+
+        $array = array();
+
+        foreach($patients as $p)
+        {
+            if($p->user != null)
+            {
+                array_push($array,$p);
+            }
+        }
+
+        return $array;
+            
+
+
+
+        // $patients = DB::table('users')->where('userable_type', 'App\Patient')
+        //             ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor) {
+        //                 $query->join('clinic_patient', function ($join) use ($name, $lastName, $ensurance_id, $doctor){
+        //                     $join->on('users.userable_id', '=', 'clinic_patient.patient_id')
+        //                     ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor){
+        //                         $query->where('name', 'like', '%'.$name.'%')
+        //                         ->where('last_name', 'like', '%'.$lastName.'%')
+        //                         ->where('ensurance_id', 'like', '%'.$ensurance_id.'%')
+        //                         ->where('clinic_patient.clinic_id', $doctor->clinic_id);
+        //                     });
+        //                 });
+        //             })
+        //             ->get();
         
         return $patients;
     }

@@ -250,6 +250,34 @@ class DoctorService implements IDoctorService
 
     }
 
+    function scheduleAnAppointment(array $userData)
+    {
+        $user = Auth::user();
+        $doctor = $user->userable()->get()[0];
+
+        $appointment_id = array_get($userData, 'appointment_id');
+        $date = array_get($userData, 'date');
+        $price = array_get($userData, 'price');
+        $appointment_type_id = array_get($userData, 'appointmentType');
+
+        $appointment =  Appointment::where('id',$appointment_id)->first();
+
+        $newAppointment = new Appointment;
+        $newAppointment->clinic_id = $doctor->clinic_id;
+        $newAppointment->patient_id = $appointment->patient_id;
+        $newAppointment->price = $price;
+        $newAppointment->done = 0;
+        $newAppointment->doctor_id = $doctor->id;
+        $newAppointment->approved = 0;
+        $newAppointment->appointment_type_id = $appointment_type_id;
+
+        $newAppointment->date = $date;
+
+        $newAppointment->save();
+
+        return response()->json(['created' => 'Appointment has been created'], 201);
+    }
+
 
 
     function seeIfDoctorUsed($id)
@@ -273,5 +301,13 @@ class DoctorService implements IDoctorService
 
         $workingHours = WorkingDay::where('doctor_id', $user->userable_id)->get();
         
+    }
+
+    function getDoctorsAppointmentTypes(){
+        $user = Auth::user();
+        $doctor = Doctor::where('id', $user->userable_id)->first();
+
+        return $doctor->appointmentTypes()->get();
+
     }
 }

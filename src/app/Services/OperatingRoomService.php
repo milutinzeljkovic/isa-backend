@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Services\IOperatingRoomService;
 use App\OperationsRoom;
 use App\Clinic;
+use App\Operations;
 use App\Appointment;
 use Auth;
 use Carbon\Carbon;
@@ -44,7 +45,6 @@ class OperatingRoomService implements IOperatingRoomService
     public function seeIfOpRoomBooked($id)
     {
 
-        //miki dan mu jebem
         $allApps = Appointment::where('date','>',Carbon::now())
             ->where('done',0)
             ->get();
@@ -74,7 +74,7 @@ class OperatingRoomService implements IOperatingRoomService
 
         $query = OperationsRoom::query();
         $query->where('clinic_id',$clinicAdmin->clinic_id);
-        //miki jebem te
+
         $query->where('name', 'like', '%'.$name.'%');
         if($number != null){
             $query->where('number', '=', $number);
@@ -98,11 +98,19 @@ class OperatingRoomService implements IOperatingRoomService
             $operatingRooms = $query->get();
             foreach($operatingRooms as $opRoom){
                 $found = false;
+                $operations = Operations::where('operations_rooms_id', $opRoom->id)->whereDate('date', '>=', Carbon::now())->get();
                 $appointments = Appointment::where('operations_room_id', $opRoom->id)->whereDate('date', '>=', Carbon::now())->get();
-                if(count($appointments) > 0){
+                if(count($appointments) > 0 || count($operations) > 0){
                     foreach($appointments as $appointment){
                         $date1 = explode(' ', $appointment->date)[0];
                         if($date1 == $datee){
+                            $found = true;
+                        }
+                    }
+
+                    foreach($operations as $operation){
+                        $date2 = explode(' ', $operation->date)[0];
+                        if($date2 == $datee){
                             $found = true;
                         }
                     }
@@ -142,19 +150,25 @@ class OperatingRoomService implements IOperatingRoomService
         $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
 
         $appointments = Appointment::where('operations_room_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('approved', '=', 1)->where('patient_id', '!=', null)->where('clinic_id', $clinicAdmin->clinic_id)->get();
+        $operations = Operations::where('operations_rooms_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('patient_id', '!=', null)->where('clinic_id', $clinicAdmin->clinic_id)->get();
 
         $year = (int)explode('-', date("Y-m-d"))[0];
         $month = (int)explode('-', date("Y-m-d"))[1];
         $day = (int)explode('-', date("Y-m-d"))[2];
         $day = $day + 1;
 
-        if(count($appointments) == 0){
+        if(count($appointments) == 0 && count($operations)){
             return $year.'-'.$month.'-'.$day;
         }
 
         $dates = array();
         foreach($appointments as $appointment){
            $dates[] = explode(' ', $appointment->date)[0];
+        }
+
+        $datesOperations = array();
+        foreach($operations as $operation){
+           $datesOperations[] = explode(' ', $operation->date)[0];
         }
 
         $prestupna = false;
@@ -169,11 +183,11 @@ class OperatingRoomService implements IOperatingRoomService
                     if($prestupna){  //ako je februar
                         while($day <= 29){
                             if($day < 10){
-                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
                                     return $year.'-'.$month.'-'.$day;
                                 }
                             }else{
-                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
                                     return $year.'-'.$month.'-'.$day;
                                 }
                             }
@@ -182,11 +196,11 @@ class OperatingRoomService implements IOperatingRoomService
                     }else {
                         while($day <= 28){
                             if($day < 10){
-                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
                                     return $year.'-'.$month.'-'.$day;
                                 }
                             }else{
-                                if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
                                     return $year.'-'.$month.'-'.$day;
                                 }
                             }
@@ -196,12 +210,24 @@ class OperatingRoomService implements IOperatingRoomService
                 }else{
                     while($day <= 30){
                         if($day < 10){
-                            if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
-                                return $year.'-'.$month.'-'.$day;
+                            if($month < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else {
+                                if(!in_array(($year.'-'.$month.'-0'.$day),$dates) && !in_array(($year.'-'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
                             }
                         }else{
-                            if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
-                                return $year.'-'.$month.'-'.$day;
+                            if($month < 10){
+                                if(!in_array(($year.'-0'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else {
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
                             }
                         }
                         $day++;
@@ -210,12 +236,24 @@ class OperatingRoomService implements IOperatingRoomService
             }else {
                 while($day <= 31){
                     if($day < 10){
-                        if(!in_array(($year.'-0'.$month.'-0'.$day),$dates)){
-                            return $year.'-'.$month.'-'.$day;
+                        if($month < 10){
+                            if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }else {
+                            if(!in_array(($year.'-'.$month.'-0'.$day),$dates) && !in_array(($year.'-'.$month.'-0'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
                         }
                     }else{
-                        if(!in_array(($year.'-'.$month.'-'.$day),$dates)){
-                            return $year.'-'.$month.'-'.$day;
+                        if($month < 10){
+                            if(!in_array(($year.'-0'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }else {
+                            if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
                         }
                     }
                     $day++;

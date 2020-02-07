@@ -16,4 +16,9 @@ interface IClinicAdminService
     function editOperation(array $userData);
     function changeDateoOfOperation(array $userData);
     //function defineAvailableAppointment();
+    function getByAppType($id);
+    function specializeDoctor($id, $data);
+    function updateAppointmentRequest($data);
+    function getAverageClinicRating();
+    function getAverageRatingDoctor($id);
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Prescription;
+use Illuminate\Support\Facades\DB;
 use Auth;
 
 class PrescriptionController extends Controller
@@ -70,13 +71,35 @@ class PrescriptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $prescrption = Prescription::find($id);
         $user = Auth::user();
         $nurse = $user->userable()->first();
-        $prescrption->nurse()->associate($nurse);
-        $prescrption->save();
 
-        return $prescrption;
+        DB::transaction(function () use($id, $nurse)
+        {
+            $pr =  DB::table('prescriptions')
+                ->where('id', $pr)
+                ->first();
+            DB::table('prescriptions')
+                ->where('id', $pr)
+                ->where('lock_version', $pr->lock_version)
+                ->update([
+                        'lock_version' => $pr->lock_version+1,
+                        'nurse_id' => $nurse
+                    ]);            
+        });
+
+        $updated = Prescription::find($id);
+
+        if($updated->nurse_id != $nurse)
+        {
+            return response('Error '.json_encode($updatedClinic),400);
+        }
+        else
+        {
+            return $updated;
+        }
+
+
     }
 
     function getPrescriptions(){

@@ -151,4 +151,25 @@ class ClinicAdminController extends Controller
 
     }
 
+    public function getByAppType($id){
+        return $this->_clinicAdminService->getByAppType($id);
+    }
+
+    public function specializeDoctor(Request $request, $id){
+        $data = $request->all();
+        return $this->_clinicAdminService->specializeDoctor($id, $data);
+    }
+
+    public function updateAppointmentRequest(Request $request){
+        $data = $request->all();
+        return $this->_clinicAdminService->updateAppointmentRequest($data);
+    }
+
+    public function getAverageClinicRating(){
+        return $this->_clinicAdminService->getAverageClinicRating();
+    }
+
+    public function getAverageRatingDoctor($id){
+        return $this->_clinicAdminService->getAverageRatingDoctor($id);
+    }
 }

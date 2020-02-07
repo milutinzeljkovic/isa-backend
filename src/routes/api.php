@@ -75,7 +75,9 @@ Route::group([
     Route::post('finish-report','DoctorController@medicalReportForAppointment');
     Route::get('get-data/{id}','DoctorController@getDataForDoctor');
     Route::post('shedule-operation','DoctorController@sheduleAnOperation');
+    Route::post('schedule-appointment', 'DoctorController@scheduleAnAppointment');
     Route::get('calendar','DoctorController@getApointments');
+    Route::get('appointment-types', 'DoctorController@getDoctorsAppointmentTypes');
     Route::get('{id}','DoctorController@show');
     Route::get('appointments/{id}', 'DoctorController@showDoctorAppointments');
     Route::get('','DoctorController@index');
@@ -121,8 +123,11 @@ Route::group([
     Route::post('reserve-operation', 'ClinicAdminController@reserveOperation');
     Route::post('reserve-appointment', 'ClinicAdminController@reserveAppointmentRoom');
     Route::get('pending-appointment-requests', 'ClinicAdminController@pendingAppointmentRequests');
-    
-
+    Route::get('doctors-can-perform/{id}','ClinicAdminController@getByAppType');
+    Route::post('specialize-doctor/{id}', 'ClinicAdminController@specializeDoctor');
+    Route::put('update-appointment-request', 'ClinicAdminController@updateAppointmentRequest');
+    Route::get('average-rating', 'ClinicAdminController@getAverageClinicRating');
+    Route::get('doctor-average-rating/{id}', 'ClinicAdminController@getAverageRatingDoctor');
 });
 
 Route::group([
@@ -159,6 +164,7 @@ Route::group([
     Route::delete('delete/{id}', 'AppointmentTypeController@destroy');
     Route::put('update/{id}', 'AppointmentTypeController@update');
     Route::get('used/{id}', 'AppointmentTypeController@seeIfAppTypeUsed');
+    Route::get('options/{id}','AppointmentTypeController@getDoctorsOptions');
 });
 
 Route::group([

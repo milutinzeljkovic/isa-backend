@@ -166,4 +166,15 @@ class DoctorController extends Controller
     public function getOperations(){
         return $this->_doctorService->getOperations();
     }
+
+    public function getDoctorsAppointmentTypes(){
+        return $this->_doctorService->getDoctorsAppointmentTypes();
+    }
+
+    public function scheduleAnAppointment(Request $request)
+    {
+        $credentials = $request->all();
+
+        return $this->_doctorService->scheduleAnAppointment($credentials);
+    }
 }
