@@ -15,4 +15,6 @@ interface IClinicAdminService
 
     function editOperation(array $userData);
     //function defineAvailableAppointment();
+    function getByAppType($id);
+    function specializeDoctor($id, $data);
 }

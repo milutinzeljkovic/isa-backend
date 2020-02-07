@@ -118,8 +118,8 @@ Route::group([
     Route::post('reserve-operation', 'ClinicAdminController@reserveOperation');
     Route::post('reserve-appointment', 'ClinicAdminController@reserveAppointmentRoom');
     Route::get('pending-appointment-requests', 'ClinicAdminController@pendingAppointmentRequests');
-    
-
+    Route::get('doctors-can-perform/{id}','ClinicAdminController@getByAppType');
+    Route::post('specialize-doctor/{id}', 'ClinicAdminController@specializeDoctor');
 });
 
 Route::group([
@@ -156,6 +156,7 @@ Route::group([
     Route::delete('delete/{id}', 'AppointmentTypeController@destroy');
     Route::put('update/{id}', 'AppointmentTypeController@update');
     Route::get('used/{id}', 'AppointmentTypeController@seeIfAppTypeUsed');
+    Route::get('options/{id}','AppointmentTypeController@getDoctorsOptions');
 });
 
 Route::group([

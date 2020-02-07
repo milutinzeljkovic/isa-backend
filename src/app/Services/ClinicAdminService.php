@@ -7,10 +7,12 @@ use Auth;
 use App\Clinic;
 use App\OperationsRoom;
 use App\Appointment;
+use App\AppointmentType;
 use App\User;
 use App\Doctor;
 use App\Operations;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ClinicAdminService implements IClinicAdminService
 {
@@ -287,4 +289,37 @@ class ClinicAdminService implements IClinicAdminService
         return $res;
     }
 
+    function getByAppType($id){
+        $appType = AppointmentType::where('id', $id)->get()[0];
+
+        $doctors1 = DB::table('appointment_type_doctor')->where('appointment_type_id', $id)->get();
+        $doctors = collect();
+        foreach($doctors1 as $doc){
+            $user = Doctor::where('id', $doc->doctor_id)->with('user')->first();
+            $doctors->push($user);
+        }
+
+        return $doctors;
+    }
+
+    function specializeDoctor($id, $data){
+        $user = User::where('id', $id)->first();
+        $doctor = Doctor::where('id', $user->userable_id)->first();
+
+        $collection = collect();
+        foreach($data as $detail){
+            $at = AppointmentType::where('id', $detail['id'])->first();
+            $collection->push($at);
+        }
+        
+        if(count($data) > 0) {
+            foreach($collection as $detail){
+                $doctor->appointmentTypes()->save($detail);
+            }
+
+            return response()->json(['message' => 'Doctor is now more specialized']);
+        }
+        
+        return response()->json(['message' => 'Doctor did not learn anything new']);
+    }
 }
