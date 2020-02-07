@@ -160,6 +160,15 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['api', 'jsonify'],
+    'prefix' => 'confirmations'
+],function ($router){
+    Route::get('confirm/{enryptedId}', 'AppointmentController@confirm');
+    Route::get('decline/{enryptedId}', 'AppointmentController@decline');
+
+});
+
+Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'appointment' 
 ],function ($router){
@@ -168,6 +177,7 @@ Route::group([
     Route::get('history/{id}','AppointmentController@patientHistory');
     Route::post('request/{id}','AppointmentController@requestAppointment');
     Route::get('','AppointmentController@searchAppointment');
+
 });
 
 Route::group([

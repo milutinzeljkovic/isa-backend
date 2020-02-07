@@ -130,9 +130,7 @@ class UserService
             return response()->json(['message' => 'Account successfully activated']);
         }
 
-        return response()->json(['message' => 'Account was already activated']);
-
-        
+        return response()->json(['message' => 'Account was already activated']);     
     }
 
     

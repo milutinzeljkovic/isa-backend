@@ -84,7 +84,6 @@ class AppointmentService implements IAppointmentService
             $user->clinics()->save($clinic);
         }
         $id = $user->id;
-
         DB::transaction(function () use($appointment, $id){
 
             DB::table('appointments')
@@ -93,6 +92,7 @@ class AppointmentService implements IAppointmentService
                 ->update(['patient_id' => $id]);
             DB::table('appointments')
                 ->where('id', $appointment->id)
+                ->where('lock_version', $appointment->lock_version)
                 ->update(['lock_version' => $appointment->lock_version +1]);
             DB::table('appointments')
                 ->where('id', $appointment->id)
@@ -110,6 +110,31 @@ class AppointmentService implements IAppointmentService
         {
             return $updatedAppointment;
         }
+
+        // try {
+
+        //     DB::beginTransaction();
+
+        //     $appointmentForUpdate = DB::table('appointments')->where('id', $appointment->id)
+        //         ->where('patient_id',null)
+        //         ->lockForUpdate()->first();
+
+        //     \Log::Info("Unsold Phone Details:" . json_encode($appointmentForUpdate, true));
+
+        //     if (empty($appointmentForUpdate))
+        //         return response()->json("All phone sold out.");
+
+        //     DB::table('appointments')->where('id', $appointment->id)->update([
+        //         'patient_id' => $id,
+        //     ]);
+        //     DB::commit();
+
+        //     return response()->json("appointment reserved successfully!");
+        // } catch (\Exception $exception) {
+        //     DB::rollBack();
+        //     \Log::error($exception->getMessage());
+        //     return response()->json('order failed!');
+        // }
 
     }
 

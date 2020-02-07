@@ -10,9 +10,11 @@ use App\Appointment;
 use App\User;
 use App\Doctor;
 use App\Operations;
+use App\Mail\AppointmentReservedMail;
 use Carbon\Carbon;
 use App\Mail\AddToOperationMail;
-use DB;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 
 class ClinicAdminService implements IClinicAdminService
@@ -205,9 +207,24 @@ class ClinicAdminService implements IClinicAdminService
 
         if($message['error'] == false)
         {
-            $operation->operations_rooms_id = $operaitonRoom->id;
-            $operation->save();
-            return $operation;
+            $operaiton_room_id = $operaitonRoom->id;
+            DB::transaction(function () use($operation, $ooperaiton_room_id){
+                DB::table('operations')
+                    ->where('id',$operaiton_room_id)
+                    ->where('lock_version',$operation->lock_version)
+                    ->update(['operations_rooms_id' => $operaiton_room_id]);
+                DB::table('operations')
+                    ->where('id', $operaiton_room_id)
+                    ->update(['lock_version', $operation->lock_version+1]);
+            });
+            if($operaiton_room_id !== $oeration->operations_rooms_id)
+            {
+                return response('Error', 400);
+            }
+            else
+            {
+                return $operation;
+            }            
         }
         else
         {
@@ -291,6 +308,18 @@ class ClinicAdminService implements IClinicAdminService
         if($message['error'] == false)
         {
             $appointment->operations_room_id = $operaitonRoom->id;
+            $patient = $appointment->patient_id;
+            $clinic = Clinic::find($appointment->clinic_id);
+
+            $doctor = User::where('userable_id',$appointment->doctor_id)
+                ->where('userable_type','App\\Doctor')
+                ->first();
+            $user = User::where('userable_id',$patient)
+                ->where('userable_type','App\\Patient')
+                ->first();
+            $encrypted = Crypt::encryptString($appointment->id);
+            \Mail::to($user)->send(new AppointmentReservedMail($user,$appointment,$doctor,$operaitonRoom,$clinic,$encrypted));
+
             $appointment->save();
             return $appointment;
         }
