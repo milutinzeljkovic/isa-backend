@@ -15,4 +15,5 @@ interface IDoctorService
 
     function seeIfDoctorUsed($id);
     function getWorkingHours($id);
+    function getDoctorsAppointmentTypes();
 }
