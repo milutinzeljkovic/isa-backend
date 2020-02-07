@@ -5,6 +5,8 @@ use App\Appointment;
 use App\Services\IAppointmentService;
 use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+
 
 class AppointmentController extends Controller
 {
@@ -107,5 +109,25 @@ class AppointmentController extends Controller
     public function searchAppointment(Request $request)
     {
         return $this->_appointmentService->searchAppointment($request->input('date'),$request->input('type'));
+    }
+
+    public function confirm($encryptedId)
+    {
+        $id = Crypt::decryptString($encryptedId);
+        $appointment = Appointment::findOrFail($id);
+        $appointment->approved = 1;
+        $appointment->save();
+
+        return response()->json(['message' => 'Appointment confirmed!']);     
+    }
+
+    public function decline($encryptedId)
+    {
+        $id = Crypt::decryptString($encryptedId);
+        $appointment = Appointment::findOrFail($id);
+        $appointment->approved = -1;
+        $appointment->save();
+
+        return response()->json(['message' => 'Appointment declined!']);     
     }
 }

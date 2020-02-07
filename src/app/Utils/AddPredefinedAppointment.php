@@ -78,7 +78,12 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
             {
                 $message['error'] = true;
                 $message['message'] = 'Appointment ending is overlapping';
-            }  
+            } 
+            if($appointmentDate->lessThanOrEqualTo($start) && $appointmentDateEnd->greaterThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Overlaping';
+            } 
         }
 
         $operationRoom = OperationsRoom::find($app->operations_room_id);
@@ -98,6 +103,11 @@ class AddPredefinedAppointment implements IAddAppointmentStrategy
             {
                 $message['error'] = true;
                 $message['message'] = 'Operating room is not free';
+            }
+            if($appointmentDate->lessThanOrEqualTo($start) && $appointmentDateEnd->greaterThanOrEqualTo($end))
+            {
+                $message['error'] = true;
+                $message['message'] = 'Overlaping room';
             }
         }
 
