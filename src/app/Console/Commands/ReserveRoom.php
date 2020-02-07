@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Mail\ActivateMail;
 use App\User;
 use Carbon\Carbon;
+use App\Operations;
 
 class ReserveRoom extends Command
 {
@@ -40,8 +41,9 @@ class ReserveRoom extends Command
      */
     public function handle()
     {
-        // $user = User::where('userable_type','App\\Patient')
-        // ->first();
-        // \Mail::to($user)->send(new ActivateMail($user,'asdsakdjaslkjdsakljdlsakjds'));
+        $operations = Operations::where('operations_rooms_id',null)->get();
+        
+
+        \Mail::to($user)->send(new ActivateMail($user,'asdsakdjaslkjdsakljdlsakjds'));
     }
 }

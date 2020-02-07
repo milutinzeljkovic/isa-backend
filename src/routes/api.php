@@ -108,6 +108,8 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'clinic-admin'
 ], function ($router){
+    Route::post('change-date-operation', 'ClinicAdminController@changeDateoOfOperation');
+
     Route::post('add-duration', 'ClinicAdminController@addDuration');
     Route::post('edit-operations', 'ClinicAdminController@editOperation');
     Route::get('operations', 'ClinicAdminController@getOperations');

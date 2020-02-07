@@ -14,5 +14,6 @@ interface IClinicAdminService
     function pendingAppointmentRequests();
     function addDuration(array $userData);
     function editOperation(array $userData);
+    function changeDateoOfOperation(array $userData);
     //function defineAvailableAppointment();
 }

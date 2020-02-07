@@ -11,6 +11,7 @@ use App\User;
 use App\Doctor;
 use App\Operations;
 use App\Mail\AppointmentReservedMail;
+use App\Mail\ChangeDateOfOperationMail;
 use Carbon\Carbon;
 use App\Mail\AddToOperationMail;
 use Illuminate\Support\Facades\Crypt;
@@ -208,16 +209,22 @@ class ClinicAdminService implements IClinicAdminService
         if($message['error'] == false)
         {
             $operaiton_room_id = $operaitonRoom->id;
-            DB::transaction(function () use($operation, $ooperaiton_room_id){
+            DB::transaction(function () use($operation, $operaiton_room_id){
+                $oper =  DB::table('operations')
+                    ->where('id', $operation->id)
+                    ->first();
                 DB::table('operations')
-                    ->where('id',$operaiton_room_id)
-                    ->where('lock_version',$operation->lock_version)
-                    ->update(['operations_rooms_id' => $operaiton_room_id]);
-                DB::table('operations')
-                    ->where('id', $operaiton_room_id)
-                    ->update(['lock_version', $operation->lock_version+1]);
+                    ->where('id', $oper->id)
+                    ->where('lock_version', $oper->lock_version)
+                    ->update([
+                            'operations_rooms_id' => $operaiton_room_id,
+                            'lock_version' => $oper->lock_version +1
+                        ]);            
             });
-            if($operaiton_room_id !== $oeration->operations_rooms_id)
+
+            $updatedOperation = Operations::find($operation_id);
+
+            if($operaiton_room_id != $updatedOperation->operations_rooms_id)
             {
                 return response('Error', 400);
             }
@@ -350,6 +357,33 @@ class ClinicAdminService implements IClinicAdminService
             }])
             ->get(); 
         return $res;
+    }
+
+    function changeDateoOfOperation(array $userData){
+        $room_id = array_get($userData, 'room_id');
+        $date = array_get($userData, 'date');
+        $operation_id = array_get($userData, 'operation_id');
+        $room=OperationsRoom::where('id',$room_id)->first();
+
+        $operation = Operations::find($operation_id);
+        $oldDate=$operation->date;
+        $operation->date=$date;
+        $operation->operations_rooms_id=$room_id;
+        $operation->save();
+
+        $patient = $operation->patient()->first();
+        $user=$patient->user()->first();
+
+       
+    
+
+        \Mail::to($user)->send(new ChangeDateOfOperationMail($user,$oldDate, $operation,$room));
+
+
+
+        return response()->json(['updated' => 'Date of operation has been updated'], 201);
+
+
     }
 
 }
