@@ -9,6 +9,7 @@ use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\DB;
 
 use App\Appointment;
+use App\User;
 
 
 class PredefinedAppointmentReservationTest extends TestCase
