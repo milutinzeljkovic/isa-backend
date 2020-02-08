@@ -23,10 +23,17 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
+        $c = new Clinic();
+        $c->name='name';
+        $c->address='adresa';
+        $c->description='dobra';
+        $c->clinical_center_id=1;
+        $c->save();
 
         $oproom = new OperationsRoom();
         $oproom->name='soba';
         $oproom->number=2;
+        $oproom->clinic_id=1;
         $oproom->save();
 
         $appointmentToBeReserved = new Appointment();
