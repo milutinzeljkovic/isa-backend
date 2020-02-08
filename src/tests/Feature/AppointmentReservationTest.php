@@ -26,20 +26,20 @@ class AppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $user1 = new User;
-        $user1->email = 'doca@gmail.com';
-        $user1->name = 'doca_name';
-        $user1->last_name = 'doca_lastname';
-        $user1->ensurance_id = '64645754';
-        $user1->phone_number = '43256434';
-        $user1->address = 'address';
-        $user1->city = 'city';
-        $user1->state = 'state';
-        $user1->password = \Hash::make('password');
-        $user1->has_loggedin = 1;
-        $doctor = new User();
-        $doctor->save();
-        $doctor->user()->save($user1);
+        // $user1 = new User;
+        // $user1->email = 'doca@gmail.com';
+        // $user1->name = 'doca_name';
+        // $user1->last_name = 'doca_lastname';
+        // $user1->ensurance_id = '64645754';
+        // $user1->phone_number = '43256434';
+        // $user1->address = 'address';
+        // $user1->city = 'city';
+        // $user1->state = 'state';
+        // $user1->password = \Hash::make('password');
+        // $user1->has_loggedin = 1;
+        // $doctor = new Patient();
+        // $doctor->save();
+        // $doctor->user()->save($user1);
 
         // $patient = Patient::first();
 
@@ -67,7 +67,7 @@ class AppointmentReservationTest extends TestCase
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => 'password']);
+        ])->json('POST', '/api/auth/login', ['email' => 'doctor-test01@gmail.com', 'password' => 'password']);
 
         $response
             ->assertStatus(200)

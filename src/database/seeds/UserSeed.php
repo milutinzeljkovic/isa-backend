@@ -45,6 +45,16 @@ class UserSeed extends Seeder
         $patient->save();
         $patient->user()->save($user1);
 
+        $u1 = User::where('email','patient-test02@gmail.com')->first();
+        $u1->activated = 1;
+        $u1->confirmed = 1;
+        $u1->save();
+
+        $u2 = User::where('email','patient-test01@gmail.com')->first();
+        $u2->activated = 1;
+        $u2->confirmed = 1;
+        $u1->save();
+
         $user = new User;
         $user->email = 'doctor-test01@gmail.com';
         $user->name = 'doctor1_name';
