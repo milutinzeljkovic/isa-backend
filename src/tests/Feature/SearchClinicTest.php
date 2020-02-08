@@ -21,7 +21,7 @@ class SearchClinicTest extends TestCase
         $patient1 = Patient::all()[0];
         $user1 = $patient1->user()->first();
 
-        $this->assert
+        
         
         $response = $this->get('/api/clinics');
         $response->assertStatus(401);
@@ -35,9 +35,9 @@ class SearchClinicTest extends TestCase
             ->assertJson([
                 'access_token' => true,
             ]);
-        $token = $response->json()['access_token'];
+        // $token = $response->json()['access_token'];
 
-        $bearer = "bearer " .$token;
+        // $bearer = "bearer " .$token;
 
         // $response = $this->withHeaders([
         //     'X-Header' => 'Value',
