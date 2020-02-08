@@ -30,7 +30,7 @@ script:
 
 env:
     - APP_NAME="Laravel JWT Boilerplate"
-    - APP_ENV=local
+    - APP_ENV=production
     - APP_KEY=base64:/HhrmYcqI8CQNMxjah/0ueNlKisxpaa5vriN49I02aU=
     - APP_DEBUG=true
 
