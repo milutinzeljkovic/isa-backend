@@ -23,43 +23,13 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $user2 = 10;
-        $user1 = 2;
-        $user = new User;
-        $user->email = 'patient1@gmail.com';
-        $user->name = 'patient1_name';
-        $user->last_name = 'patient1_lastname';
-        $user->ensurance_id = '94859335';
-        $user->phone_number = '43256434';
-        $user->address = 'address';
-        $user->city = 'city';
-        $user->state = 'state';
-        $user->password = \Hash::make('password');
-        $user->has_loggedin = 1;
-        $patient = new Patient();
-        $patient->save();
-        $patient->user()->save($user);
 
-        $user->email = 'patient2@gmail.com';
-        $user->name = 'patient2_name';
-        $user->last_name = 'patient2_lastname';
-        $user->ensurance_id = '94859335';
-        $user->phone_number = '43256434';
-        $user->address = 'address';
-        $user->city = 'city';
-        $user->state = 'state';
-        $user->password = \Hash::make('password');
-        $user->has_loggedin = 1;
-        $patient = new Patient();
-        $patient->save();
-        $patient->user()->save($user);
+        $patient = Patient::first();
+
 
         $appointment = Appointment::where('id',1)->first();
-        $this->updateAppointment($appointment, $user2);
-        // $this->updateAppointment($appointment, $user1);
-        // $this->assertEquals(1, $appointment->lock_version);
-
-        $this->assertEquals(10, $appointment->patient_id);
+        $this->updateAppointment($appointment, $patient->id);
+        $this->assertEquals($patient->id, $appointment->patient_id);
 
     }
 

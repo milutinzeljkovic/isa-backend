@@ -17,27 +17,16 @@ class SearchClinicTest extends TestCase
      */
     public function testExample()
     {
-        // $user = new User;
-        // $user->email = 'patient1234@gmail.com';
-        // $user->name = 'patient_name';
-        // $user->last_name = 'patient_lastname';
-        // $user->ensurance_id = '56456789';
-        // $user->phone_number = '43256434';
-        // $user->address = 'address';
-        // $user->city = 'city';
-        // $user->state = 'state';
-        // $user->password = \Hash::make('password');
-        // $user->has_loggedin = 1;
-        // $patient = new Patient();
-        // $patient->save();
-        // $patient->user()->save($user);
 
+        $patient1 = Patient::all()[0];
+        $user1 = $patient1->user()->first();
+        
         $response = $this->get('/api/clinics');
         $response->assertStatus(401);
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => 'patient-test02@gmail.com', 'password' => 'password']);
+        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => 'password']);
 
         $response
             ->assertStatus(200)
