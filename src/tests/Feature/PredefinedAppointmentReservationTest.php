@@ -58,6 +58,8 @@ class PredefinedAppointmentReservationTest extends TestCase
             'Authorization' => $bearer1
         ])->json('GET', '/api/appointment');
         
+        
+        
         $appointmentId = Appointment::where('patient_id',null)->first()->id;
 
         $response1 = $this->withHeaders([
@@ -66,7 +68,6 @@ class PredefinedAppointmentReservationTest extends TestCase
         ])->json('POST', '/api/appointment/reserve/'.$appointmentId);
 
         $this->assertTrue($appointmentId == 1);
-        $this->assertTrue($doctor->id == 1);
 
         $response2 = $this->withHeaders([
             'X-Header' => 'Value',
