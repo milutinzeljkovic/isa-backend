@@ -56,8 +56,8 @@ class PredefinedAppointmentReservationTest extends TestCase
 
         $appointment = Appointment::where('id',1)->first();
         $this->updateAppointment($appointment, $user2);
-        $this->updateAppointment($appointment, $user1);
-        $this->assertEquals(1, $appointment->lock_version);
+        // $this->updateAppointment($appointment, $user1);
+        // $this->assertEquals(1, $appointment->lock_version);
 
         $this->assertEquals(10, $appointment->patient_id);
 
@@ -70,7 +70,6 @@ class PredefinedAppointmentReservationTest extends TestCase
 
             DB::table('appointments')
                 ->where('id', $appointment->id)
-                ->where('patient_id',null)
                 ->where('lock_version', $appointment->lock_version)
                 ->update(['lock_version' => $appointment->lock_version +1,
                         'patient_id' => $id

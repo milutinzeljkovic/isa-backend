@@ -101,5 +101,7 @@ class AppointmentReservationTest extends TestCase
         
         $response
             ->assertStatus(200);
+
+        echo $response;
     }
 }
