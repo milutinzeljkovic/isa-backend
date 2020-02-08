@@ -15,6 +15,7 @@ use App\Services\WorkingDayService;
 use App\Services\VacationService;
 
 use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Schema;
 
 use DB;
