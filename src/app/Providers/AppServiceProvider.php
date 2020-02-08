@@ -15,6 +15,8 @@ use App\Services\WorkingDayService;
 use App\Services\VacationService;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+
 use DB;
 
 
@@ -33,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
                 $query->sql, $query->bindings, $query->time
             );
         });
+        Schema::defaultStringLength(191);
+
     }
 
     /**
