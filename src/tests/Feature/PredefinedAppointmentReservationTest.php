@@ -9,6 +9,8 @@ use App\User;
 use App\Clinic;
 use App\Appointment;
 use App\AppointmentType;
+use App\OperationsRoom;
+
 use Carbon\Carbon;
 use App\Patient;
 
@@ -21,6 +23,11 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
+
+        $oproom = new OperationsRoom();
+        $oproom->name='soba';
+        $oproom->number=2;
+        $oproom->save();
 
         $appointmentToBeReserved = new Appointment();
         $appointmentToBeReserved->price = 1000;
