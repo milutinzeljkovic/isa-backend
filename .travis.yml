@@ -18,6 +18,8 @@ before_script:
   - cd src
   - pwd
   - mysql -u root -e 'CREATE DATABASE isa;'
+  - mysql -u root -e "CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';"
+  - mysql -u root -e "GRANT ALL ON isa.* TO 'user'@'localhost';"
   - composer self-update
   - composer install 
   - php artisan migrate --force
