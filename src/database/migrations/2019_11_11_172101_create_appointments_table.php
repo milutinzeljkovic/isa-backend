@@ -28,8 +28,8 @@ class CreateAppointmentsTable extends Migration
             ->references('id')
             ->on('appointment_types')
             ->onDelete('set null');
-            $table->integer('operations_rooms_id')->unsigned()->nullable();
-            $table->foreign('operations_rooms_id')
+            $table->integer('operations_room_id')->unsigned()->nullable();
+            $table->foreign('operations_room_id')
             ->references('id')
             ->on('operations_rooms')
             ->onDelete('set null');
