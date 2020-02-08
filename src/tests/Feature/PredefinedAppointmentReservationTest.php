@@ -50,12 +50,24 @@ class PredefinedAppointmentReservationTest extends TestCase
         $appointmentToBeReserved->date = '2020-12-12 12:00:00';
         $appointmentToBeReserved->save();
 
-        $patient1 = Patient::all()[0];
-        $user1 = $patient1->user()->first();
+        $user = new User;
+        $user->email = 'patient12@gmail.com';
+        $user->name = 'patient_name';
+        $user->last_name = 'patient_lastname';
+        $user->ensurance_id = '67543456';
+        $user->phone_number = '43256434';
+        $user->address = 'address';
+        $user->city = 'city';
+        $user->state = 'state';
+        $user->password = \Hash::make('password');
+        $user->has_loggedin = 1;
+        $patient = new Patient();
+        $patient->save();
+        $patient->user()->save($user);
 
         $response1 = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => 'password']);
+        ])->json('POST', '/api/auth/login', ['email' => $user->email, 'password' => 'password']);
 
         $response1
             ->assertStatus(200)

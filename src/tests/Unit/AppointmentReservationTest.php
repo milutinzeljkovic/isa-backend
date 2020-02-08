@@ -24,7 +24,9 @@ class AppointmentReservationTest extends TestCase
         $searchingApp = true;
 
         $clinics = Clinic::all();
-        $appType = AppointmentType::first();
+        $appType = new AppointmentType();
+        $appType->name='sadsa';
+        $appType->save();
 
         $this->assertTrue($appType != null);
 

@@ -63,7 +63,6 @@ class AppointmentReservationTest extends TestCase
         
 
 
-        $user = $patient->user()->first();
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
