@@ -22,8 +22,8 @@ before_script:
   - mysql -u root -e "GRANT ALL ON isa.* TO 'user'@'localhost';"
   - composer self-update
   - composer install 
-  - cp .env.example .env
   - php artisan migrate --force
+  - cp .env.example .env
   - php artisan key:generate
 
 script:
