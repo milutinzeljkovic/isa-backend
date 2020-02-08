@@ -69,7 +69,7 @@ class PredefinedAppointmentReservationTest extends TestCase
         $user1 = $patient1->user()->first();
         $response1 = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => 'password']);
+        ])->json('POST', '/api/auth/login', ['email' => 'patient-test01@gmail.com', 'password' => 'password']);
         $response1
             ->assertStatus(200)
             ->assertJson([
@@ -83,7 +83,7 @@ class PredefinedAppointmentReservationTest extends TestCase
         $user2 = $patient2->user()->first();
         $response2 = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => $user2->email, 'password' => '123']);
+        ])->json('POST', '/api/auth/login', ['email' => 'patient-test02@gmail.com', 'password' => 'password']);
         $response2
             ->assertStatus(200)
             ->assertJson([

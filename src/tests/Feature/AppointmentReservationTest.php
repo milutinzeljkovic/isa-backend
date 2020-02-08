@@ -26,43 +26,44 @@ class AppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $user1 = new User;
-        $user1->email = 'doca@gmail.com';
-        $user1->name = 'doca_name';
-        $user1->last_name = 'doca_lastname';
-        $user1->ensurance_id = '64645754';
-        $user1->phone_number = '43256434';
-        $user1->address = 'address';
-        $user1->city = 'city';
-        $user1->state = 'state';
-        $user1->password = \Hash::make('password');
-        $user1->has_loggedin = 1;
-        $doctor = new Doctor();
-        $doctor->save();
-        $doctor->user()->save($user1);
+        // $user1 = new User;
+        // $user1->email = 'doca@gmail.com';
+        // $user1->name = 'doca_name';
+        // $user1->last_name = 'doca_lastname';
+        // $user1->ensurance_id = '64645754';
+        // $user1->phone_number = '43256434';
+        // $user1->address = 'address';
+        // $user1->city = 'city';
+        // $user1->state = 'state';
+        // $user1->password = \Hash::make('password');
+        // $user1->has_loggedin = 1;
+        // $doctor = new Doctor();
+        // $doctor->save();
+        // $doctor->user()->save($user1);
 
-        $patient = Patient::first();
+        // $patient = Patient::first();
 
-        if($patient == null){
-            $user = new User;
-            $user->email = 'patient@gmail.com';
-            $user->name = 'patient_name';
-            $user->last_name = 'patient_lastname';
-            $user->ensurance_id = '94859335';
-            $user->phone_number = '43256434';
-            $user->address = 'address';
-            $user->city = 'city';
-            $user->state = 'state';
-            $user->password = \Hash::make('password');
-            $user->has_loggedin = 1;
-            $patient = new Patient();
-            $patient->save();
-            $patient->user()->save($user);
-        }
+        // if($patient == null){
+        //     $user = new User;
+        //     $user->email = 'patient@gmail.com';
+        //     $user->name = 'patient_name';
+        //     $user->last_name = 'patient_lastname';
+        //     $user->ensurance_id = '94859335';
+        //     $user->phone_number = '43256434';
+        //     $user->address = 'address';
+        //     $user->city = 'city';
+        //     $user->state = 'state';
+        //     $user->password = \Hash::make('password');
+        //     $user->has_loggedin = 1;
+        //     $patient = new Patient();
+        //     $patient->save();
+        //     $patient->user()->save($user);
+        // }
 
         
 
-
+        $patient = Patient::all()[0];
+        $user = $patient->user()->first();
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
@@ -103,8 +104,6 @@ class AppointmentReservationTest extends TestCase
             $appType= new AppointmentType();
             $appType->name='pregled grla';
             $appType->save();
-
-
 
         }
 
