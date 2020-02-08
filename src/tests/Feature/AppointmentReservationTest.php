@@ -34,7 +34,7 @@ class AppointmentReservationTest extends TestCase
         $user1->address = 'address';
         $user1->city = 'city';
         $user1->state = 'state';
-        $user1->password = \Hash::make('pass123', 'password');
+        $user1->password = \Hash::make(pass123, 'password');
         $user1->has_loggedin = 1;
         $doctor = new Doctor();
         $doctor->save();
@@ -52,7 +52,7 @@ class AppointmentReservationTest extends TestCase
             $user->address = 'address';
             $user->city = 'city';
             $user->state = 'state';
-            $user->password = \Hash::make('pass123', 'password');
+            $user->password = \Hash::make(pass123, 'password');
             $user->has_loggedin = 1;
             $patient = new Patient();
             $patient->save();
