@@ -19,6 +19,7 @@ class WorkingDay extends Model
     protected $fillable = [
         'day',
         'from',
-        'to'
+        'to',
+        'doctor_id'
     ];
 }

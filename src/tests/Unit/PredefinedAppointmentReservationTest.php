@@ -23,8 +23,8 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $user2 = '10';
-        $user1 = '2';
+        $user2 = 10;
+        $user1 = 2;
         $user = new User;
         $user->email = 'patient1@gmail.com';
         $user->name = 'patient1_name';
@@ -59,7 +59,7 @@ class PredefinedAppointmentReservationTest extends TestCase
         $this->updateAppointment($appointment, $user1);
         $this->assertEquals(1, $appointment->lock_version);
 
-        $this->assertEquals(2, $appointment->patient_id);
+        $this->assertEquals(10, $appointment->patient_id);
 
     }
 

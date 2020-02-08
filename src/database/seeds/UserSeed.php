@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\User;
 use App\Patient;
 use App\Doctor;
+use App\WorkingDay;
 
 class UserSeed extends Seeder
 {
@@ -95,8 +96,54 @@ class UserSeed extends Seeder
         $d2->confirmed = 1;
         $d2->save();
         
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 0;
+        $wd->doctor_id = 1;
+        $wd->save();
 
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 1;
+        $wd->doctor_id = 1;
+        $wd->save();
 
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 2;
+        $wd->doctor_id = 1;
+        $wd->save();
+
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 3;
+        $wd->doctor_id = 1;
+        $wd->save();
+
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 4;
+        $wd->doctor_id = 1;
+        $wd->save();
+
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 5;
+        $wd->doctor_id = 1;
+        $wd->save();
+
+        $wd = new WorkingDay();
+        $wd->from = '08:00:00';
+        $wd->to = '16:00:00';
+        $wd->day = 6;
+        $wd->doctor_id = 1;
+        $wd->save();
 
 
     }
