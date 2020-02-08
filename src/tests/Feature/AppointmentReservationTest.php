@@ -60,7 +60,7 @@ class AppointmentReservationTest extends TestCase
         }])->first();
 
         $this->assertTrue($at != null);
-        $this->assertTrue($doctor != null);
+        $this->assertTrue($doctor->id == 1);
         
 
 
