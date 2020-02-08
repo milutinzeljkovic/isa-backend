@@ -142,6 +142,148 @@ class OperatingRoomService implements IOperatingRoomService
         return $appointments;
     }
 
+    public function getOperations($id)
+    {
+        $user = Auth::user();
+        $clinicAdmin = $user->userable()->first();
+
+        $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
+        $operations = Operations::where('operations_rooms_id', $operatingRoom->id)->where('clinic_id', $clinicAdmin->clinic_id)
+         ->with(['patient' => function($q) {
+            $q->with('user');
+        }])->get();
+
+        return $operations;
+    }
+
+    public function getFirstFreeDateFromDate($id,$from,$clinic_id)
+    {
+
+        $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
+
+        $appointments = Appointment::where('operations_room_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('approved', '=', 1)->where('patient_id', '!=', null)->where('clinic_id', $clinic_id)->get();
+        $operations = Operations::where('operations_rooms_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('clinic_id', $clinic_id)->get();
+
+
+        $year = (int)explode('-', $from)[0];
+        $month = (int)explode('-', $from)[1];
+        $day = (int)explode('-', $from)[2];
+       // $day = $day + 1;
+
+        if(count($appointments) == 0 && count($operations) == 0){
+            return $year.'-'.$month.'-'.$day;
+        }
+
+        $dates = array();
+        foreach($appointments as $appointment){
+           $dates[] = explode(' ', $appointment->date)[0];
+        }
+
+        $datesOperations = array();
+        foreach($operations as $operation){
+           $datesOperations[] = explode(' ', $operation->date)[0];
+        }
+
+        $prestupna = false;
+
+        if($year % 4 == 0){
+            $prestupna = true;
+        }
+
+        while($month <= 12){
+            if($month % 2 == 0){
+                if($month == 2){
+                    if($prestupna){  //ako je februar
+                        while($day <= 29){
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                            $day++;
+                        }
+                    }else {
+                        while($day <= 28){
+                            if($day < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else{
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                            $day++;
+                        }
+                    }
+                }else{
+                    while($day <= 30){
+                        if($day < 10){
+                            if($month < 10){
+                                if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else {
+                                if(!in_array(($year.'-'.$month.'-0'.$day),$dates) && !in_array(($year.'-'.$month.'-0'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                        }else{
+                            if($month < 10){
+                                if(!in_array(($year.'-0'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }else {
+                                if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
+                                    return $year.'-'.$month.'-'.$day;
+                                }
+                            }
+                        }
+                        $day++;
+                    }
+                }
+            }else {
+                while($day <= 31){
+                    if($day < 10){
+                        if($month < 10){
+                            if(!in_array(($year.'-0'.$month.'-0'.$day),$dates) && !in_array(($year.'-0'.$month.'-0'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }else {
+                            if(!in_array(($year.'-'.$month.'-0'.$day),$dates) && !in_array(($year.'-'.$month.'-0'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }
+                    }else{
+                        if($month < 10){
+                            if(!in_array(($year.'-0'.$month.'-'.$day),$dates) && !in_array(($year.'-0'.$month.'-'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }else {
+                            if(!in_array(($year.'-'.$month.'-'.$day),$dates) && !in_array(($year.'-'.$month.'-'.$day),$datesOperations)){
+                                return $year.'-'.$month.'-'.$day;
+                            }
+                        }
+                    }
+                    $day++;
+                }
+            }
+
+            //za iteriranje
+            $day = 1;
+            if($month + 1 > 12){
+                $month = 1;
+                $year++;
+            }else {
+                $month++;
+            }
+        }
+    }
+
     public function getFirstFreeDate($id)
     {
         $user = Auth::user();
@@ -150,14 +292,15 @@ class OperatingRoomService implements IOperatingRoomService
         $operatingRoom = OperationsRoom::where('id', $id)->get()[0];
 
         $appointments = Appointment::where('operations_room_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('approved', '=', 1)->where('patient_id', '!=', null)->where('clinic_id', $clinicAdmin->clinic_id)->get();
-        $operations = Operations::where('operations_rooms_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('patient_id', '!=', null)->where('clinic_id', $clinicAdmin->clinic_id)->get();
+        $operations = Operations::where('operations_rooms_id', $operatingRoom->id)->whereDate('date', '>=', Carbon::now())->where('clinic_id', $clinicAdmin->clinic_id)->get();
+
 
         $year = (int)explode('-', date("Y-m-d"))[0];
         $month = (int)explode('-', date("Y-m-d"))[1];
         $day = (int)explode('-', date("Y-m-d"))[2];
         $day = $day + 1;
 
-        if(count($appointments) == 0 && count($operations)){
+        if(count($appointments) == 0 && count($operations) == 0){
             return $year.'-'.$month.'-'.$day;
         }
 

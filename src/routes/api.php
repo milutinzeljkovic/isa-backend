@@ -143,13 +143,15 @@ Route::group([
     'middleware' => ['api', 'jwt.verify', 'jsonify'],
     'prefix' => 'operating-room'
 ], function ($router){
-    
+    Route::get('handle', 'OperatingRoomController@handle');
+
     Route::post('add', 'OperatingRoomController@store');
     Route::get('get', 'OperatingRoomController@getOpRooms');
     Route::put('update/{id}', 'OperatingRoomController@update');
     Route::delete('delete/{id}', 'OperatingRoomController@destroy');
     Route::get('used/{id}', 'OperatingRoomController@seeIfOpRoomBooked');
     Route::get('', 'OperatingRoomController@index');
+    Route::get('availabilityOp/{id}', 'OperatingRoomController@getOperations');
     Route::get('availability/{id}', 'OperatingRoomController@getAppointments');
     Route::get('recommendation/{id}', 'OperatingRoomController@getFirstFreeDate');
 });

@@ -9,4 +9,7 @@ interface IOperatingRoomService
     function searchOperatingRooms($name, $number, $date);
     function getAppointments($id);
     function getFirstFreeDate($id);
+    function getOperations($id);
+    function getFirstFreeDateFromDate($id,$from,$clinic_id);
+
 }
