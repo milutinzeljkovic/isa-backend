@@ -22,6 +22,7 @@ class AppointmentSeeder extends Seeder
         $appointmentToBeReserved->price = 1000;
         $appointmentToBeReserved->doctor_id = 1;
         $appointmentToBeReserved->clinic_id = 1;
+        $appointmentToBeReserved->appointment_type_id = 1;
         $appointmentToBeReserved->operations_room_id = 1;
         $appointmentToBeReserved->date = '2020-12-12 12:00:00';
         $appointmentToBeReserved->save();
@@ -29,6 +30,7 @@ class AppointmentSeeder extends Seeder
         $appointmentToBeReserved = new Appointment();
         $appointmentToBeReserved->price = 1000;
         $appointmentToBeReserved->doctor_id = 1;
+        $appointmentToBeReserved->appointment_type_id = 1;
         $appointmentToBeReserved->clinic_id = 1;
         $appointmentToBeReserved->operations_room_id = 1;
         $appointmentToBeReserved->date = '2020-12-13 12:00:00';
@@ -40,6 +42,7 @@ class AppointmentSeeder extends Seeder
         $appointmentToBeReserved->doctor_id = 1;
         $appointmentToBeReserved->clinic_id = 1;
         $appointmentToBeReserved->operations_room_id = 1;
+        $appointmentToBeReserved->appointment_type_id = 1;
         $appointmentToBeReserved->date = '2020-12-14 12:00:00';
         $appointmentToBeReserved->save();
 
@@ -47,6 +50,7 @@ class AppointmentSeeder extends Seeder
         $appointmentToBeReserved->price = 1000;
         $appointmentToBeReserved->doctor_id = 1;
         $appointmentToBeReserved->clinic_id = 1;
+        $appointmentToBeReserved->appointment_type_id = 1;
         $appointmentToBeReserved->operations_room_id = 1;
         $appointmentToBeReserved->date = '2020-12-15 12:00:00';
         $appointmentToBeReserved->save();
@@ -54,6 +58,7 @@ class AppointmentSeeder extends Seeder
         $appointmentToBeReserved = new Appointment();
         $appointmentToBeReserved->price = 1000;
         $appointmentToBeReserved->doctor_id = 2;
+        $appointmentToBeReserved->appointment_type_id = 1;
         $appointmentToBeReserved->clinic_id = 2;
         $appointmentToBeReserved->operations_room_id = 2;
         $appointmentToBeReserved->date = '2020-12-12 12:00:00';
