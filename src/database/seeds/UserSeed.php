@@ -53,7 +53,7 @@ class UserSeed extends Seeder
         $u2 = User::where('email','patient-test01@gmail.com')->first();
         $u2->activated = 1;
         $u2->confirmed = 1;
-        $u1->save();
+        $u2->save();
 
         $user = new User;
         $user->email = 'doctor-test01@gmail.com';
@@ -70,6 +70,11 @@ class UserSeed extends Seeder
         $patient->save();
         $patient->user()->save($user);
 
+        $d1 = User::where('email','doctor-test01@gmail.com')->first();
+        $d1->activated = 1;
+        $d1->confirmed = 1;
+        $d1->save();
+
         $user = new User;
         $user->email = 'doctor-test02@gmail.com';
         $user->name = 'doctor2_name';
@@ -84,6 +89,11 @@ class UserSeed extends Seeder
         $patient = new Doctor();
         $patient->save();
         $patient->user()->save($user);
+
+        $d2 = User::where('email','doctor-test02@gmail.com')->first();
+        $d2->activated = 1;
+        $d2->confirmed = 1;
+        $d2->save();
         
 
 

@@ -68,12 +68,12 @@ class PredefinedAppointmentReservationTest extends TestCase
 
             DB::table('appointments')
                 ->where('id', $appointment->id)
-                ->where('lock_version', $appointment->lock_version)
-                ->update(['patient_id' => $id]);
-            
+                ->where('lock_version', $appointment->lock_version);            
             DB::table('appointments')
                 ->where('id', $appointment->id)
-                ->update(['lock_version' => $appointment->lock_version +1]);
+                ->update(['lock_version' => $appointment->lock_version +1,
+                        'patient_id' => $id
+                ]);
             
         });
     }
