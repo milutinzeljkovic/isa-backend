@@ -13,11 +13,11 @@ class CreateNursesDoctorsOperationTable extends Migration
      */
     public function up()
     {
-        Schema::create('nurses_doctors_operation', function (Blueprint $table) {
+        Schema::create('doctor_operations', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('operation_id')->unsigned()->nullable();
-            $table->foreign('operation_id')
+            $table->integer('operations_id')->unsigned()->nullable();
+            $table->foreign('operations_id')
             ->references('id')
             ->on('operations')
             ->onDelete('set null');
@@ -25,11 +25,6 @@ class CreateNursesDoctorsOperationTable extends Migration
             $table->foreign('doctor_id')
             ->references('id')
             ->on('doctors')
-            ->onDelete('set null');
-            $table->integer('nurse_id')->unsigned()->nullable();
-            $table->foreign('nurse_id')
-            ->references('id')
-            ->on('nurses')
             ->onDelete('set null');
 
         });
@@ -42,6 +37,6 @@ class CreateNursesDoctorsOperationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nurses_doctors_operation');
+        Schema::dropIfExists('doctor_operations');
     }
 }
