@@ -87,8 +87,8 @@ class AppointmentReservationTest extends TestCase
         $at = AppointmentType::first();
         $doctor = Doctor::first();
 
-        $clinic = Clinic::with(['doctors' => function($q) use ($appType) {
-            $q->with(['appointmentTypes'=> function($q) use ($appType){
+        $clinic = Clinic::with(['doctors' => function($q) use ($at) {
+            $q->with(['appointmentTypes'=> function($q) use ($at){
                 $q->where('name',$at->name);
             }]);
         }])->first();
