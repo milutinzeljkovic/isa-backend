@@ -63,7 +63,7 @@ class AppointmentReservationTest extends TestCase
         $response = $this->withHeaders([
             'X-Header' => 'Value',
             'Authorization' => $bearer,
-        ])->json('POST', '/api/appointment/request/'.$doctor->id, ['date' => '2020-12-12 12:00:00', 'appointment_type' => $at->id]);
+        ])->json('POST', '/api/appointment/request112/'.$doctor->id, ['date' => '2020-12-12 12:00:00', 'appointment_type' => $at->id]);
         
         
         $response
