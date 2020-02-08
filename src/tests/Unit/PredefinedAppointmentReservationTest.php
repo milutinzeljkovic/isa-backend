@@ -26,7 +26,6 @@ class PredefinedAppointmentReservationTest extends TestCase
         $user1 = '1';
         $user2 = '2';
         $user = new User;
-
         $user->email = 'patient1@gmail.com';
         $user->name = 'patient1_name';
         $user->last_name = 'patient1_lastname';
