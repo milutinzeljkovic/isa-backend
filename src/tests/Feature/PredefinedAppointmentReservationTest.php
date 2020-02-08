@@ -65,6 +65,9 @@ class PredefinedAppointmentReservationTest extends TestCase
             'Authorization' => $bearer1
         ])->json('POST', '/api/appointment/reserve/'.$appointmentId);
 
+        $this->assertTrue($appointmentId == 1);
+        $this->assertTrue($doctor->id == 1);
+
         $response2 = $this->withHeaders([
             'X-Header' => 'Value',
             'Authorization' => $bearer2
