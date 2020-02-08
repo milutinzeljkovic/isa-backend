@@ -45,7 +45,8 @@ class AppointmentReservationTest extends TestCase
         //     }
         // }
         // $this->assertTrue($doctor != null);
-
+        
+        $appointment = Appointment::where('patient_id',null)->first();
         $patient = Patient::first();
         $appointment->patient_id = $patient->id;
         $res = $appointment->save();
