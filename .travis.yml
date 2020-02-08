@@ -22,7 +22,7 @@ before_script:
   - mysql -u root -e "GRANT ALL ON isa.* TO 'user'@'localhost';"
   - composer self-update
   - composer install 
-  - php artisan migrate
+  - php artisan migrate --force
   - y
 
 script:
