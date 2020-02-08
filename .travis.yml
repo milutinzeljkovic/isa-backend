@@ -17,7 +17,7 @@ cache:
 before_script:
   - cd src
   - pwd
-  - sudo mysql -e 'CREATE DATABASE isa;'
+  - mysql -u root -e 'CREATE DATABASE isa;'
   - composer self-update
   - composer install --no-interaction
   - php artisan migrate --no-interaction -vvv
