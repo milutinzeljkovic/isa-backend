@@ -10,6 +10,8 @@ use App\Clinic;
 use App\Appointment;
 use App\AppointmentType;
 use App\OperationsRoom;
+use App\ClinicalCenter;
+
 
 use Carbon\Carbon;
 use App\Patient;
@@ -23,6 +25,10 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
+        $cc=new ClinicalCenter();
+        $cc->name="dsads";
+        $cc->save();
+        
         $c = new Clinic();
         $c->name='name';
         $c->address='adresa';
