@@ -58,6 +58,8 @@ class PredefinedAppointmentReservationTest extends TestCase
 
         $this->updateAppointment($appointment, $user2);
         $this->updateAppointment($appointment, $user1);
+        $this->assertEquals('1', $appointment->lock_version);
+
         $this->assertEquals('2', $appointment->patient_id);
 
     }
