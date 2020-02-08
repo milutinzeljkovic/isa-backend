@@ -83,61 +83,21 @@ class AppointmentReservationTest extends TestCase
             'Authorization' => $bearer,
         ])->json('GET', '/api/clinics');
 
-        $c = new Clinic();
-        $c->name='name';
-        $c->address='adresa';
-        $c->description='dobra';
-        $c->clinical_center_id=1;
-        $c->save();
 
-        $c1 = new Clinic();
-        $c1->name='name1';
-        $c1->address='adresa1';
-        $c1->description='dobra1';
-        $c1->clinical_center_id=1;
-        $c1->save();
-
-        $clinics = Clinic::all();
-        
-        $appType = AppointmentType::first();
-        if($appType == null){
-            $appType= new AppointmentType();
-            $appType->name='pregled grla';
-            $appType->save();
-
-        }
-
-        $this->assertTrue($appType != null);
-
+        $at = AppointmentType::first();
+        $doctor = Doctor::first();
 
         $clinic = Clinic::with(['doctors' => function($q) use ($appType) {
             $q->with(['appointmentTypes'=> function($q) use ($appType){
-                $q->where('name',$appType->name);
+                $q->where('name',$at->name);
             }]);
         }])->first();
 
-        $doctor;
-        foreach($clinic->doctors as $d)
-        {
-            if($d->appointmentTypes->where('name',$appType->name) != [])
-            {
-                $doctor = $d;
-                break;
-            }
-        }
-        $this->assertTrue($doctor != null);
-
-        $appointment = new Appointment();
-        $appointment->date = '2020-12-15 15:00:00';
-        $appointment->doctor_id = $doctor->id;
-        $appointment->appointment_type_id = $appType->id;
-        
-        echo $appointment;
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
             'Authorization' => $bearer,
-        ])->json('POST', '/api/appointment/request/'.$appointment->doctor->id, ['date' => $appointment->date, 'appointment_type' => $appointment->appointment_type_id]);
+        ])->json('POST', '/api/appointment/request/'.$doctor, ['date' => '2020-12-12 12:00:00', 'appointment_type' => $at->id]);
         
         $response
             ->assertStatus(200);

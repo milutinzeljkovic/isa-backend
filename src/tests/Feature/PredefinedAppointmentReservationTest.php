@@ -97,7 +97,7 @@ class PredefinedAppointmentReservationTest extends TestCase
             'Authorization' => $bearer1
         ])->json('GET', '/api/appointment');
         
-        $appointmentId = $response->original[0]->id;
+        $appointmentId = 1;
 
         $response1 = $this->withHeaders([
             'X-Header' => 'Value',
