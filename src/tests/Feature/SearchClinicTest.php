@@ -20,7 +20,7 @@ class SearchClinicTest extends TestCase
 
         $response = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => 'nada@gmail.com', 'password' => '123']);
+        ])->json('POST', '/api/auth/login', ['email' => 'patient@gmail.com', 'password' => 'password']);
 
         $response
             ->assertStatus(200)

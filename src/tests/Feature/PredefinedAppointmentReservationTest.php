@@ -55,7 +55,7 @@ class PredefinedAppointmentReservationTest extends TestCase
 
         $response1 = $this->withHeaders([
             'X-Header' => 'Value',
-        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => '123']);
+        ])->json('POST', '/api/auth/login', ['email' => $user1->email, 'password' => 'password']);
 
         $response1
             ->assertStatus(200)

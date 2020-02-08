@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 use App\Appointment;
 use App\User;
+use App\Patient;
+
 
 
 class PredefinedAppointmentReservationTest extends TestCase
