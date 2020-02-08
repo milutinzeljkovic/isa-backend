@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use App\Patient;
+use App\Doctor;
 
 class UserSeed extends Seeder
 {

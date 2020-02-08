@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Doctor;
 use App\Clinic;
 use App\AppointmentType;
+use App\Appointment;
 use App\OperationsRoom;
 
 
