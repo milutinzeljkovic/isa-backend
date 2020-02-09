@@ -148,7 +148,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
-        Laravel\Dusk\DuskServiceProvider::class,
 
 
         /*

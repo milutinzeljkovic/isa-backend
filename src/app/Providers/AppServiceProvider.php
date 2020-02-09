@@ -91,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
             VacationService::class
         );
 
-        if ($this->app->environment('local', 'testing','production')) {
+        if ($this->app->environment('local', 'testing')) {
             $this->app->register(DuskServiceProvider::class);
         }
     }
