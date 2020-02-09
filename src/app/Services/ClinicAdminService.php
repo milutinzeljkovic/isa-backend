@@ -368,7 +368,7 @@ class ClinicAdminService implements IClinicAdminService
                 $message['error'] = true;
                 $message['message'] = 'Appointment ending is overlapping';
             }  
-            if($operation->date == $a->date)
+            if($appointment->date == $a->date)
             {
                 $message['error'] = true;
                 $message['message'] = 'Operating room not free';

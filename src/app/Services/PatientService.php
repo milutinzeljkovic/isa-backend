@@ -72,24 +72,6 @@ class PatientService implements IPatientService
 
         return $array;
             
-
-
-
-        // $patients = DB::table('users')->where('userable_type', 'App\Patient')
-        //             ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor) {
-        //                 $query->join('clinic_patient', function ($join) use ($name, $lastName, $ensurance_id, $doctor){
-        //                     $join->on('users.userable_id', '=', 'clinic_patient.patient_id')
-        //                     ->when(true,function ($query) use($name, $lastName, $ensurance_id, $doctor){
-        //                         $query->where('name', 'like', '%'.$name.'%')
-        //                         ->where('last_name', 'like', '%'.$lastName.'%')
-        //                         ->where('ensurance_id', 'like', '%'.$ensurance_id.'%')
-        //                         ->where('clinic_patient.clinic_id', $doctor->clinic_id);
-        //                     });
-        //                 });
-        //             })
-        //             ->get();
-        
-        return $patients;
     }
 
     function getMedicalRecord($id)
