@@ -44,8 +44,8 @@ a:hover, a:active {
     <p>Your appointment request has been approved, please confirm.</p>
     <table aria-describedby="mydesc">
       <tr>
-      <th></th>
-      <th></th>
+      <th id='1'></th>
+      <th id='2'></th>
     </tr>
         <tr>
         <td>date:</td>
