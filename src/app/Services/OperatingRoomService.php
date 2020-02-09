@@ -157,7 +157,7 @@ class OperatingRoomService implements IOperatingRoomService
         $day = (int)explode('-', date("Y-m-d"))[2];
         $day = $day + 1;
 
-        if(count($appointments) == 0 && count($operations)){
+        if(count($appointments) == 0 && count($operations) == 0){
             return $year.'-'.$month.'-'.$day;
         }
 

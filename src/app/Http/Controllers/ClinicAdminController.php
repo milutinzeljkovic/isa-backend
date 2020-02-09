@@ -169,7 +169,20 @@ class ClinicAdminController extends Controller
         return $this->_clinicAdminService->getAverageClinicRating();
     }
 
-    public function getAverageRatingDoctor($id){
-        return $this->_clinicAdminService->getAverageRatingDoctor($id);
+    public function getAverageRatingDoctor(){
+        return $this->_clinicAdminService->getAverageRatingDoctor();
+    }
+
+    public function earnedMoneyInPeriod(Request $request){
+        $data = $request->all();
+        return $this->_clinicAdminService->earnedMoneyInPeriod($data);
+    }
+
+    public function weeklyNumberOfAppointments(){
+        return $this->_clinicAdminService->weeklyNumberOfAppointments();
+    }
+
+    public function monthlyNumberOfAppointments(){
+        return $this->_clinicAdminService->monthlyNumberOfAppointments();
     }
 }
