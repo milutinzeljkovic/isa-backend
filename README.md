@@ -1,44 +1,24 @@
-# Laravel JWT in Docker
-Boilerplate for Laravel with JWT auth wrapped in Docker.
-
-# What is this?
-
-This repo will get you up and running in no time. 
-Basically this is clean laravel 5.6 project with JWT authentication implemented.
-Package that is used for JWT authentication is `tymon/jwt-auth`, this will save you a lot of time because JWT configuration in laravel can be pain in the ass.
-
-Things that are added :
-* `User` model with name, email and password attributes
-* `AuthController` with register, login, me and logout routes
-* `UserService` with register, login, me and logout methods
-* `RegisterApiRequest` request with name, email and password validation
-* `Jsonify` middleware that will set header `Accept: application/json`
-* JWT authentication
-
-And thats it, no unnecessary craps, just things that must be implemented to have JWT authentication working.
-
-# What about Docker ?
-
-Whole stack is dockerized so it can boost your development productivity and let you focus on code, instead of configuration.
-Docker related files :
-
-* `docker-compose.yml` - YAML file defining services, networks and volumes
-* `Dockerfile` - file that is building our nginx-php instance
-* `config/default.conf` - Laravel optimized NGINX vhost configuration file
-
-All that you need to do first time starting app is :
-```
-cp src/.env.example src/.env
-docker-compose up -d
-docker exec -it nginx-php php /app/artisan key:generate
-docker exec -it nginx-php php /app/artisan jwt:secret
-```
-> If everything went well, your app will be live on http://localhost (port 80)
-
-As we are using volume to map `./src` to `/app` in container, all changes in host source files will be immediately visible in container.
-
-# How can I access nginx or mariadb?
-
-You can access bash shell in your nginx-php instance with `docker exec -it nginx-php /bin/bash`.  
+### Projekat ISA-PSW 2019/20 (BackEnd)
+### Neophodno za pokretanje projekta:
+  - Composer
+  - PHP
+  - Docker ili Mysql baza
   
-MariaDB is mapped to your host so you can use client tool of your preference and point it to `127.0.0.1` with username/password from `docker-compose.yml`.
+### Preuzeti projekat sa linka sa komandom:
+  git clone https://github.com/milutinzeljkovic/isa-backend
+
+### Pokretanje:
+   - Ukoliko radite preko dockera iz glavog foldera pokrenuti komandu docker-compose up -d
+   - Ukoliko radite preko mysql pokrenite komande:
+   - mysql -u root -e 'CREATE DATABASE isa;'
+   - mysql -u root -e "CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';"
+   - mysql -u root -e "GRANT ALL ON isa.* TO 'user'@'localhost';"
+   - Potrebno je pozicionirati se u src folder sa komandom: cd src
+   - Instalirati potrebne dependency-e sa: composer install
+   - Kreirati konfiguracioni fajl: cp .env.example .env
+   - Podesiti kredencijale u env fajlu
+   - U okruženju u kojem ste otvorili terminal uneti komandu: php artisan migrate (morate biti i dalje u src-u jer je tu            pozicioniran artisan
+   - Zatim se generišu ključevi za autorizaciju sa komandama: php artisan key: generate i nakon toga php artisan jwt:secret
+   - Nakon što ste ovo sve odradili za pokretanje se koristi: php artisan serve
+   
+   ### TIM32 - Milutin Zeljković, Mihailo Stanarević, Ivan Činčurak
