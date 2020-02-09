@@ -30,6 +30,8 @@ before_script:
   - php artisan db:seed --class=AppointmentTypeTableSeeder
   - php artisan db:seed --class=AppointmentSeeder
   
+script:
+  - vendor/bin/phpunit
 
 
 env:
