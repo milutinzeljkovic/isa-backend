@@ -9,6 +9,9 @@ use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\DB;
 
 use App\Appointment;
+use App\User;
+use App\Patient;
+
 
 
 class PredefinedAppointmentReservationTest extends TestCase
@@ -20,13 +23,13 @@ class PredefinedAppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $user1 = '2';
-        $user2 = '5';
 
-        $appointment = DB::table('appointments')->where('id','1')->first();
-        $this->updateAppointment($appointment, $user2);
-        $this->updateAppointment($appointment, $user1);
-        $this->assertEquals('5', $appointment->patient_id);
+        $patient = Patient::first();
+
+
+        $appointment = Appointment::where('id',1)->first();
+        $this->updateAppointment($appointment, $patient->id);
+        $this->assertEquals($patient->id, $appointment->patient_id);
 
     }
 
@@ -38,11 +41,9 @@ class PredefinedAppointmentReservationTest extends TestCase
             DB::table('appointments')
                 ->where('id', $appointment->id)
                 ->where('lock_version', $appointment->lock_version)
-                ->update(['patient_id' => $id]);
-            
-            DB::table('appointments')
-                ->where('id', $appointment->id)
-                ->update(['lock_version' => $appointment->lock_version +1]);
+                ->update(['lock_version' => $appointment->lock_version +1,
+                        'patient_id' => $id
+                ]);
             
         });
     }

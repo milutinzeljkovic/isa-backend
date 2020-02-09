@@ -21,44 +21,16 @@ class AppointmentReservationTest extends TestCase
      */
     public function testExample()
     {
-        $searchingApp = true;
 
-        $clinics = Clinic::all();
-        $appType = AppointmentType::first();
-
-        $this->assertTrue($appType != null);
-
-
-        $clinic = Clinic::with(['doctors' => function($q) use ($appType) {
-            $q->with(['appointmentTypes'=> function($q) use ($appType){
-                $q->where('name',$appType->name);
-            }]);
-        }])->first();
-
-        $doctor;
-        foreach($clinic->doctors as $d)
-        {
-            if($d->appointmentTypes->where('name',$appType->name) != [])
-            {
-                $doctor = $d;
-                break;
-            }
-        }
-        $this->assertTrue($doctor != null);
-
+        
+        $appointment = Appointment::where('patient_id',null)->first();
         $patient = Patient::first();
-
-        $appointment = new Appointment();
-        $appointment->date = Carbon::now()->addDays(14);
-        $appointment->doctor_id = $doctor->id;
-        $appointment->appointment_type_id = $appType->id;
-        $appointment->clinic_id = $clinic->id;
         $appointment->patient_id = $patient->id;
-        $appointment->save();
+        $res = $appointment->save();
 
 
 
 
-        $this->assertTrue($searchingApp);
+        $this->assertTrue($res);
     }
 }

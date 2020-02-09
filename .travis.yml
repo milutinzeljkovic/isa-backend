@@ -23,7 +23,13 @@ before_script:
   - composer self-update
   - composer install 
   - php artisan migrate --force
-  - y
+  - cp .env.example .env
+  - php artisan key:generate
+  - php artisan db:seed --class=UserSeed
+  - php artisan db:seed --class=ClinicsSeeder
+  - php artisan db:seed --class=AppointmentTypeTableSeeder
+  - php artisan db:seed --class=AppointmentSeeder
+  
 
 script:
   - vendor/bin/phpunit

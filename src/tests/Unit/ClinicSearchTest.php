@@ -16,7 +16,12 @@ class ClinicSearchTest extends TestCase
      */
     public function testExample()
     {
-        $clinic = Clinic::find(1);
+        $clinic = new Clinic();
+        $clinic->name='name';
+        $clinic->address='adresa';
+        $clinic->description='dobra';
+        $clinic->clinical_center_id=1;
+        $clinic->save();
         $clinics = Clinic::where('name','%like%',$clinic->name)->get();
         $this->assertTrue($clinics != []);
 
