@@ -20,5 +20,9 @@
    - U okruženju u kojem ste otvorili terminal uneti komandu: php artisan migrate (morate biti i dalje u src-u jer je tu            pozicioniran artisan
    - Zatim se generišu ključevi za autorizaciju sa komandama: php artisan key: generate i nakon toga php artisan jwt:secret
    - Nakon što ste ovo sve odradili za pokretanje se koristi: php artisan serve
+
+### link 
+https://isa-front-test.herokuapp.com/
+ 
    
    ### TIM32 - Milutin Zeljković, Mihailo Stanarević, Ivan Činčurak
