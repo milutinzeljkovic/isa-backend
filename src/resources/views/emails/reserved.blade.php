@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head>
-      <title>Appointment reserved!</title>
-      <head>
+<html lang="en">
+
 <style>
 .button {
   background-color: #4CAF50; /* Green */
@@ -33,7 +31,8 @@ a:hover, a:active {
 .button2 {background-color: #008CBA;} /* Blue */
 .button3 {background-color: #f44336;} /* Red */ 
 </style>
-</head>
+<head>
+      <title>Appointment reserved!</title>
 </head>
 <body style="background-color:#36c7a5">
     <div style="background-color:#36c7a5">
