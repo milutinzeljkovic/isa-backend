@@ -5,6 +5,8 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Clinic;
+use App\ClinicalCenter;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ClinicSearchTest extends TestCase
@@ -16,6 +18,10 @@ class ClinicSearchTest extends TestCase
      */
     public function testExample()
     {
+        $clinicc = new ClinicalCenter();
+        $clinicc->name='center';
+        $clinicc->save();
+
         $clinic = new Clinic();
         $clinic->name='name';
         $clinic->address='adresa';
