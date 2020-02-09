@@ -13,6 +13,7 @@ use App\Utils\AddPredefinedAppointment;
 use App\Utils\IAddAppointmentStrategy;
 use App\Services\WorkingDayService;
 use App\Services\VacationService;
+use Laravel\Dusk\DuskServiceProvider;
 
 use Illuminate\Support\Facades\Log;
 
@@ -89,5 +90,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\IVacationService',
             VacationService::class
         );
+
+        if ($this->app->environment('local', 'testing')) {
+            $this->app->register(DuskServiceProvider::class);
+        }
     }
 }
