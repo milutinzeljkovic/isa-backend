@@ -42,7 +42,11 @@ a:hover, a:active {
     </div>
     <h5>Hello, {{ $user->name }},</h5>
     <p>Your appointment request has been approved, please confirm.</p>
-    <table>
+    <table aria-describedby="mydesc">
+      <tr>
+      <th></th>
+      <th></th>
+    </tr>
         <tr>
         <td>date:</td>
         <td>{{$appointment->date}}</td>
