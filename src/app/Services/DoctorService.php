@@ -14,7 +14,9 @@ use App\Medicine;
 use App\Prescription;
 use App\Diagnose;
 use App\Operations;
-
+use App\ClinicAdmin;
+use App\Patient;
+use App\Mail\AppointmentRequestMail;
 
 use Auth;
 use Log;
@@ -274,6 +276,14 @@ class DoctorService implements IDoctorService
         $newAppointment->date = $date;
 
         $newAppointment->save();
+
+        $clinicAdmins = ClinicAdmin::where('clinic_id', $doctor->clinic_id)->get();
+        $patient1 = Patient::where('id',$appointment->patient_id)->first();
+        $patient = User::where('userable_type', 'App\Patient')->where('userable_id', $patient1->id)->first();
+        foreach($clinicAdmins as $user1){
+            $user12 = User::where('userable_type', 'App\ClinicAdmin')->where('userable_id', $user1->id)->first();
+            \Mail::to($user12)->send(new AppointmentRequestMail($user12,$newAppointment,$patient));
+        }    
 
         return response()->json(['created' => 'Appointment has been created'], 201);
     }

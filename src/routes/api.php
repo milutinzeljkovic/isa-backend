@@ -127,7 +127,10 @@ Route::group([
     Route::post('specialize-doctor/{id}', 'ClinicAdminController@specializeDoctor');
     Route::put('update-appointment-request', 'ClinicAdminController@updateAppointmentRequest');
     Route::get('average-rating', 'ClinicAdminController@getAverageClinicRating');
-    Route::get('doctor-average-rating/{id}', 'ClinicAdminController@getAverageRatingDoctor');
+    Route::get('doctor-average-rating', 'ClinicAdminController@getAverageRatingDoctor');
+    Route::get('money-earned-in-period', 'ClinicAdminController@earnedMoneyInPeriod');
+    Route::get('weekly-report', 'ClinicAdminController@weeklyNumberOfAppointments');
+    Route::get('monthly-report', 'ClinicAdminController@monthlyNumberOfAppointments');
 });
 
 Route::group([

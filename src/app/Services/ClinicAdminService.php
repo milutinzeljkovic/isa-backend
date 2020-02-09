@@ -17,6 +17,8 @@ use Carbon\Carbon;
 use App\Mail\AddToOperationMail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use stdClass;
+use DateTime;
 
 use App\ClinicAdmin;
 use App\Recension;
@@ -539,25 +541,174 @@ class ClinicAdminService implements IClinicAdminService
         return round($sum/count($recensions),2);
     }
 
-    function getAverageRatingDoctor($id){
-        $user = User::where('id', $id)->first();
+    function getAverageRatingDoctor(){
+        $user = Auth::user();
+        $clinicAdmin = ClinicAdmin::where('id', $user->userable_id)->first();
+        $doctors = Doctor::where('clinic_id', $clinicAdmin->clinic_id)->get();
+        $retVal = array();
         
-        $recensions = Recension::where('doctor_id', $user->userable_id)->get();
+        foreach($doctors as $doctor){
+            $object = new stdClass;
+            $recensions = Recension::where('doctor_id', $doctor->id)->get();
+            $user1 = User::where('userable_type', 'App\Doctor')->where('userable_id', $doctor->id)->first();
 
-        $sum = 0;
-        if(count($recensions) == 0){
-            return 0;
+            $sum = 0;
+            if(count($recensions) == 0){
+                $object->id = $user1->id;
+                $object->rating = 0;
+                $retVal[] = $object;
+                continue;
+            }
+    
+            foreach($recensions as $recension){
+                $sum = $sum + $recension->stars_count;
+            }
+
+            $object->id = $user1->id;
+            $object->rating = round($sum/count($recensions),2);
+            $retVal[] = $object;
         }
-
-        foreach($recensions as $recension){
-            $sum = $sum + $recension->stars_count;
-        }
-
-        return round($sum/count($recensions),2);
+        
+        return $retVal;
     }
 
-    /*function earnedMoneyInPeriod($start, $end){
+    function earnedMoneyInPeriod($data){
+        $start = array_get($data, 'start');
+        $end = array_get($data, 'end');
         $user = Auth::user();
-        $clinicAdmin = ClinicAdmin::
-    }*/
+        $clinicAdmin = ClinicAdmin::where('id', $user->userable_id)->first();
+
+        $appointments = Appointment::where('date', '>=', $start)->where('date', '<=', $end)->
+                                     where('clinic_id',$clinicAdmin->clinic_id)->get();
+
+        $sum = 0;
+        if(count($appointments) > 0){
+            foreach($appointments as $appointment){
+                $moneyEarned = ((int)$appointment->price * (100 - (int)$appointment->discount))/100;
+                $sum = $sum + $moneyEarned;
+            }
+        }
+
+        return $sum;
+    }
+
+    function weeklyNumberOfAppointments()
+    {
+        $user = Auth::user();
+        $clinicAdmin = ClinicAdmin::where('id', $user->userable_id)->first();
+
+        $dateToday = date("Y-m-d");
+        $year = (int)explode('-', $dateToday)[0];
+        if((int)date("W") - 9 < 0){
+            $week = 52 - (9 - (int)date("W"));
+            $year = $year - 1;
+        }else {
+            $week = (int)date("W") - 9;
+        }
+
+        $retVal = array();
+        $dates = array();
+        for($i = 0; $i < 10; $i++){
+            $object = new stdClass;
+            $dto = new DateTime();
+            $startDate = $dto->setISODate($year, $week)->format('Y-m-d');
+            $endDate = $dto->modify('+6 days')->format('Y-m-d');
+            $apps = Appointment::where('done', '=', '1')->where('clinic_id', $clinicAdmin->clinic_id)->where('done', '=', '1')->whereDate('date','>=', $startDate)->whereDate('date','<=', $endDate)->get();    
+            if($week + 1 > 52){
+                $week = 1;
+                $year++;
+            }else {
+                $week++;
+            }
+            $object->x = 'Week '.' '.$week.' - '.substr($year,-2);
+            $object->y = count($apps);
+            $retVal[] = $object;
+        }
+        return $retVal;
+    }
+
+    function monthlyNumberOfAppointments()
+    {
+        $user = Auth::user();
+        $clinicAdmin = ClinicAdmin::where('id', $user->userable_id)->first();
+        $year = (int)explode('-', date("Y-m-d"))[0]; //current date
+        $month = (int)explode('-', date("Y-m-d"))[1];
+        $day = (int)explode('-', date("Y-m-d"))[2];
+
+        $yearX = $year - 1;
+        $arrayMonths = array();
+        $arrayYear = array();
+        $numberOfAppointments = array();
+        $retVal = array();
+        $i = 0;
+        for($i = 0; $i < 12; $i++){
+            $arrayMonths[] = $month;
+            $arrayYear[] = $year;
+
+            if($month < 10){
+                $formattedDateInPast = $year.'-0'.$month.'-'.'00';
+                $formattedDateInFuture = $year.'-0'.$month.'-'.'30';
+            }else {
+                $formattedDateInPast = $year.'-'.$month.'-'.'00';
+                $formattedDateInFuture = $year.'-'.$month.'-'.'30';
+            }
+            $apps = Appointment::where('done', '=', '1')->where('clinic_id', $clinicAdmin->clinic_id)->where('approved', '=', '1')->whereDate('date','>=', $formattedDateInPast)->whereDate('date','<=', $formattedDateInFuture)->get();    
+            $numberOfAppointments[] = count($apps);
+            if($month - 1 == 0){
+                $month = 12;
+                $year--;
+            }else {
+                $month--;
+            }
+        }
+
+        $i = 0;
+        for($i = 0; $i < 12; $i++){
+            switch($arrayMonths[$i]){
+                case 1: 
+                    $stringMonth = 'Jan';
+                    break;
+                case 2:
+                    $stringMonth = 'Feb';
+                    break;
+                case 3: 
+                    $stringMonth = 'Mar';
+                    break;
+                case 4: 
+                    $stringMonth = 'Apr';
+                    break;
+                case 5: 
+                    $stringMonth = 'May';
+                    break;
+                case 6: 
+                    $stringMonth = 'Jue';
+                    break;
+                case 7: 
+                    $stringMonth = 'Jul';
+                    break;
+                case 8: 
+                    $stringMonth = 'Aug';
+                    break;
+                case 9: 
+                    $stringMonth = 'Sept';
+                    break;
+                case 10: 
+                    $stringMonth = 'Oct';
+                    break;
+                case 11: 
+                    $stringMonth = 'Nov';
+                    break;
+                case 12: 
+                    $stringMonth = 'Dec';    
+                    break;
+                default:
+            }
+            $object = new stdClass;
+            $object->x = $stringMonth.' '.substr($arrayYear[$i],-2);
+            $object->y = $numberOfAppointments[$i];
+            $retVal[] = $object;
+        }
+
+        return $retVal;
+    }
 }
