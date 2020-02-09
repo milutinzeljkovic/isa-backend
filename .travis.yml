@@ -21,7 +21,7 @@ before_script:
   - mysql -u root -e "CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';"
   - mysql -u root -e "GRANT ALL ON isa.* TO 'user'@'localhost';"
   - composer self-update
-  - composer install 
+  - composer install --no-dev  
   - php artisan migrate --force
   - cp .env.example .env
   - php artisan key:generate
@@ -31,8 +31,6 @@ before_script:
   - php artisan db:seed --class=AppointmentSeeder
   
 
-script:
-  - vendor/bin/phpunit
 
 env:
     - APP_NAME="Laravel JWT Boilerplate"
