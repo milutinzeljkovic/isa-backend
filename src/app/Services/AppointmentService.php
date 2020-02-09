@@ -16,6 +16,9 @@ use DateTime;
 use App\Utils\AppointmentAdding;
 use App\Utils\AddPredefinedAppointment;
 use App\Utils\AddCustomAppointment;
+use App\Mail\ClinicAdminNotification;
+use App\Mail\PredefinedAppointmentReserved;
+
 
 
 class AppointmentService implements IAppointmentService
@@ -105,6 +108,9 @@ class AppointmentService implements IAppointmentService
         }
         else
         {
+
+            \Mail::to(Auth::user())->send(new PredefinedAppointmentReserved(Auth::user()));
+
             return $updatedAppointment;
         }
     }
@@ -158,11 +164,25 @@ class AppointmentService implements IAppointmentService
             ]);
             DB::commit();
 
-            return $requestedAppointment;
         } catch (\Exception $exception) {
             DB::rollBack();
             \Log::error($exception->getMessage());
             return response()->json('order failed!');
+        }
+
+        $app = Appointment::find($requestedAppointment->id);
+        if($app->patient_id == $patientId)
+        {
+            $clinic = Clinic::find($app->clinic_id);
+            $clinicAdmin = $clinic->clinicAdmins()->first();
+            $admin  = $clinicAdmin->user()->first();
+            \Mail::to($admin)->send(new ClinicAdminNotification($admin));
+            return $app;
+        }
+        else
+        {
+            return response('Error'.$patientId,400);
+
         }
 
         }
