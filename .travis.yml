@@ -25,11 +25,10 @@ before_script:
   - php artisan migrate --force
   - cp .env.example .env
   - php artisan key:generate
-  - php artisan db:seed --class=UserSeed
-  - y
-  - php artisan db:seed --class=ClinicsSeeder
-  - php artisan db:seed --class=AppointmentTypeTableSeeder
-  - php artisan db:seed --class=AppointmentSeeder
+  - php artisan db:seed --class=UserSeed --force
+  - php artisan db:seed --class=ClinicsSeeder --force
+  - php artisan db:seed --class=AppointmentTypeTableSeeder --force
+  - php artisan db:seed --class=AppointmentSeeder --force
   
 script:
   - vendor/bin/phpunit
