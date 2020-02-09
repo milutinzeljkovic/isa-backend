@@ -21,7 +21,7 @@ class SimpleFactory
 
     public function createOperatingRoom()
     {
-        return new OpertionsRoom();
+        return new OperationsRoom();
     }
 
     public function createNurse()

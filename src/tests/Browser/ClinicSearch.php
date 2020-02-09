@@ -19,10 +19,8 @@ class ClinicSearch extends DuskTestCase
             $browser->visit('/');
             $browser->click('@loginbtn');
             $browser->waitForText('email');
-
             $browser->append('input[name="email"]' , 'pacijent@mail.com');
             $browser->assertInputValue('input[name="email"]', 'pacijent@mail.com');
-
             $browser->type('pass', 'pass123');
             $browser->pause(1500);
             $browser->click('@loginbtn1');
@@ -37,9 +35,7 @@ class ClinicSearch extends DuskTestCase
             $browser->click('@showDoctors');
             $browser->pause(1500);
             
-            
 
-            
             $browser->maximize();
 
         });
